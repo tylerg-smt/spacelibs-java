@@ -1,0 +1,13 @@
+{
+	"name": "Space Force Java Libraries",
+	"description": "SMT's Reusable code libraires for use on the Space Force",
+	"repository" :
+	{	"type" : "git",
+		"url" : "https://github.com/smtadmin/SpaceLibs-Java.git"
+	},
+	"config": {
+    	"commitizen": {
+      		"path": "cz-conventional-changelog"
+    	}
+    }
+}
