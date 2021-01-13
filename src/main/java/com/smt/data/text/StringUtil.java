@@ -1,9 +1,5 @@
 package com.smt.data.text;
 
-// JDK 11.x
-import java.util.ArrayList;
-import java.util.List;
-
 // Apache Commons 3.1.1
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,20 +31,20 @@ public class StringUtil extends StringUtils {
 	 * @param searchStr
 	 * @return
 	 */
-	public static Integer[] everyIndexOf(CharSequence str, CharSequence searchStr) {
-		if (StringUtils.isEmpty(str) ||  StringUtils.isEmpty(searchStr)) return new Integer[0];
-		
-		List<Integer> items = new ArrayList<>();
+	public static int[] everyIndexOf(CharSequence str, CharSequence searchStr) {
+		if (StringUtils.isEmpty(str) ||  StringUtils.isEmpty(searchStr)) return new int[0];
+		int matches = StringUtils.countMatches(str, searchStr);
+		int[] items = new int[matches];
 		int loc = -1;
 		
 		for (int i=0; i < 50; i++) {
 			
 			loc = str.toString().indexOf(searchStr.toString(), loc + 1);
 			if (loc < 0) break;
-			items.add(loc);
+			items[i] = loc;
 		}
 
-		return items.toArray(new Integer[0]);
+		return items;
 	}
 
 }

@@ -9,12 +9,17 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'jacoco'
 }
+
+group = 'com.smt'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -24,9 +29,17 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
     implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.16'
 
     // Use JUnit test framework
     // testImplementation 'junit:junit:4.12'
     testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
     testRuntime('org.junit.vintage:junit-vintage-engine:5.7.0')
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+	dependsOn test
 }

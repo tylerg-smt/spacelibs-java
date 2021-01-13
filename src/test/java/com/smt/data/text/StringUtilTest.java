@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 /****************************************************************************
  * <b>Title</b>: StringUtilTest.java
  * <b>Project</b>: SpaceLibs-Java
- * <b>Description: </b> CHANGE ME!!
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -24,18 +23,18 @@ class StringUtilTest {
 	 */
 	@Test
 	void testEveryIndexOf() {
-		Integer[] indexes = StringUtil.everyIndexOf("james camire", "a");
-		assertEquals(indexes.length, 2);
-		assertEquals(indexes[0], 1);
-		assertEquals(indexes[1], 7);
+		int[] indexes = StringUtil.everyIndexOf("james camire", "a");
+		assertEquals(2, indexes.length);
+		assertEquals(1, indexes[0]);
+		assertEquals(7, indexes[1]);
 		
 		indexes = StringUtil.everyIndexOf("the time for all of the good things", "the");
-		assertEquals(indexes.length, 2);
-		assertEquals(indexes[0], 0);
-		assertEquals(indexes[1], 20);
+		assertEquals(2, indexes.length);
+		assertEquals(0, indexes[0]);
+		assertEquals(20, indexes[1]);
 		
 		indexes = StringUtil.everyIndexOf("the time for all of the good things", "");
-		assertEquals(indexes.length, 0);
+		assertEquals(0, indexes.length);
 	}
 
 }
