@@ -72,7 +72,7 @@ class TreeTest {
 	@Test
 	void testPreorderList() {
 		Tree t = new Tree(nodes, root);
-		assertEquals(3, t.getPreorderList().size());
+		assertEquals(3, t.preorderList().size());
 	}
 
 	/**
@@ -80,7 +80,8 @@ class TreeTest {
 	 */
 	@Test
 	void testGetPreorderList() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		assertEquals(3, t.getPreorderList().size());
 	}
 
 	/**
@@ -88,7 +89,9 @@ class TreeTest {
 	 */
 	@Test
 	void testPreorderListBoolean() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		assertEquals(4, t.preorderList(true).size());
+		assertEquals(3, t.preorderList(false).size());
 	}
 
 	/**
@@ -96,7 +99,10 @@ class TreeTest {
 	 */
 	@Test
 	void testPreorderListNode() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		Node nullNode = null;
+		assertEquals(0, t.preorderList(nullNode).size());
+		assertEquals(3, t.preorderList(root).size());
 	}
 
 	/**
@@ -104,7 +110,7 @@ class TreeTest {
 	 */
 	@Test
 	void testCreatePreorder() {
-		fail("Not yet implemented");
+		Tree.createPreorder(nodes, new ArrayList<Node>());
 	}
 
 	/**
@@ -112,7 +118,15 @@ class TreeTest {
 	 */
 	@Test
 	void testCalculateTotalChildren() {
-		fail("Not yet implemented");
+		Node firstChild = new Node("child_node_1", "root_node_id");
+		Node secondChild = new Node("child_node_2", "root_node_id");
+		Node firstFirstChild = new Node("child_node_3", "child_node_1");
+		firstChild.addChild(secondChild);
+		secondChild.addChild(firstFirstChild);
+
+		assertEquals(0, Tree.calculateTotalChildren(null));
+		assertEquals(0, Tree.calculateTotalChildren(root));
+		assertEquals(2, Tree.calculateTotalChildren(firstChild));
 	}
 
 	/**
@@ -120,15 +134,8 @@ class TreeTest {
 	 */
 	@Test
 	void testGetDepth() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.smt.data.tree.Tree#setRootNode(com.smt.data.tree.Node)}.
-	 */
-	@Test
-	void testSetRootNode() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		assertEquals(3, t.getDepth());
 	}
 
 	/**
@@ -136,7 +143,9 @@ class TreeTest {
 	 */
 	@Test
 	void testGetRootNode() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes);
+		t.setRootNode(root);
+		assertEquals("root_node_id", t.getRootNode().getNodeId());
 	}
 
 	/**
@@ -144,7 +153,22 @@ class TreeTest {
 	 */
 	@Test
 	void testBuildNodePaths() {
-		fail("Not yet implemented");
+		Node firstChild = new Node("child_node_1", "root_node_id");
+		Node secondChild = new Node("child_node_2", "root_node_id");
+		secondChild.setNodeName("my second child");
+		Node firstFirstChild = new Node("child_node_3", "child_node_1");
+		firstChild.addChild(secondChild);
+		secondChild.addChild(firstFirstChild);
+		
+		List<Node> pathNodes = new ArrayList<Node>();
+		pathNodes.add(firstChild);
+		
+		Tree t = new Tree(pathNodes, root);
+		t.buildNodePaths();
+		
+		
+		t = new Tree(nodes, root);
+		t.buildNodePaths();
 	}
 
 	/**
@@ -152,7 +176,8 @@ class TreeTest {
 	 */
 	@Test
 	void testBuildNodePathsString() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		t.buildNodePaths("/");
 	}
 
 	/**
@@ -160,7 +185,11 @@ class TreeTest {
 	 */
 	@Test
 	void testBuildNodePathsStringBoolean() {
-		fail("Not yet implemented");
+		root.setNodeName("root node");
+		
+		Tree t = new Tree(nodes, root);
+		t.buildNodePaths("/", true);
+		t.buildNodePaths("/", false);
 	}
 
 	/**
@@ -168,7 +197,23 @@ class TreeTest {
 	 */
 	@Test
 	void testBuildNodePathsNodeStringBoolean() {
-		fail("Not yet implemented");
+		Node firstChild = new Node("child_node_1", "root_node_id");
+		firstChild.setNodeName("my first child");
+		Node secondChild = new Node("child_node_2", "root_node_id");
+		secondChild.setNodeName("my second child");
+		Node firstFirstChild = new Node("child_node_3", "child_node_1");
+		firstFirstChild.setNodeName("my first first child");
+		firstFirstChild.setNodeId(null);
+		
+		firstChild.addChild(secondChild);
+		secondChild.addChild(firstFirstChild);
+		
+		List<Node> pathNodes = new ArrayList<Node>();
+		pathNodes.add(firstChild);
+		
+		Tree t = new Tree(pathNodes, root);
+		t.buildNodePaths(firstChild, "/", true);
+		t.buildNodePaths(firstChild, "/", false);
 	}
 
 	/**
@@ -176,7 +221,8 @@ class TreeTest {
 	 */
 	@Test
 	void testEqualsObject() {
-		fail("Not yet implemented");
+		Tree t = new Tree(nodes, root);
+		assertFalse(t.equals(null));
 	}
 
 }

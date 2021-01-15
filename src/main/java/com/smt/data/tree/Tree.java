@@ -162,6 +162,7 @@ public class Tree implements Serializable {
 	 * @return
 	 */
 	public static int calculateTotalChildren(Node node) {
+		if (node == null) return 0;
 		int total = 0;
 		for (Node n : node.getChildren()) {
 			total += calculateTotalChildren(n);
@@ -273,6 +274,7 @@ public class Tree implements Serializable {
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
 		for (Node child : parentNode.getChildren()) {
+			System.out.println(child);
 			StringBuilder path = new StringBuilder(50);
 			if (parentNode.getFullPath() != null) path.append(parentNode.getFullPath());
 			if (path.length() > 0) path.append(delimiter);
