@@ -52,11 +52,14 @@ class PhoneNumberFormatTest {
 		pnf = new PhoneNumberFormat("3031234567", "US", FormatType.INTERNATIONAL_FORMAT);
 		assertEquals("+1 303-123-4567", pnf.getFormattedNumber());
 		
-		pnf = new PhoneNumberFormat();
+		pnf = new PhoneNumberFormat(null);
 		assertEquals(null, pnf.getFormattedNumber());
 		
 		pnf = new PhoneNumberFormat("303123", FormatType.DASH_FORMATTING);
 		assertEquals("303123", pnf.getFormattedNumber());
+		
+		pnf = new PhoneNumberFormat("303", FormatType.DASH_FORMATTING);
+		assertEquals("303", pnf.getFormattedNumber());
 	}
 
 	/**
@@ -76,15 +79,13 @@ class PhoneNumberFormatTest {
 	 */
 	@Test
 	void testSetPhoneNumber() {
-		PhoneNumberFormat pnf = new PhoneNumberFormat();
-		pnf.setPhoneNumber("3031234567");
+		PhoneNumberFormat pnf = new PhoneNumberFormat("3031234567");
 		assertEquals("3031234567", pnf.getPhoneNumber());
 		
-		pnf = new PhoneNumberFormat();
-		pnf.setPhoneNumber("303-123-4567");
+		pnf = new PhoneNumberFormat("303-123-4567");
 		assertEquals("303-123-4567", pnf.getPhoneNumber());
 		
-		pnf = new PhoneNumberFormat();
+		pnf = new PhoneNumberFormat(null);
 		pnf.setPhoneNumber(null);
 		assertEquals(null, pnf.getPhoneNumber());
 	}
@@ -103,7 +104,7 @@ class PhoneNumberFormatTest {
 	 */
 	@Test
 	void testSetFormatType() {
-		PhoneNumberFormat pnf = new PhoneNumberFormat();
+		PhoneNumberFormat pnf = new PhoneNumberFormat("303-123-4567");
 		pnf.setFormatType(FormatType.DASH_FORMATTING);
 		assertEquals(FormatType.DASH_FORMATTING, pnf.getFormatType());
 	}
@@ -122,9 +123,9 @@ class PhoneNumberFormatTest {
 	 */
 	@Test
 	void testSetCountryCode() {
-		PhoneNumberFormat pnf = new PhoneNumberFormat();
-		pnf.setCountryCode("US");
-		assertEquals("US", pnf.getCountryCode());
+		PhoneNumberFormat pnf = new PhoneNumberFormat("303-123-4567");
+		pnf.setCountryCode("CH");
+		assertEquals("CH", pnf.getCountryCode());
 	}
 	
 	/**
@@ -132,7 +133,7 @@ class PhoneNumberFormatTest {
 	 */
 	@Test
 	void testAssignPhoneNumber() {
-		PhoneNumberFormat pnf = new PhoneNumberFormat();
+		PhoneNumberFormat pnf = new PhoneNumberFormat(null);
 		assertEquals(null, pnf.assignPhoneNumber());
 	}
 	
@@ -141,8 +142,23 @@ class PhoneNumberFormatTest {
 	 */
 	@Test
 	void testAssignUSFormatting() {
-		PhoneNumberFormat pnf = new PhoneNumberFormat();
+		PhoneNumberFormat pnf = new PhoneNumberFormat(null);
 		assertEquals(null, pnf.assignUSFormatting('.', '.'));
 	}
 
+	/**
+	 * Test method for {@link com.smt.data.formatter.PhoneNumberFormat#obfuscatePhoneNumber()}.
+	 */
+	@Test
+	void testObfuscatePhoneNumber() {
+		PhoneNumberFormat pnf = new PhoneNumberFormat("303-123-4567");
+		assertEquals("(XXX) XXX-4567", pnf.obfuscatePhoneNumber());
+		
+		pnf = new PhoneNumberFormat("3031234567", FormatType.DOT_FORMATTING);
+		assertEquals("XXX.XXX.4567", pnf.obfuscatePhoneNumber());
+		
+		pnf = new PhoneNumberFormat("3031234567", FormatType.DASH_FORMATTING);
+		assertEquals("XXX-XXX-4567", pnf.obfuscatePhoneNumber());
+	}
+	
 }

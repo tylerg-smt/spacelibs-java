@@ -60,10 +60,11 @@ public class PhoneNumberFormat implements Serializable {
 	private String countryCode = "US";
 	
 	/**
-	 * 
+	 * Constructor that accepts a string phone number and phone type
+	 * @param phoneNumber
 	 */
-	public PhoneNumberFormat() {
-		super();
+	public PhoneNumberFormat(String phoneNumber) {
+		this(phoneNumber, "US", FormatType.NATIONAL_FORMAT);
 	}
 	
 	/**
@@ -72,9 +73,7 @@ public class PhoneNumberFormat implements Serializable {
 	 * @param type
 	 */
 	public PhoneNumberFormat(String phoneNumber, FormatType type) {
-		this();
-		this.setPhoneNumber(phoneNumber);
-		this.setFormatType(type);
+		this(phoneNumber, "US", type);
 	}
 	
 	/**
@@ -84,12 +83,14 @@ public class PhoneNumberFormat implements Serializable {
 	 * @param type Formatting type
 	 */
 	public PhoneNumberFormat(String phoneNumber, String countryCode, FormatType type) {
-		this(phoneNumber, type);
+		this.setPhoneNumber(phoneNumber);
 		this.setCountryCode(countryCode);
+		this.setFormatType(type);
+		assignFormattedNumber();
 	}
 	
 	/**
-	 * Return the phone number whith the country dialing code
+	 * Return the phone number with the country dialing code
 	 * @return
 	 */
 	public String getFullNumber() {
@@ -107,8 +108,8 @@ public class PhoneNumberFormat implements Serializable {
 	 * Address is a non-US address 
 	 * @return
 	 */
-	public String getFormattedNumber() {
-		if (StringUtils.isEmpty(formattedNumber) || formattedNumber.length() < 7) return formattedNumber;
+	void assignFormattedNumber() {
+		if (StringUtils.isEmpty(phoneNumber)) return;
 		
 		// If the request is for a dot or dash formatting for a non-US address
 		// Convert the formatting type to International formatting
@@ -127,7 +128,7 @@ public class PhoneNumberFormat implements Serializable {
 				sb.append(PhoneNumberUtil.getInstance().format(assignPhoneNumber(), NTNAL_FORMAT));
 		}
 		
-		return sb.toString();
+		formattedNumber = sb.toString();
 	}
 	
 	/**
@@ -136,7 +137,7 @@ public class PhoneNumberFormat implements Serializable {
 	 * @return
 	 */
 	String assignUSFormatting(char startDelim, char endDelim) {
-		if (StringUtils.isEmpty(formattedNumber)) return null; 
+		if (StringUtils.isEmpty(formattedNumber) || formattedNumber.length() < 7) return formattedNumber; 
 		StringBuilder sb = new StringBuilder();
 		sb.append(formattedNumber.substring(0,3)).append(startDelim);
 		sb.append(formattedNumber.substring(3,6)).append(endDelim);
@@ -157,6 +158,14 @@ public class PhoneNumberFormat implements Serializable {
 		} catch (Exception e) { /* Nothing to do */}
 		
 		return phone;
+	}
+	
+	/**
+	 * Returns the formatted number
+	 * @return
+	 */
+	public String getFormattedNumber() {
+		return formattedNumber;
 	}
 
 	/**
@@ -212,21 +221,16 @@ public class PhoneNumberFormat implements Serializable {
 	 * @param phoneNumber
 	 * @return
 	 */
-	public static String obfuscatePhoneNumber(String phoneNumber) {
-		if (StringUtils.isEmpty(phoneNumber)) return phoneNumber;
-		int dashIdx = phoneNumber.indexOf('-');
-		
-		if (dashIdx == -1) dashIdx = phoneNumber.length()-5;
-		if (dashIdx < 1) dashIdx = phoneNumber.length()/2;
-		
-		StringBuilder sb = new StringBuilder(phoneNumber.length());
-		for (int x=0; x < phoneNumber.length(); x++ ) {
-			char c = phoneNumber.charAt(x);
-			if (x > dashIdx -1 || c =='(' || c == ')' || c == ' ') {
-				sb.append(c);
-			} else{
+	public String obfuscatePhoneNumber() {
+		StringBuilder sb = new StringBuilder();
+		int ctr = 0;
+		for (char c : formattedNumber.toCharArray()) {
+			if (! Character.isDigit(c) || ctr > 5) sb.append(c);
+			else {
+				ctr++;
 				sb.append('X');
 			}
+			
 		}
 		
 		return sb.toString();

@@ -1,5 +1,9 @@
 package com.smt.data.text;
 
+// JDK 11.x
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 // Apache Commons 3.1.1
 import org.apache.commons.lang3.StringUtils;
 
@@ -98,7 +102,7 @@ public class StringUtil extends StringUtils {
 	 * @return parsed data.
 	 */
 	public static String removeNonNumeric(String data) {
-		if (data == null || data.length() < 1) return null;
+		if (StringUtils.isEmpty(data)) return null;
 
 		StringBuilder newVal = new StringBuilder();
 		for (char a : data.toCharArray()) {
@@ -106,5 +110,71 @@ public class StringUtil extends StringUtils {
 		}
 		
 		return newVal.toString();
+	}
+	
+	/**
+	 * Uses reflection to find all fields in the class and 
+	 * output the data in the following format:<br>
+	 * fieldName:value|fieldName:value....|fieldName:value
+	 * @param o Object to get values for.
+	 * @return formatted string of variables
+	 */
+	public static String getToString(Object o) {
+		return getToString(o, ":");
+	}
+	
+	/**
+	 * Uses reflection to find all fields in the class and 
+	 * output the data in the following format:<br>
+	 * fieldName:value|fieldName:value....|fieldName:value
+	 * @param o Object to get values for.
+	 * @param sep separator between values
+	 * @return formatted string of variables
+	 */
+	public static String getToString(Object o, String sep) {
+		if (o == null) return "";
+		
+		if (o.getClass().isArray()) {
+			return getToString((Object[])o, sep);
+		}
+		
+		Class<?> c = o.getClass();
+		Method[] methods = c.getMethods();
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < methods.length; i++) {
+			String name = methods[i].getName();
+			if (methods[i].getParameterTypes().length > 0 || methods[i].getModifiers() != Modifier.PUBLIC) continue;
+
+			try {
+				if ((name.startsWith("get") || name.startsWith("is"))) {
+					sb.append(name).append(":");
+					sb.append(methods[i].invoke(o)).append(sep);
+				}
+			} catch (Exception e) { System.out.println("Test: " + e.getLocalizedMessage()); }
+			
+		}
+
+		return sb.toString();
+	}
+	
+	/**
+	 * Formats an array into a delimited String
+	 * @param arr Array to iterate.  
+	 * @param delim Character to use as the delimiter
+	 * @return Delimited String. "" if array is empty
+	 */
+	private static String getToString(Object[] arr, String delim) {
+		if (arr.length == 0) return ""; 
+		
+		StringBuilder sb = new StringBuilder("[");
+		
+		for (int i = 0; i < arr.length; i++) {
+			if (i > 0) sb.append(delim);
+			sb.append(arr[i] == null ? "" : arr[i]);
+		}
+
+		sb.append("]");
+		return sb.toString();
 	}
 }
