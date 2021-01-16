@@ -84,7 +84,6 @@ public class Tree implements Serializable {
 	private void locateNode(List<Node> nodes, String id) {
 		if (!nodes.isEmpty()) {
 			for (Node n : nodes) {
-				System.out.println(n.getNodeId() + "|" + id);
 				if (id.equalsIgnoreCase(n.getNodeId())) {
 					tempNode = n;
 					return;
@@ -274,7 +273,6 @@ public class Tree implements Serializable {
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
 		for (Node child : parentNode.getChildren()) {
-			System.out.println(child);
 			StringBuilder path = new StringBuilder(50);
 			if (parentNode.getFullPath() != null) path.append(parentNode.getFullPath());
 			if (path.length() > 0) path.append(delimiter);
