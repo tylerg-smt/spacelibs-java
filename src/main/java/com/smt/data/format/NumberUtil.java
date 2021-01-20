@@ -36,6 +36,18 @@ public class NumberUtil {
 	}
 	
 	/**
+	 * Converts a String into an int
+	 * Return an Integer with a value of 0 if the conversion fails
+	 * 
+	 * @param val String to be converted
+	 * @param defaultVal the value to assign if the val is empty or throws a parse error
+	 * @return Integer of value 0 if conversion fails
+	 */
+	public static int toInt(String val, int defaultVal) {
+		return toInt(val, defaultVal, true);
+	}
+	
+	/**
 	 * Converts a String to an int. If data is not a number , use the
 	 * default val.  this method acts as the controller.
 	 * 

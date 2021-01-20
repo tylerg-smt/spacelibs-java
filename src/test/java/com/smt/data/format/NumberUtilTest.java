@@ -30,6 +30,7 @@ class NumberUtilTest {
 		assertEquals(123, NumberUtil.toInt("123"));
 		assertEquals(123, NumberUtil.toInt("123.45"));
 		assertEquals(-123, NumberUtil.toInt("-123.45"));
+		assertEquals(-123, NumberUtil.toInt("-123.45", 1));
 	}
 
 	/**
