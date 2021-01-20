@@ -151,7 +151,7 @@ public class StringUtil extends StringUtils {
 					sb.append(name).append(":");
 					sb.append(methods[i].invoke(o)).append(sep);
 				}
-			} catch (Exception e) { System.out.println("Test: " + e.getLocalizedMessage()); }
+			} catch (Exception e) { /* Nothing to do here */ }
 			
 		}
 
