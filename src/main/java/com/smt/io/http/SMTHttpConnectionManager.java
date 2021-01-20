@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 /****************************************************************************
  * <b>Title</b>: SMTHttpConnectionManager.java
  * <b>Project</b>: SpaceLibs-Java
- * <b>Description: </b> CHANGE ME!!
+ * <b>Description: </b> Tests the HttpConnectionManager
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -48,6 +48,16 @@ public class SMTHttpConnectionManager {
 		GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE
 	}
 
+	/**
+	 * Default connection prefix if not supplied
+	 */
+	public static final String HTTP_CONN_PREFIX = "http://";
+	
+	/**
+	 * Default connection prefix if not supplied
+	 */
+	public static final String HTTPS_CONN_PREFIX = "https://";
+	
 	/**
 	 * Socket timeout in ms
 	 */
@@ -163,6 +173,22 @@ public class SMTHttpConnectionManager {
 	 */
 	public byte[] getRequestData(String url, Map<String, Object> parameters, HttpConnectionType type) 
 	throws IOException {
+		if (StringUtils.isEmpty(url)) throw new IOException("Url is required");
+		return connect(createURL(url), convertPostData(parameters), type == null ? HttpConnectionType.POST : type);
+	}
+	
+	/**
+	 * Retrieves data from an HTTP server and returns the data
+	 * @param url fully qualified URL (http://www.somedomain.com)
+	 * @param parameters HTTP POST data as a Map of <key, value> pairs
+	 * @return binary data containing information retrieved from the site
+	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
+	 * Defaults to POST if type is null
+	 * @throws IOException
+	 */
+	public byte[] getRequestData(URL url, Map<String, Object> parameters, HttpConnectionType type) 
+	throws IOException {
+		if (url == null) throw new IOException("Url is required");
 		return connect(url, convertPostData(parameters), type == null ? HttpConnectionType.POST : type);
 	}
 
@@ -173,13 +199,14 @@ public class SMTHttpConnectionManager {
 	 * @return data for the request
 	 * @throws IOException
 	 */
-	private byte[] connect(String actionUrl, byte[] postDataBytes, HttpConnectionType type) throws IOException {
+	private byte[] connect(URL actionUrl, byte[] postDataBytes, HttpConnectionType type) throws IOException {
 		int nRead;
 		byte[] byteBuffer = new byte[8192];
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (InputStream in = connectStream(actionUrl, postDataBytes, 0, type)) {
-			while ((nRead = in.read(byteBuffer)) != -1)
+			while ((nRead = in.read(byteBuffer)) != -1) {
 				baos.write(byteBuffer, 0, nRead);
+			}
 
 		}
 		
@@ -195,7 +222,7 @@ public class SMTHttpConnectionManager {
 	 * @return Connection stream to the data
 	 * @throws IOException
 	 */
-	public InputStream getConnectionStream(String url, Map<String, Object> params, HttpConnectionType type) throws IOException {
+	public InputStream getConnectionStream(URL url, Map<String, Object> params, HttpConnectionType type) throws IOException {
 		return connectStream(url, convertPostData(params), 0, type);
 	}
 	
@@ -207,22 +234,21 @@ public class SMTHttpConnectionManager {
 	 * @return Connection
 	 * @throws IOException
 	 */
-	private InputStream connectStream(String actionUrl, byte[] postDataBytes, int redirectAttempt, HttpConnectionType type) 
+	private InputStream connectStream(URL actionUrl, byte[] postDataBytes, int redirectAttempt, HttpConnectionType type) 
 	throws IOException {
 		// build connection
-		HttpURLConnection conn = createConnection(createURL(actionUrl));
+		HttpURLConnection conn = createConnection(actionUrl);
 
 		// execute the connection
 		executeConnection(conn, postDataBytes, type);
 
 		//see if we need to follow a redirect
-		if (followRedirects && (HttpURLConnection.HTTP_MOVED_PERM == responseCode 
-						|| HttpURLConnection.HTTP_MOVED_TEMP == responseCode) && redirectAttempt < redirectLimit) {
+		if (followRedirects && (HttpURLConnection.HTTP_MOVED_PERM == responseCode || HttpURLConnection.HTTP_MOVED_TEMP == responseCode) && redirectAttempt < redirectLimit) {
 			String redirUrl = conn.getHeaderField("Location");
 			if (!StringUtils.isEmpty(redirUrl)) {
 				log.debug(String.format("got redirected to: %s, Redirect Attempts: %d", redirUrl , redirectAttempt));
 				conn.disconnect();
-				return connectStream(redirUrl, postDataBytes, ++redirectAttempt, type);
+				return connectStream(createURL(redirUrl), postDataBytes, ++redirectAttempt, type);
 			}
 		} else if(redirectAttempt == redirectLimit) {
 			log.debug(String.format("Terminating Redirect Loop: %s", conn.getHeaderField("Location")));
@@ -233,20 +259,18 @@ public class SMTHttpConnectionManager {
 	}
 	
 	/**
-	 * Validates and creates a URL using actionUrl.
+	 * Validates and creates a URL using actionUrl.  Default prototcal is http://
 	 * @param actionUrl
 	 * @return
 	 * @throws IOException
 	 */
-	private URL createURL(String actionUrl) throws IOException {
-		log.debug("createURL using: " + actionUrl);
-		if (StringUtils.isEmpty(actionUrl)) throw new IOException("Invalid URL.");
-		if (! actionUrl.startsWith("http")) actionUrl = "http://" + actionUrl;
-		try {
-			return new URL(actionUrl);
-		} catch (Exception e) {
-			throw new IOException("Invalid URL.");
+	URL createURL(String actionUrl) throws IOException {
+		if (StringUtils.isEmpty(actionUrl)) throw new IOException("Invalid URL");
+		if (! actionUrl.startsWith("http")) {
+			actionUrl = ((sslSocketFactory == null) ? HTTP_CONN_PREFIX : HTTPS_CONN_PREFIX) + actionUrl;
 		}
+		
+		return new URL(actionUrl);
 	}
 	
 	/**
@@ -288,7 +312,6 @@ public class SMTHttpConnectionManager {
 		// connect and retrieve data
 		conn.connect();
 		responseCode = conn.getResponseCode();
-		log.debug("Response Code: " + getResponseCode());
 
 		//Parse header information
 		storeCookies(conn);
@@ -296,7 +319,7 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Initializes the Connection parameters
-	 * @param url URL object to use in the connection
+	 * @param sUrl URL object to use in the connection
 	 * @param postData The data to use in the post method.  If post data is
 	 * 				 null or empty, the connection defaults to a "GET" request
 	 * @param conn
@@ -326,7 +349,6 @@ public class SMTHttpConnectionManager {
 		conn.setRequestMethod(type.toString());
 
 		if (HttpConnectionType.POST.equals(type) || HttpConnectionType.PUT.equals(type)) {
-			
 			if (! requestHeaders.containsKey(REQUEST_PROPERTY_CONTENT_TYPE))
 				conn.setRequestProperty(REQUEST_PROPERTY_CONTENT_TYPE,"application/x-www-form-urlencoded");
 			
@@ -342,7 +364,7 @@ public class SMTHttpConnectionManager {
 	 * pairs and stores them in a hash map to be used during future connections.
 	 * @param conn
 	 */
-	protected void storeCookies(HttpURLConnection conn) {
+	void storeCookies(HttpURLConnection conn) {
 		//Loop all of the HTTP header info
 		int c = 0;
 		while (conn.getHeaderField(c) != null) {
@@ -350,7 +372,7 @@ public class SMTHttpConnectionManager {
 			String key = conn.getHeaderFieldKey(c);
 			String value = StringUtils.defaultString(conn.getHeaderField(c));
 			headerMap.put(key, value);
-
+			
 			// Find the Set-Cookie parameters
 			if (COOKIE_HEADER_NAME.equalsIgnoreCase(key)) {
 				// Parse out the data
@@ -543,7 +565,6 @@ public class SMTHttpConnectionManager {
 		for (Map.Entry<String, String> entry: cookies.entrySet())
 			sb.append(entry.getKey()).append(COOKIE_VALUE_DELIMITER).append(entry.getValue()).append(COOKIE_DELIMITER);
 
-		log.debug("added cookies: " + sb.toString());
 		conn.addRequestProperty(COOKIE_NAME, sb.toString());
 	}
 
