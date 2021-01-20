@@ -29,7 +29,13 @@ import org.apache.logging.log4j.Logger;
 /****************************************************************************
  * <b>Title</b>: SMTHttpConnectionManager.java
  * <b>Project</b>: SpaceLibs-Java
- * <b>Description: </b> Tests the HttpConnectionManager
+ * <b>Description: </b> Wrapper class around URLs and connections.  Manages the 
+ * sessions via cookies.  This allows  multiple requests to be made to the same 
+ * server using any cookies that were present 
+ * during the initial connection as well as subsequent sessions.  Allow
+ * for the setting of an SSLSocketFactory in support of certificate-based auth
+ * connections.  Redirects, timeouts, headers (both request and response) are managed.
+ * Because we return byte[], any type of data can be retrieved
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -246,7 +252,6 @@ public class SMTHttpConnectionManager {
 		if (followRedirects && (HttpURLConnection.HTTP_MOVED_PERM == responseCode || HttpURLConnection.HTTP_MOVED_TEMP == responseCode) && redirectAttempt < redirectLimit) {
 			String redirUrl = conn.getHeaderField("Location");
 			if (!StringUtils.isEmpty(redirUrl)) {
-				log.debug(String.format("got redirected to: %s, Redirect Attempts: %d", redirUrl , redirectAttempt));
 				conn.disconnect();
 				return connectStream(createURL(redirUrl), postDataBytes, ++redirectAttempt, type);
 			}

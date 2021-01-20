@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+
 // JUnit5
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -119,13 +122,12 @@ class SMTHttpConnectionManagerTest {
 	 */
 	@Test
 	void testGetRequestData() throws Exception {
-		SMTHttpConnectionManager conn = new SMTHttpConnectionManager();
 		
 		// Valid the exception when null is passed
 		String nullUrl = null;
 		URL nullURL = null;
-	    assertThrows(IOException.class, () -> conn.getRequestData(nullUrl, null, HttpConnectionType.GET));
-	    assertThrows(IOException.class, () -> conn.getRequestData(nullURL, null, HttpConnectionType.GET));
+		assertThrows(IOException.class, () -> connection.getRequestData(nullUrl, null, HttpConnectionType.GET));
+	    assertThrows(IOException.class, () -> connection.getRequestData(nullURL, null, HttpConnectionType.GET));
 	    
 		// Tests with a URL Class
 		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
@@ -193,6 +195,45 @@ class SMTHttpConnectionManagerTest {
 		when(mockUrlConn.getOutputStream()).thenReturn(new ByteArrayOutputStream());
 		doReturn(200).when(mockUrlConn).getResponseCode();
 		assertEquals("Hello World", new String(connection.getRequestData(url, null, HttpConnectionType.PUT)));
+	}
+	
+	
+	/**
+	 * Retrieves the data from the end server.  Needs an http mock
+	 */
+	@Test
+	void testGetRequestDataURL () throws Exception {
+		headers.put(SMTHttpConnectionManager.REQUEST_PROPERTY_CONTENT_TYPE, "text/html");
+		connection.setRequestHeaders(headers);
+		connection.setConnectionTimeout(1000);
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
+
+		mockUrlConn = mock(HttpURLConnection.class);
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		when(mockUrlConn.getErrorStream()).thenReturn(IOUtils.toInputStream("Error Message", "UTF-8"));
+		when(mockUrlConn.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+		doReturn(200).when(mockUrlConn).getResponseCode();
+		assertEquals("Hello World", new String(connection.getRequestData(mockUrl, null, HttpConnectionType.PUT)));
+	}
+	
+	/**
+	 * Retrieves the data from the end server.  Needs an http mock
+	 */
+	@Test
+	void testGetRequestDataURLNull () throws Exception {
+		headers.put(SMTHttpConnectionManager.REQUEST_PROPERTY_CONTENT_TYPE, "text/html");
+		connection.setRequestHeaders(headers);
+		connection.setConnectionTimeout(1000);
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
+
+		mockUrlConn = mock(HttpURLConnection.class);
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		when(mockUrlConn.getErrorStream()).thenReturn(IOUtils.toInputStream("Error Message", "UTF-8"));
+		when(mockUrlConn.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+		doReturn(200).when(mockUrlConn).getResponseCode();
+		assertEquals("Hello World", new String(connection.getRequestData(mockUrl, null, null)));
 	}
 	
 	/**
@@ -338,14 +379,103 @@ class SMTHttpConnectionManagerTest {
 		assertTrue(connection.isUseCookieHandler());
 	}
 
+	/**
+	 * Tests the get connection stream method.  This method performs redirects as 
+	 * needed when response code is 30X.  
+	 * actions and other 
+	 * @throws Exception
+	 */
 	@Test
 	public void testGetConnectionStream() throws Exception {
-		throw new RuntimeException("not yet implemented");
+		// Tests with a URL Class
+		connection.setFollowRedirects(true);
+		connection.setRedirectLimit(1);
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
+		mockUrlConn = mock(HttpURLConnection.class);
+		when(mockUrlConn.getHeaderField("Location")).thenReturn("http://www.google.com");
+		
+		InputStream mis = IOUtils.toInputStream("Hello World", "UTF-8");
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(mis);
+		when(mockUrlConn.getErrorStream()).thenReturn(mis);
+		doReturn(HttpURLConnection.HTTP_MOVED_PERM).when(mockUrlConn).getResponseCode();
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
+
+		
+		doReturn(HttpURLConnection.HTTP_MOVED_PERM).when(mockUrlConn).getResponseCode();
+		when(mockUrlConn.getHeaderField("Location")).thenReturn(null);
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
+	}
+	
+	/**
+	 * Tests the get connection stream method.  This method performs redirects as 
+	 * needed when response code is 30X.  
+	 * actions and other 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetConnectionStreamRedirNull() throws Exception {
+		// Tests with a URL Class
+		connection.setFollowRedirects(true);
+		connection.setRedirectLimit(0);
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
+		mockUrlConn = mock(HttpURLConnection.class);
+		when(mockUrlConn.getHeaderField("Location")).thenReturn(null);
+		
+		InputStream mis = IOUtils.toInputStream("Hello World", "UTF-8");
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(mis);
+		when(mockUrlConn.getErrorStream()).thenReturn(mis);
+		doReturn(HttpURLConnection.HTTP_MOVED_TEMP).when(mockUrlConn).getResponseCode();
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
+	}
+	
+	/**
+	 * Tests the get connection stream method.  This method performs redirects as 
+	 * needed when response code is 30X.  
+	 * actions and other 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetConnectionStream404() throws Exception {
+		// Tests with a URL Class
+		connection.setFollowRedirects(false);
+		connection.setRedirectLimit(0);
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("http://www.siliconmtn.com"));
+		mockUrlConn = mock(HttpURLConnection.class);
+		when(mockUrlConn.getHeaderField("Location")).thenReturn(null);
+		
+		InputStream mis = IOUtils.toInputStream("Hello World", "UTF-8");
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(mis);
+		when(mockUrlConn.getErrorStream()).thenReturn(mis);
+		doReturn(404).when(mockUrlConn).getResponseCode();
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
+		
+		doReturn(100).when(mockUrlConn).getResponseCode();
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
 	}
 
 	@Test
-	public void testConnectStream() throws Exception {
-		throw new RuntimeException("not yet implemented");
+	public void testGetConnectionStreamSSL() throws Exception {
+		// Test with no SSL Factory
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("https://www.siliconmtn.com"));
+		when(mockUrl.getProtocol()).thenReturn("https");
+		mockUrlConn = mock(HttpsURLConnection.class);
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		when(mockUrlConn.getErrorStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
+		
+		// Test with an SSL Factory
+		connection.setSslSocketFactory((SSLSocketFactory)SSLSocketFactory.getDefault());
+		mockUrl = mock(URL.class, Mockito.withSettings().useConstructor("https://www.siliconmtn.com"));
+		when(mockUrl.getProtocol()).thenReturn("https");
+		mockUrlConn = mock(HttpsURLConnection.class);
+		when(mockUrl.openConnection()).thenReturn(mockUrlConn);
+		when(mockUrlConn.getInputStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		when(mockUrlConn.getErrorStream()).thenReturn(IOUtils.toInputStream("Hello World", "UTF-8"));
+		assertTrue(connection.getConnectionStream(mockUrl, null, HttpConnectionType.GET) instanceof InputStream);
 	}
 
 	/**
@@ -359,18 +489,15 @@ class SMTHttpConnectionManagerTest {
 	    assertEquals(-1, connection.createURL(sUrl).getPort());
 	    assertEquals("www.siliconmtn.com", connection.createURL(sUrl).getHost());
 	    assertEquals("www.siliconmtn.com", connection.createURL("www.siliconmtn.com").getHost());
-	}
 
-	@Test
-	public void testExecuteConnection() throws Exception {
-		throw new RuntimeException("not yet implemented");
+	    connection.setSslSocketFactory((SSLSocketFactory)SSLSocketFactory.getDefault());
+	    assertEquals("www.siliconmtn.com", connection.createURL("www.siliconmtn.com").getHost());
 	}
-
-	@Test
-	public void testInitConnection() throws Exception {
-		throw new RuntimeException("not yet implemented");
-	}
-
+	
+	/**
+	 * tests the storage of cookies capabilities
+	 * @throws Exception
+	 */
 	@Test
 	public void testStoreCookies() throws Exception {
 		URL myUrl = new URL(sUrl);
@@ -428,10 +555,4 @@ class SMTHttpConnectionManagerTest {
 		assertTrue(mockUrlConn.getRequestProperties().toString().contains("User-Agent"));
 		assertFalse(mockUrlConn.getRequestProperties().toString().contains("Host"));
 	}
-
-	@Test
-	public void testConnect() throws Exception {
-		throw new RuntimeException("not yet implemented");
-	}
-
 }
