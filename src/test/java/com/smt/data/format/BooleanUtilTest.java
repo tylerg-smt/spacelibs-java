@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 /****************************************************************************
  * <b>Title</b>: BooleanUtilTest.java
  * <b>Project</b>: SpaceLibs-Java
- * <b>Description: </b> CHANGE ME!!
+ * <b>Description: </b> Test of the Boolean util class.  This test ensures
+ * the conversion of objects and primitives to a boolean works properly
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
