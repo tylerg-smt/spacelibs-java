@@ -33,6 +33,7 @@ class NumberUtilTest {
 		assertEquals(-123, NumberUtil.toInt("-123.45", 1));
 		
 		assertEquals(1, NumberUtil.toInt("1234567890123445667", 1));
+		assertEquals(1, NumberUtil.toInt("-1234567890123445667", 1));
 	}
 
 	/**
