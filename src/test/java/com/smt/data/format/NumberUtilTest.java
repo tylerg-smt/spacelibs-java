@@ -31,6 +31,8 @@ class NumberUtilTest {
 		assertEquals(123, NumberUtil.toInt("123.45"));
 		assertEquals(-123, NumberUtil.toInt("-123.45"));
 		assertEquals(-123, NumberUtil.toInt("-123.45", 1));
+		
+		assertEquals(1, NumberUtil.toInt("1234567890123445667", 1));
 	}
 
 	/**
@@ -56,6 +58,8 @@ class NumberUtilTest {
 		assertEquals(0, NumberUtil.toLong("abc"));
 		assertEquals(-123, NumberUtil.toLong("-123.45"));
 		assertEquals(-123, NumberUtil.toLong("-123.45", 0, false));
+		assertEquals(1234567890123445567l, NumberUtil.toLong("1234567890123445567", 1));
+		assertEquals(1234567890123445567l, NumberUtil.toLong("1234567890123445567l", 1));
 	}
 
 	/**

@@ -60,35 +60,8 @@ public class NumberUtil {
 		
 		//for long and int remove data after the "point"
 		val = makeWholeNumber(val.trim());
-		
-		return processInt(val, checkForNegativeValue(val), defaultVal, removeNonAlphaNum);
-	}
-	
-	/**
-	 * processes the conversion from string to Integer
-	 * @param val value to convert
-	 * @param defaultVal If empty string or error reformatting, return default value
-	 * @param negative is value negative
-	 * @param removeNonAlphaNum This removes all non-alpha characters and then converts
-	 * @return
-	 */
-	private static int processInt(String val, boolean negative, int defaultVal, boolean removeNonAlphaNum) {
-		int convertedString = 0;
-		try {
-			// Only remove alpha characters if requested.  use the negitiveStringFlag to replace any missing signs
-			if (removeNonAlphaNum) {
-				convertedString = Integer.parseInt(signedValue(StringUtil.removeNonAlphaNumeric(val), negative));
-
-			}else {
-				// else just attempt to convert as is.
-				convertedString = Integer.parseInt(val);
-
-			}
-		} catch (Exception nfe) {
-			convertedString = defaultVal;
-		}
-		
-		return convertedString;
+		Long l = Long.valueOf(processLongInt(val, checkForNegativeValue(val), removeNonAlphaNum, defaultVal));
+		return (l > Integer.MAX_VALUE || l < Integer.MIN_VALUE) ? defaultVal : l.intValue();
 	}
 
 	/**
@@ -124,11 +97,14 @@ public class NumberUtil {
 		// Return a Long of the default value if the conversion fails
 		if (val == null || val.isEmpty()) return defaultValue;
 		
+		// Remove the long identifier if exists
+		val = val.replace("l", "");
+		
 		//for long and int remove data after the "point"
 		val = makeWholeNumber(val.trim());
 
 		//return a processed long value
-		return processLong(val,checkForNegativeValue(val),removeNonAlphaNum ,defaultValue  );
+		return processLongInt(val,checkForNegativeValue(val),removeNonAlphaNum ,defaultValue  );
 
 	}
 	
@@ -140,7 +116,7 @@ public class NumberUtil {
 	 * @param defaultValue if empty/null/error converting, return this value
 	 * @return long value
 	 */
-	private static long processLong(String val,boolean negative, boolean removeNonAlphaNum, long defaultValue) {
+	private static long processLongInt(String val,boolean negative, boolean removeNonAlphaNum, long defaultValue) {
 
 		long convertedString = 0;
 
@@ -191,11 +167,8 @@ public class NumberUtil {
 		// Return a Float of the default value if the conversion fails
 		if (val == null || val.isEmpty()) return defaultValue;
 
-		//find the index of the first point in the possible number
-		int indexOfDecimalPoint = val.indexOf(".");
-
 		//return processed number
-		return processFloat(val.trim(),checkForNegativeValue(val), indexOfDecimalPoint, removeNonAlphaNum, defaultValue);		
+		return processFloat(val.trim(),checkForNegativeValue(val), removeNonAlphaNum, defaultValue);		
 	}
 	
 	/**
@@ -207,36 +180,12 @@ public class NumberUtil {
 	 * @param defaultValue
 	 * @return
 	 */
-	private static float processFloat(String value, boolean negative, int indexOfDecimalPoint, boolean removeNonAlphaNum, float defaultValue) {
-		float convertedString = 0f;
-
+	private static float processFloat(String value, boolean negative, boolean removeNonAlphaNum, float defaultValue) {
 		try {
-			// Only remove alpha characters if requested replace sign and point
-			if (removeNonAlphaNum) {
-				int index = value.indexOf(".");
-
-				// if there is a decimal, split on the first decimal, remove alphas and put back together
-				if (index > -1) {
-					String major = "";
-					String minor = "";
-					major = StringUtil.removeNonAlphaNumeric(value.substring(0, index));
-					if (index + 1 < value.length()) minor = StringUtil.removeNonAlphaNumeric(value.substring(index + 1));
-
-					value = (negative ? "-" : "") + major + "." + minor;
-				} else {
-					// If no decimals, process the request normally
-					String val = StringUtil.removeNonAlphaNumeric(value);
-					value = signedValue(val, negative);
-				}
-			}
-
-			convertedString = Float.parseFloat(value);
-			
+			return Float.parseFloat(formatValue(value, negative, removeNonAlphaNum));
 		} catch (Exception nfe) {
 			return defaultValue;
 		}
-		
-		return convertedString;
 	}
 	
 	/**
@@ -261,9 +210,9 @@ public class NumberUtil {
 	
 	/**
 	 * Converts a String into a Double, acts as the controller for the process
-	 * @param val
-	 * @param defaultValue
-	 * @param removeNonAlphaNum
+	 * @param val Value to convert
+	 * @param defaultValue if null/empty or error, return default value
+	 * @param removeNonAlphaNum removes all non-alpha characters from the value
 	 * @return
 	 */
 	public static double toDouble(String val, double defaultValue, boolean removeNonAlphaNum) {
@@ -272,46 +221,52 @@ public class NumberUtil {
 		if (val == null || val.isEmpty()) return defaultValue;
 
 		//return processed value
-		return processDouble(val.trim(), checkForNegativeValue(val), removeNonAlphaNum, defaultValue, val.indexOf("."));
+		return processDouble(val.trim(), checkForNegativeValue(val), removeNonAlphaNum, defaultValue);
 	}
-
+	
 	/**
-	 * process the conversion from String to Double
-	 * @param value
-	 * @param negative
-	 * @param removeNonAlphaNum
-	 * @param defaultValue
-	 * @param indexOfDecimalPoint
+	 * processes the conversion from String to double
+	 * @param value String value to convert
+	 * @param negative is a negative number
+	 * @param removeNonAlphaNum removes all non-alpha characters from the value
+	 * @param defaultValue if null/empty or error, return default value
 	 * @return
 	 */
-	private static double processDouble(String value, boolean negative, boolean removeNonAlphaNum, Double defaultValue,int indexOfDecimalPoint) {
-
-		double convertedString = 0.0;
-
+	private static double processDouble(String value, boolean negative, boolean removeNonAlphaNum, double defaultValue) {
 		try {
-			// Only remove alpha characters if requested replace sign and point
-			if (removeNonAlphaNum) {
-				int index = value.indexOf(".");
-
-				// if there is a decimal, split on the first decimal, remove alphas and put back together
-				if (index > -1) {
-					String major = "", minor = "";
-					major = StringUtil.removeNonAlphaNumeric(value.substring(0, index));
-					if (index + 1 < value.length()) minor = StringUtil.removeNonAlphaNumeric(value.substring(index + 1));
-
-					value = (negative ? "-" : "") + major + "." + minor;
-				} else {
-					value = signedValue(StringUtil.removeNonAlphaNumeric(value), negative);
-				}
-			}
-
-			convertedString = Double.parseDouble(value.toString());
-
+			return Double.parseDouble(formatValue(value, negative, removeNonAlphaNum));
 		} catch (Exception nfe) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * Converts the string parameters into a number parseable string
+	 * @param value String value
+	 * @param negative is a negative number
+	 * @param removeNonAlphaNum removes all non-alphanumeric characters (such as $, ",", etc ...
+	 * @return
+	 */
+	private static String formatValue(String value, boolean negative, boolean removeNonAlphaNum) {
+		if (removeNonAlphaNum) {
+			int index = value.indexOf(".");
+
+			// if there is a decimal, split on the first decimal, remove alphas and put back together
+			if (index > -1) {
+				String major = "";
+				String minor = "";
+				major = StringUtil.removeNonAlphaNumeric(value.substring(0, index));
+				if (index + 1 < value.length()) minor = StringUtil.removeNonAlphaNumeric(value.substring(index + 1));
+
+				value = (negative ? "-" : "") + major + "." + minor;
+			} else {
+				// If no decimals, process the request normally
+				String val = StringUtil.removeNonAlphaNumeric(value);
+				value = signedValue(val, negative);
+			}
+		}
 		
-		return convertedString;
+		return value;
 	}
 	
 	/**
