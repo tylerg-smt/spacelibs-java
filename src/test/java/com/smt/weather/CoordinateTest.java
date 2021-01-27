@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * @since Jan 22, 2021
  * @updates:
  ****************************************************************************/
-class CoordinateTest {
+public class CoordinateTest {
 
 	/**
 	 * Test method for {@link com.smt.weather.Coordinate#Coordinate(java.lang.String, java.lang.String)}.

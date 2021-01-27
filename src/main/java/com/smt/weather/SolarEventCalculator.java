@@ -104,16 +104,13 @@ public class SolarEventCalculator {
      * @param isSunrise is sunrise or sunset
      * @return
      */
-    private BigDecimal computeSolarEventTime(Zenith solarZenith, Calendar date, boolean isSunrise) {
+    protected BigDecimal computeSolarEventTime(Zenith solarZenith, Calendar date, boolean isSunrise) {
         date.setTimeZone(this.timeZone);
         BigDecimal longitudeHour = getLongitudeHour(date, isSunrise);
 
         BigDecimal meanAnomaly = getMeanAnomaly(longitudeHour);
         BigDecimal sunTrueLong = getSunTrueLongitude(meanAnomaly);
         BigDecimal cosineSunLocalHour = getCosineSunLocalHour(sunTrueLong, solarZenith);
-        if ((cosineSunLocalHour.doubleValue() < -1.0) || (cosineSunLocalHour.doubleValue() > 1.0)) {
-            return null;
-        }
 
         BigDecimal sunLocalHour = getSunLocalHour(cosineSunLocalHour, isSunrise);
         BigDecimal localMeanTime = getLocalMeanTime(sunTrueLong, longitudeHour, sunLocalHour);
@@ -181,13 +178,14 @@ public class SolarEventCalculator {
      * @param sunTrueLong Suns true longitude, in <code>BigDecimal</code>
      * @return suns right ascension in degree-hours, in <code>BigDecimal</code> form.
      */
-    private BigDecimal getRightAscension(BigDecimal sunTrueLong) {
+    protected BigDecimal getRightAscension(BigDecimal sunTrueLong) {
         BigDecimal tanL = new BigDecimal(Math.tan(SMTMath.convertDegreesToRadians(sunTrueLong).doubleValue()));
 
         BigDecimal innerParens = SMTMath.multiplyBy(SMTMath.convertRadiansToDegrees(tanL), new BigDecimal("0.91764"));
         BigDecimal rightAscension = new BigDecimal(Math.atan(SMTMath.convertDegreesToRadians(innerParens).doubleValue()));
         rightAscension = setScale(SMTMath.convertRadiansToDegrees(rightAscension));
 
+        System.out.println("Val: " + sunTrueLong + "|" + rightAscension.doubleValue());
         if (rightAscension.doubleValue() < 0) {
             rightAscension = rightAscension.add(BigDecimal.valueOf(360));
         } else if (rightAscension.doubleValue() > 360) {
@@ -366,18 +364,19 @@ public class SolarEventCalculator {
             localTime = localTime.add(BigDecimal.valueOf(24.0D));
             resultTime.add(Calendar.HOUR_OF_DAY, -24);
         }
+        
         String[] timeComponents = localTime.toPlainString().split("\\.");
         int hour = Integer.parseInt(timeComponents[0]);
-
+        
         BigDecimal minutes = new BigDecimal("0." + timeComponents[1]);
         minutes = minutes.multiply(BigDecimal.valueOf(60)).setScale(0, RoundingMode.HALF_EVEN);
+        
         if (minutes.intValue() == 60) {
             minutes = BigDecimal.ZERO;
             hour += 1;
         }
-        if (hour == 24) {
-            hour = 0;
-        }
+        
+        if (hour == 24) hour = 0;
 
         // Set the local time
         resultTime.set(Calendar.HOUR_OF_DAY, hour);
