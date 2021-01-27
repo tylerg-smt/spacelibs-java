@@ -183,7 +183,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#getEndDate(Date)}
 	 */
 	@Test
-	public void getEndDate_Test() {
+	public void getEndDate_test() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,23,59,59).getTime();
 		assertEquals(ud_new.toInstant(),DateFormat.getEndDate("10/28/1995").toInstant());
@@ -196,7 +196,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#getStartDate(Date)}
 	 */
 	@Test
-	public void getStartOfDate_Test() {
+	public void getStartDate_test() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,0,0,0).getTime();
 		assertEquals(ud_new.getTime(),DateFormat.getStartDate("10/28/1995").getTime());
@@ -209,7 +209,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#getStartNextDate(Date)}
 	 */
 	@Test
-	public void getStartOfNextDate_Test() {
+	public void getStartNextDate_test() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 29,0,0,0).getTime();
 		assertEquals(ud_new,DateFormat.getStartNextDate("10/28/1995"));
@@ -222,7 +222,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#anyZoneToUTC(Date, String)}
 	 */
 	@Test
-	public void convertAnyZoneToUTC() {
+	public void anyZoneToUTC_test() {
 		Date d = new GregorianCalendar(1995, Calendar.OCTOBER, 29,0,0,0).getTime();
 		ZonedDateTime then = DateFormat.anyZoneToUTC(d,TimeZone.getDefault().getID().toString());
 		ZonedDateTime then2 = DateFormat.anyZoneToUTC("10/29/1995",TimeZone.getDefault().getID().toString());
