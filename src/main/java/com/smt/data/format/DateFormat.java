@@ -111,8 +111,9 @@ public class DateFormat {
 		theDate = theDate.replaceAll(",", "");
 		theDate = theDate.trim();
 		Date d = null;
+	
 		for(PatternName pn: PatternName.values()) {
-			d = formatDate(pn.pattern, theDate);
+			d = formatDate(pn, theDate);
 			if (d != null)
 				break;
 		}
@@ -125,14 +126,14 @@ public class DateFormat {
 	 * @param dateText text to be converted
 	 * @return null if unable to convert, if successful return Date
 	 */
-	public static Date formatDate(String dp, String dateText) {	
+	public static Date formatDate(PatternName dp, String dateText) {	
 		if(dateText == null) 
 			return null;
 		if(dateText.length()<4)
 			return null;
 		// Instantiate the fastDateFormat with the appropriate date/time
 		// pattern
-		FastDateFormat fastDateFormat = FastDateFormat.getInstance(dp);
+		FastDateFormat fastDateFormat = FastDateFormat.getInstance(dp.pattern);
 		Date myDate = null;
 		try {
 			// Parse the fastDateFormat object into a date object			
@@ -149,7 +150,7 @@ public class DateFormat {
 	 * @param String Pattern
 	 * @return Converts to String date in desired pattern, else empty string
 	 */
-	public static String changePattern(PatternName dp, Date date) {	
+	public static String dateToPattern(PatternName dp, Date date) {	
 		FastDateFormat fastDateFormat = FastDateFormat.getInstance(PatternName.DATE_LONG_DAY_OF_WEEK.getPattern());
 		FastDateFormat fastDateFormat1 = FastDateFormat.getInstance(dp.pattern);
 		String formattedDate="";		
@@ -229,7 +230,7 @@ public class DateFormat {
 	 * @param dateText text to be converted
 	 * @return null if unable to convert
 	 */
-	public static java.sql.Date formatSQLDate(String datePattern,String dateText) {
+	public static java.sql.Date formatSQLDate(PatternName datePattern,String dateText) {
 		java.util.Date uDate = formatDate(datePattern, dateText);
 		return formatSQLDate(uDate);
 	}
@@ -239,7 +240,7 @@ public class DateFormat {
 	 * @return
 	 */
 	public static java.sql.Date formatSQLDate(String dateText) {
-		java.util.Date uDate = formatDate(PatternName.DATE_SLASH.pattern, dateText);
+		java.util.Date uDate = formatDate(PatternName.DATE_SLASH, dateText);
 		return formatSQLDate(uDate);
 	}
 	/**
@@ -248,7 +249,7 @@ public class DateFormat {
 	 * @param dateText
 	 * @return
 	 */ 
-	public static Timestamp formatTimestamp(String datePattern, String dateText) {
+	public static Timestamp formatTimestamp(PatternName datePattern, String dateText) {
 		Date d = formatDate(datePattern,dateText);
 		if (d == null) return null;
 		else return new Timestamp(d.getTime());

@@ -67,20 +67,21 @@ class DateFormatTest {
 	}
     
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#formatDate(String, String)}
+	 * Test method for {@link com.smt.data.format.DateFormat#formatDate(PatternName, String)}
 	 */
 	@Test
 	void formatDate_test() {
-		assertEquals(null,DateFormat.formatDate("MM/DD/YYYY", null));
+		assertEquals(null,DateFormat.formatDate(PatternName.DATE_SLASH, null));
+		assertEquals("Sat Oct 28 00:00:00 MDT 1995",DateFormat.formatDate(PatternName.DATE_SLASH,"10/28/1995").toString());
 	}
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#changePattern(String, Date)}
+	 * Test method for {@link com.smt.data.format.DateFormat#dateToPattern(PatternName, Date)}
 	 */
 	@Test
-	void changePattern_test() {
+	void dateToPattern_test() {
 		Date date = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
-		assertEquals("951028",DateFormat.changePattern(PatternName.DATE_SHORT_NOSPACE,date));
-		assertEquals(null,DateFormat.changePattern(PatternName.DATE_SHORT_NOSPACE,null));
+		assertEquals("951028",DateFormat.dateToPattern(PatternName.DATE_SHORT_NOSPACE,date));
+		assertEquals(null,DateFormat.dateToPattern(PatternName.DATE_SHORT_NOSPACE,null));
 	}
 	
 	/**
@@ -140,7 +141,7 @@ class DateFormatTest {
 		assertEquals(sd,DateFormat.formatSQLDate(ud, false));
 		assertEquals(new java.sql.Date(new Date().getTime()),DateFormat.formatSQLDate(null, true));
 		assertEquals(null,DateFormat.formatSQLDate(null, false));
-		assertEquals(sd,DateFormat.formatSQLDate("MM/dd/yyyy","10/28/1995"));
+		assertEquals(sd,DateFormat.formatSQLDate(PatternName.DATE_SLASH,"10/28/1995"));
 		assertEquals(sd,DateFormat.formatSQLDate("10/28/1995"));
 	}
 
@@ -155,8 +156,8 @@ class DateFormatTest {
 		java.sql.Timestamp ts =java.sql.Timestamp.valueOf(
 		        java.time.LocalDate.of(1995,10,28).atStartOfDay()
 		);
-		assertEquals(ts,DateFormat.formatTimestamp("MM/dd/yyyy","10/28/1995"));
-		assertNotEquals(ts,DateFormat.formatTimestamp("MM/dd/yyyy","10"));
+		assertEquals(ts,DateFormat.formatTimestamp(PatternName.DATE_SLASH,"10/28/1995"));
+		assertNotEquals(ts,DateFormat.formatTimestamp(PatternName.DATE_SLASH,"10"));
 		assertEquals(ts,DateFormat.formatTimestamp(ud));
 		assertNotEquals(ts,DateFormat.formatTimestamp(null));
 	}
