@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import org.junit.jupiter.api.Test;
 
-import com.smt.data.format.DateFormat.PatternName;
+import com.smt.data.format.DateFormat.DatePattern;
 
 /****************************************************************************
  * <b>Title</b>: DateFormatTest.java
@@ -34,7 +34,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#zoneDateToDate(ZonedDateTime)}
 	 */
 	@Test
-	void convertZoneDateToDate_test() throws ParseException {
+	void ZoneDateToDate_test() throws ParseException {
 		ZonedDateTime dateTime5 = ZonedDateTime.of(LocalDateTime.of(2021, 01, 22, 07, 00),
 	            ZoneId.of("UTC"));
 		assertEquals("Fri Jan 22 07:00:00 MST 2021",DateFormat.zoneDateToDate(dateTime5).toString());
@@ -44,7 +44,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#parseUnknownPattern(String)}
 	 */
 	@Test 
-	void parseDateUnknownPattern_testForNull() {
+	void parseUnknownPattern_testForNull() {
 		assertEquals(null,DateFormat.parseUnknownPattern(null));
 		assertEquals(null,DateFormat.parseUnknownPattern("10$28$123"));
 	}
@@ -53,7 +53,7 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#parseUnknownPattern(String)}
 	 */
 	@Test 
-	void parseDateUnknownPattern_testForLessLength() {
+	void parseUnknownPattern_testForLessLength() {
 		assertEquals(null,DateFormat.parseUnknownPattern("10/"));
 	}
 	
@@ -61,27 +61,29 @@ class DateFormatTest {
 	 * Test method for {@link com.smt.data.format.DateFormat#parseUnknownPattern(String)}
 	 */
 	@Test 
-	void parseDateUnknownPattern_testForNotNull() {
+	void parseUnknownPattern_testForNotNull() {
 		Date date = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		assertEquals(date,DateFormat.parseUnknownPattern("10/28/1995"));
 	}
     
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#formatDate(PatternName, String)}
+	 * Test method for {@link com.smt.data.format.DateFormat#formatDate(DatePattern, String)}
 	 */
 	@Test
 	void formatDate_test() {
-		assertEquals(null,DateFormat.formatDate(PatternName.DATE_SLASH, null));
-		assertEquals("Sat Oct 28 00:00:00 MDT 1995",DateFormat.formatDate(PatternName.DATE_SLASH,"10/28/1995").toString());
+		assertEquals(null,DateFormat.formatDate(DatePattern.DATE_SLASH, null));
+		assertEquals("Sat Oct 28 00:00:00 MDT 1995",DateFormat.formatDate(DatePattern.DATE_SLASH,"10/28/1995").toString());
 	}
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#dateToPattern(PatternName, Date)}
+	 * Test method for {@link com.smt.data.format.DateFormat#dateToPattern(DatePattern, Date)}
 	 */
 	@Test
 	void dateToPattern_test() {
 		Date date = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
-		assertEquals("951028",DateFormat.dateToPattern(PatternName.DATE_SHORT_NOSPACE,date));
-		assertEquals(null,DateFormat.dateToPattern(PatternName.DATE_SHORT_NOSPACE,null));
+		assertEquals("951028",DateFormat.dateToPattern(DatePattern.DATE_SHORT_NOSPACE,date));
+		assertEquals(null,DateFormat.dateToPattern(DatePattern.DATE_SHORT_NOSPACE,null));
+		assertEquals(null,DateFormat.dateToPattern(null,date));
+		assertEquals(null,DateFormat.dateToPattern(null,null));
 	}
 	
 	/**
@@ -141,7 +143,7 @@ class DateFormatTest {
 		assertEquals(sd,DateFormat.formatSQLDate(ud, false));
 		assertEquals(new java.sql.Date(new Date().getTime()),DateFormat.formatSQLDate(null, true));
 		assertEquals(null,DateFormat.formatSQLDate(null, false));
-		assertEquals(sd,DateFormat.formatSQLDate(PatternName.DATE_SLASH,"10/28/1995"));
+		assertEquals(sd,DateFormat.formatSQLDate(DatePattern.DATE_SLASH,"10/28/1995"));
 		assertEquals(sd,DateFormat.formatSQLDate("10/28/1995"));
 	}
 
@@ -156,8 +158,8 @@ class DateFormatTest {
 		java.sql.Timestamp ts =java.sql.Timestamp.valueOf(
 		        java.time.LocalDate.of(1995,10,28).atStartOfDay()
 		);
-		assertEquals(ts,DateFormat.formatTimestamp(PatternName.DATE_SLASH,"10/28/1995"));
-		assertNotEquals(ts,DateFormat.formatTimestamp(PatternName.DATE_SLASH,"10"));
+		assertEquals(ts,DateFormat.formatTimestamp(DatePattern.DATE_SLASH,"10/28/1995"));
+		assertNotEquals(ts,DateFormat.formatTimestamp(DatePattern.DATE_SLASH,"10"));
 		assertEquals(ts,DateFormat.formatTimestamp(ud));
 		assertNotEquals(ts,DateFormat.formatTimestamp(null));
 	}
@@ -180,43 +182,31 @@ class DateFormatTest {
 		}
 	
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#getEndDate(String)}
-	 * Test method for {@link com.smt.data.format.DateFormat#getEndDate(Date)}
+	 * Test method for {@link com.smt.data.format.DateFormat#getEndOfDay(String)}
+	 * Test method for {@link com.smt.data.format.DateFormat#getEndOfDaY(Date)}
 	 */
 	@Test
 	public void getEndDate_test() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,23,59,59).getTime();
-		assertEquals(ud_new.toInstant(),DateFormat.getEndDate("10/28/1995").toInstant());
-		assertEquals(ud_new.toInstant(),DateFormat.getEndDate(ud).toInstant());
-		assertNotEquals(new Date(),DateFormat.getEndDate((Date)null));
+		assertEquals(ud_new.toInstant(),DateFormat.getEndOfDay("10/28/1995").toInstant());
+		assertEquals(ud_new.toInstant(),DateFormat.getEndOfDay(ud).toInstant());
+		assertNotEquals(new Date(),DateFormat.getEndOfDay((Date)null));
 	}
 	
 	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#getStartDate(String)}
-	 * Test method for {@link com.smt.data.format.DateFormat#getStartDate(Date)}
+	 * Test method for {@link com.smt.data.format.DateFormat#getStartOfDate(String)}
+	 * Test method for {@link com.smt.data.format.DateFormat#getStartOfDate(Date)}
 	 */
 	@Test
 	public void getStartDate_test() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,0,0,0).getTime();
-		assertEquals(ud_new.getTime(),DateFormat.getStartDate("10/28/1995").getTime());
-		assertEquals(ud_new.getTime(),DateFormat.getStartDate(ud).getTime());
-		assertNotEquals(new Date(),DateFormat.getStartDate((Date)null));
+		assertEquals(ud_new.getTime(),DateFormat.getStartOfDay("10/28/1995").getTime());
+		assertEquals(ud_new.getTime(),DateFormat.getStartOfDay(ud).getTime());
+		assertNotEquals(new Date(),DateFormat.getStartOfDay((Date)null));
 	}
 	
-	/**
-	 * Test method for {@link com.smt.data.format.DateFormat#getStartNextDate(String)}
-	 * Test method for {@link com.smt.data.format.DateFormat#getStartNextDate(Date)}
-	 */
-	@Test
-	public void getStartNextDate_test() {
-		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
-		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 29,0,0,0).getTime();
-		assertEquals(ud_new,DateFormat.getStartNextDate("10/28/1995"));
-		assertEquals(ud_new,DateFormat.getStartNextDate(ud));
-		assertNotEquals(new Date(),DateFormat.getStartNextDate((Date)null));
-	}
 	
 	/**
 	 * Test method for {@link com.smt.data.format.DateFormat#anyZoneToUTC(String, String)}
