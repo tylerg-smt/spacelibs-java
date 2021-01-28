@@ -3,6 +3,9 @@ package com.smt.weather;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
+import com.smt.data.format.DateFormat;
+import com.smt.data.format.DateFormat.DatePattern;
+import com.smt.data.format.DateFormat.Patterns;
 import com.smt.data.parser.BeanDataVO;
 import com.smt.data.text.StringUtil;
 
@@ -156,7 +159,7 @@ public class SunTimeVO extends BeanDataVO{
 		if (StringUtil.isEmpty(this.sunriseTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
-		String d = Convert.formatDate(sourceDate, Convert.DATE_DASH_PATTERN);
+		String d = DateFormat.formatDate(Patterns.DATE_DASH_PATTERN, sourceDate);
 		sunriseDate = Convert.formatDate(d + " " + sunriseTime.trim() + ":00");
 	}
 
@@ -175,7 +178,7 @@ public class SunTimeVO extends BeanDataVO{
 		if (StringUtil.isEmpty(sunsetTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
-		String d = Convert.formatDate(sourceDate, Convert.DATE_DASH_PATTERN);
+		String d = DateFormat.formatDate(sourceDate, DatePattern.DATE_DASH_PATTERN);
 		sunsetDate = Convert.formatDate(d + " " + sunsetTime.trim() + ":00");
 	}
 }

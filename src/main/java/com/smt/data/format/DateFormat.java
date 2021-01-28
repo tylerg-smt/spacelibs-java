@@ -141,6 +141,11 @@ public class DateFormat {
 		}
 		return d;
 	}
+	public static String formatDate(String dp, Date dateText) {
+		
+		return "";
+	}
+	
 	/**
 	 * Converts a String date into a Date date
 	 * @param datePattern Format of the date
