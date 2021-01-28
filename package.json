@@ -1,5 +1,5 @@
 {
-	"name": "Space Force Java Libraries",
+	"name": "space-force-java-libraries",
 	"description": "SMT's Reusable code libraires for use on the Space Force",
 	"repository" :
 	{	"type" : "git",
