@@ -1,11 +1,12 @@
 package com.smt.weather;
 
+// JDK 11.x
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
+// Spaceforce Libs 1.x
 import com.smt.data.format.DateFormat;
 import com.smt.data.format.DateFormat.DatePattern;
-import com.smt.data.format.DateFormat.Patterns;
 import com.smt.data.parser.BeanDataVO;
 import com.smt.data.text.StringUtil;
 
@@ -159,8 +160,8 @@ public class SunTimeVO extends BeanDataVO{
 		if (StringUtil.isEmpty(this.sunriseTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
-		String d = DateFormat.formatDate(Patterns.DATE_DASH_PATTERN, sourceDate);
-		sunriseDate = Convert.formatDate(d + " " + sunriseTime.trim() + ":00");
+		String d = DateFormat.toFormattedString(DatePattern.DATE_DASH, sourceDate);
+		sunriseDate = DateFormat.formatDate(DatePattern.DATE_DASH, d + " " + sunriseTime.trim() + ":00");
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class SunTimeVO extends BeanDataVO{
 		if (StringUtil.isEmpty(sunsetTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
-		String d = DateFormat.formatDate(sourceDate, DatePattern.DATE_DASH_PATTERN);
-		sunsetDate = Convert.formatDate(d + " " + sunsetTime.trim() + ":00");
+		String d = DateFormat.toFormattedString(DatePattern.DATE_DASH, sourceDate);
+		sunsetDate = DateFormat.formatDate(DatePattern.DATE_DASH, d + " " + sunsetTime.trim() + ":00");
 	}
 }

@@ -2,7 +2,6 @@ package com.smt.data.format;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -24,7 +23,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  **********************************************************************************************************/
 public class DateFormat {
 	
-	public enum Patterns{
+	public enum DatePattern{
 				// Defining and declaring enum type Date and Time Patterns
 		        		        
 				//Date Time formats that are RSS Related.
@@ -36,41 +35,41 @@ public class DateFormat {
 				ISO_8601("yyyy-MM-dd'T'HH:mm:ssZ"),	
 				
 				//date & time formats
-				DATE_TIME_SLASH_PATTERN("MM/dd/yyyy HH:mm:ss"),
-				DATE_TIME_DASH_PATTERN("yyyy-MM-dd HH:mm:ss"),
-				DATETIME_SLASH_PATTERN("MM/dd/yyyy HH:mm"),
-				DATETIME_SLASH_SHORT_PATTERN("MM/dd/yy HH:mm"),
-				DATETIME_DASH_PATTERN("yyyy-MM-dd HH:mm"),
-				ISO_PATTERN("yyyy-MM-dd'T'HH:mm:ss.SSS zzz"),
-				ISO_PATTERN_SHORT("yyyy-MM-dd'T'HH:mm:ss.SSS"),
+				DATE_TIME_SLASH("MM/dd/yyyy HH:mm:ss"),
+				DATE_TIME_DASH("yyyy-MM-dd HH:mm:ss"),
+				DATETIME_SLASH("MM/dd/yyyy HH:mm"),
+				DATETIME_SLASH_SHORT("MM/dd/yy HH:mm"),
+				DATETIME_DASH("yyyy-MM-dd HH:mm"),
+				ISO("yyyy-MM-dd'T'HH:mm:ss.SSS zzz"),
+				ISO_SHORT("yyyy-MM-dd'T'HH:mm:ss.SSS"),
 				
 				//date formats
-				DATE_DASH_PATTERN("yyyy-MM-dd"),
-				DATE_DASH_SIMPLE_YEAR_PATTERN("MM-dd-yyyy"),
-				DATE_SLASH_PATTERN("MM/dd/yyyy"),
-				DATE_SLASH_ABBREV_PATTERN("MMM/dd/yyyy"),
-				DATE_SLASH_SHORT_PATTERN("MM/dd/yy"),
+				DATE_DASH("yyyy-MM-dd"),
+				DATE_DASH_SIMPLE_YEAR("MM-dd-yyyy"),
+				DATE_SLASH("MM/dd/yyyy"),
+				DATE_SLASH_ABBREV("MMM/dd/yyyy"),
+				DATE_SLASH_SHORT("MM/dd/yy"),
 				DATE_LONG("EEEE MMMM dd, yyyy"),
 				DATE_FULL_MONTH("MMMMMMMMM dd, yyyy"),
 				DATE_SHORT_MONTH("MMM dd, yyyy"),
-				DATE_NOSPACE_PATTERN("yyyyMMdd"),
-				DATE_SHORT_NOSPACE_PATTERN("yyMMdd"),
-				DATE_SIMPLE_PATTERN("MMddyy"),
-				DATE_SIMPLE_YEAR_PATTERN("MMddyyyy"),
-				DATE_SHORT_PATTERN("MMyy"),
-				DATE_SLASH_MONTH_PATTERN("MM/yyyy"),
-				DATE_SLASH_MONTH_SHORT_PATTERN("MM/yy"),
-				DATE_LONG_DAY_OF_WEEK_PATTERN("EEE MMM dd HH:mm:ss zzz yyyy"),
+				DATE_NOSPACE("yyyyMMdd"),
+				DATE_SHORT_NOSPACE("yyMMdd"),
+				DATE_SIMPLE("MMddyy"),
+				DATE_SIMPLE_YEAR("MMddyyyy"),
+				DATE_SHORT("MMyy"),
+				DATE_SLASH_MONTH("MM/yyyy"),
+				DATE_SLASH_MONTH_SHORT("MM/yy"),
+				DATE_LONG_DAY_OF_WEEK("EEE MMM dd HH:mm:ss zzz yyyy"),
 				
-				DATE_TIME_NOSPACE_PATTERN("yyyyMMdd_HHmmss"),
-				DATE_TIME_DASH_PATTERN_12HR("yyyy-MM-dd hh:mm a"),
-				DATE_TIME_SLASH_PATTERN_12HR("MM/dd/yyyy hh:mm a"),
-				DATE_TIME_SLASH_PATTERN_FULL_12HR("MM/dd/yyyy hh:mm:ss a"),
-				DATE_TIME_NOSPACE_PATTERN_12HR("yyyyMMdd_hhmma"),
+				DATE_TIME_NOSPACE("yyyyMMdd_HHmmss"),
+				DATE_TIME_DASH_12HR("yyyy-MM-dd hh:mm a"),
+				DATE_TIME_SLASH_12HR("MM/dd/yyyy hh:mm a"),
+				DATE_TIME_SLASH_FULL_12HR("MM/dd/yyyy hh:mm:ss a"),
+				DATE_TIME_NOSPACE_12HR("yyyyMMdd_hhmma"),
 
 				//time formats
-				TIME_SHORT_PATTERN("h:mm a"),
-				TIME_LONG_PATTERN("hh:mm:ss a"),
+				TIME_SHORT("h:mm a"),
+				TIME_LONG("hh:mm:ss a"),
 				TIME_SHORT_NOSPACE("hhmm"),
 				TIME_SHORT_24HR_NOSPACE("HHmm"),
 				TIME_LONG_24HR_NOSPACE("HHmmss");
@@ -78,7 +77,7 @@ public class DateFormat {
 		private final String pattern;
 		
 		//initialization of patterns
-		private Patterns(String pattern) {
+		private DatePattern(final String pattern) {
 			this.pattern=pattern;
 		}
 		
@@ -94,30 +93,11 @@ public class DateFormat {
 	 * @param Takes in ZonedDateTime zdt as input;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date convertZoneDateToDate(ZonedDateTime zdt) throws ParseException {
+	public static Date zoneDateToDate(ZonedDateTime zdt) throws ParseException {
 		String zdt_str=zdt.toString();
 		FastDateFormat fastDateFormat = FastDateFormat.getInstance("YYYY-MM-DD'T'HH:MM'Z'");
 		Date myDate = fastDateFormat.parse(zdt_str);
 		return myDate;
-	}
-	/**
-	 * Sets Default TimeZone to UTC
-	 * @param no parameters required
-	 * @return returns default timezone id, which can be stored and used to revert back to local time zone by calling setDefaultTimeToLocal
-	 */
-	public static String setLocalToUTC() {
-		String system_default_time_zone=TimeZone.getDefault().getID();
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-		return system_default_time_zone;
-	}
-	/**
-	 * Sets from any UTC time zone changed in the past calling setDefaultTimeToUTC() to Default TimeZone
-	 * Used as complementary to setLocalToUTC().
-	 * @param Takes in default time zone as string
-	 * @return no returns
-	 */
-	public static void setUTCToLocal(String default_time) {
-		TimeZone.setDefault(TimeZone.getTimeZone(default_time));
 	}
 	
 	/**
@@ -126,50 +106,60 @@ public class DateFormat {
 	 * @param theDate string formatted date/time
 	 * @return Date object. Null if unable to match
 	 */
-	public static Date parseDateUnknownPattern(String theDate) {	
+	public static Date parseUnknownPattern(String theDate) {	
 		if (theDate == null) return null;
 		theDate = theDate.replaceAll(",", "");
 		theDate = theDate.trim();
 		Date d = null;
-		
-
-		for (Patterns p : Patterns.values()) {
-			System.out.println(p.getPattern());
-			d = formatDate(p.getPattern(), theDate);
+	
+		for(DatePattern pn: DatePattern.values()) {
+			d = formatDate(pn, theDate);
 			if (d != null)
 				break;
 		}
 		return d;
 	}
-	public static String formatDate(String dp, Date dateText) {
-		
-		return "";
-	}
 	
 	/**
 	 * Converts a String date into a Date date
-	 * @param datePattern Format of the date
+	 * @param Enum PatternName dp
 	 * @param dateText text to be converted
 	 * @return null if unable to convert, if successful return Date
 	 */
-	public static Date formatDate(String dp, String dateText) {
-	
-		if (dateText == null) 
+	public static Date formatDate(DatePattern dp, String dateText) {	
+		if(dateText == null) 
 			return null;
 		if(dateText.length()<4)
 			return null;
 		// Instantiate the fastDateFormat with the appropriate date/time
 		// pattern
-		FastDateFormat fastDateFormat = FastDateFormat.getInstance(dp);
+		FastDateFormat fastDateFormat = FastDateFormat.getInstance(dp.getPattern());
 		Date myDate = null;
 		try {
 			// Parse the fastDateFormat object into a date object			
 			myDate = fastDateFormat.parse(dateText);			
-		} catch (ParseException|NullPointerException e) {
+		} catch (ParseException e) {
 			return null;
 		}
 		return myDate;
 	}
+	
+	/**
+	 * Converts given Date object into a given Specific pattern
+	 * @param Enum PatternName dp
+	 * @param Date object
+	 * @return Converts to String date in desired pattern, else empty string
+	 */
+	public static String toFormattedString(DatePattern dp, Date date) {
+		if (dp == null || date == null) return null;
+		
+		FastDateFormat fastDateFormat1 = FastDateFormat.getInstance(dp.getPattern());
+		String formattedDate="";		
+		// Parse the fastDateFormat object into a date object				
+		formattedDate=fastDateFormat1.format(date);
+		return formattedDate;
+	}
+	
 	/**
 	 * The date is adjusted in the field entry and by the amount.  For example, 
 	 * if the date is 1/1/2008 and you want to move the month back one month use:
@@ -179,7 +169,7 @@ public class DateFormat {
 	 * @param amount
 	 * @return
 	 */
-	public static Date formatDate(Date d, int field, int amount) {
+	public static Date adjustDate(Date d, int field, int amount) {
 		if(d==null)
 			return null;
 		Calendar cal = new GregorianCalendar();
@@ -193,7 +183,7 @@ public class DateFormat {
 	 * @return
 	 */
 	public static boolean isDate(String sDate) {
-		Date parsedDate = parseDateUnknownPattern(sDate);
+		Date parsedDate = parseUnknownPattern(sDate);
 		return (parsedDate != null);
 	}
 	/**
@@ -232,30 +222,30 @@ public class DateFormat {
 	}
 	/**
 	 * Converts a String into a java.sql.Date Object
-	 * @param datePattern Format of the date
+	 * @param Enum PatternName datePattern
 	 * @param dateText text to be converted
-	 * @return null if unable to convert
+	 * @return null if unable to convert, else java.sql.Date object
 	 */
-	public static java.sql.Date formatSQLDate(String datePattern,String dateText) {
+	public static java.sql.Date formatSQLDate(DatePattern datePattern,String dateText) {
 		java.util.Date uDate = formatDate(datePattern, dateText);
 		return formatSQLDate(uDate);
 	}
 	/**
 	 * Converts a String into a java.sql.Date Object
 	 * @param dateText Must be formatted as the default pattern (MM/DD/YYYY)
-	 * @return
+	 * @return null if unable to convert, else java.sql.Date object
 	 */
 	public static java.sql.Date formatSQLDate(String dateText) {
-		java.util.Date uDate = formatDate(Patterns.DATE_SLASH_PATTERN.getPattern(), dateText);
+		java.util.Date uDate = formatDate(DatePattern.DATE_SLASH, dateText);
 		return formatSQLDate(uDate);
 	}
 	/**
 	 * Creates a SQL Timestamp out of a String date that matches the supplied pattern
-	 * @param datePattern
-	 * @param dateText
-	 * @return
+	 * @param Enum PatternName datePattern
+	 * @param dateText text to be converted
+	 * @return Timestamp
 	 */ 
-	public static Timestamp formatTimestamp(String datePattern, String dateText) {
+	public static Timestamp formatTimestamp(DatePattern datePattern, String dateText) {
 		Date d = formatDate(datePattern,dateText);
 		if (d == null) return null;
 		else return new Timestamp(d.getTime());
@@ -263,8 +253,8 @@ public class DateFormat {
 	/**
 	 * takes a java.util.Date object and if it's not null converts it to a 
 	 * java.sql.Timestamp, for insertion into DBs.
-	 * @param dt
-	 * @return
+	 * @param  Date dt
+	 * @return Timestamp 
 	 */
 	public static Timestamp formatTimestamp(Date dt) {
 		if (dt == null) return null;
@@ -312,8 +302,8 @@ public class DateFormat {
 	 * @param date String to format (MM/DD/YYYY).  Uses current date if null;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date getEndOfDate(String date) {
-		return getEndOfDate(parseDateUnknownPattern(date));
+	public static Date getEndOfDay(String date) {
+		return getEndOfDay(parseUnknownPattern(date));
 	}
 	/**
 	 * Returns the end date for a sql query.  Keeps current date and sets
@@ -321,7 +311,7 @@ public class DateFormat {
 	 * @param d Date to format.  Uses current date if null;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date getEndOfDate(Date d) {	
+	public static Date getEndOfDay(Date d) {	
 		if (d == null) d = new Date();
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(d);
@@ -336,8 +326,8 @@ public class DateFormat {
 	 * @param date String to format (MM/DD/YYYY).  Uses current date if null;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date getStartOfDate(String date) {
-		return getStartOfDate(parseDateUnknownPattern(date));
+	public static Date getStartOfDay(String date) {
+		return getStartOfDay(parseUnknownPattern(date));
 	}
 	/**
 	 * Returns the start date for a sql query. Keeps current date and sets
@@ -345,7 +335,7 @@ public class DateFormat {
 	 * @param d Date to format.  Uses current date if null;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date getStartOfDate(Date d) {	
+	public static Date getStartOfDay(Date d) {	
 		if (d == null) d = new Date();
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(d);
@@ -354,46 +344,21 @@ public class DateFormat {
 		cal.set(Calendar.SECOND, 0);
 		return cal.getTime();
 	}
-	/**
-	 * Returns the next date for a sql query. Gives next day date and sets
-	 * the time to 00:00:00
-	 * @param date String to format (MM/DD/YYYY).  Uses current date if null;
-	 * @return Date to use as the end date of a query
-	 */
-	public static Date getStartOfNextDate(String date) {	
-		return getStartOfNextDate(parseDateUnknownPattern(date));
-	}
-	/**
-	 * Returns the next date for a sql query. Gives next day date and sets
-	 * the time to 00:00:00
-	 * @param d Date to format.  Uses current date if null;
-	 * @return Date to use as the end date of a query
-	 */
-	public static Date getStartOfNextDate(Date d) {	
-		
-		if (d == null) d = new Date();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(d);
-		cal.add(Calendar.DAY_OF_YEAR, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		return cal.getTime();
-	}
+	
 	/**
 	 * Converts date to UTC as ZonedDateTime object.
 	 * @param date as String and fromZone string in the format
 	 * @return returns UTC ZonedDateTime
 	 */
-	public static ZonedDateTime convertAnyZoneToUTC(String date, String fromZone) {
-		return convertAnyZoneToUTC(parseDateUnknownPattern(date),fromZone);
+	public static ZonedDateTime anyZoneToUTC(String date, String fromZone) {
+		return anyZoneToUTC(parseUnknownPattern(date),fromZone);
 	}
 	/**
 	 * Converts date to UTC as ZonedDateTime object.
 	 * @param date as Date and fromZone string in the format
 	 * @return returns UTC ZonedDateTime
 	 */
-	public static ZonedDateTime convertAnyZoneToUTC(Date date, String fromZone) {	    
+	public static ZonedDateTime anyZoneToUTC(Date date, String fromZone) {	    
 	    LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());	  
 	    ZoneId zone = ZoneId.of(fromZone);
 	    // parse the offset
