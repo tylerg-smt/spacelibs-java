@@ -1,5 +1,6 @@
 package com.smt.data.format;
 
+// Spacelibs 1.x
 import com.smt.data.text.StringUtil;
 
 /****************************************************************************

@@ -150,7 +150,7 @@ public class DateFormat {
 	 * @param Date object
 	 * @return Converts to String date in desired pattern, else empty string
 	 */
-	public static String dateToPattern(DatePattern dp, Date date) {
+	public static String toFormattedString(DatePattern dp, Date date) {
 		if (dp == null || date == null) return null;
 		
 		FastDateFormat fastDateFormat1 = FastDateFormat.getInstance(dp.getPattern());

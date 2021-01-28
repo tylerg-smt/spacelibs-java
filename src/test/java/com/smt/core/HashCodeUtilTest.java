@@ -4,8 +4,6 @@ package com.smt.core;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.smt.core.HashCodeUtil;
-
 // JDK 11.x
 import java.util.Arrays;
 import java.util.List;
