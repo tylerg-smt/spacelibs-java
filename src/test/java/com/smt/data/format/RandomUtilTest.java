@@ -32,14 +32,14 @@ public class RandomUtilTest {
 	 * Test method for {@link com.smt.data.format.generateValidRandom(int) }
 	 */
 	@Test
-	public void generateValidRandom() {
+	public void generateValidRandomTest() {
 		assertEquals(true,RandomUtil.generateValidRandom(4).matches("[0-9a-z]{4}"));
 	}
 	/**
 	 * Test method for {@link com.smt.data.format.generateExtendedRandom(int) }
 	 */
 	@Test
-	public void generateExtendedRandom() {
+	public void generateExtendedRandomTest() {
 		assertEquals(true,RandomUtil.generateExtendedRandom(4).matches("[0-9a-zA-Z!*$#]{4}"));
 	}
 	
