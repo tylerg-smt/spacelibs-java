@@ -5,7 +5,7 @@ import java.util.Random;
 /****************************************************************************
  * <b>Title</b>RandomUtil.java
  * <p/>
- * <b>Description: </b>
+ * <b>Description: Generate random string from generic character & extended character set </b>
  * <p/>
  * <b>Copyright:</b> Copyright (c) 2021
  * <p/>
@@ -14,7 +14,7 @@ import java.util.Random;
  * 
  * @author Bala Gayatri Bugatha
  * @version 1.0
- * @since Jan 29, 2020
+ * @since Jan 29, 2021
  ****************************************************************************/
 public class RandomUtil {
 	
@@ -29,7 +29,7 @@ public class RandomUtil {
 	 * @param len of string
 	 * @return Generated random string
 	 */
-	public static String generateValidRandom(int len) {
+	public static String generateRandom(int len) {
 		return generateAnyRandom(len, lowerCase+number);
 	}
 	
