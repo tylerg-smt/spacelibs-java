@@ -29,11 +29,11 @@ public class RandomUtilTest {
 	}
 
 	/**
-	 * Test method for {@link com.smt.data.format.generateValidRandom(int) }
+	 * Test method for {@link com.smt.data.format.generateRandom(int) }
 	 */
 	@Test
-	public void generateValidRandomTest() {
-		assertEquals(true,RandomUtil.generateValidRandom(4).matches("[0-9a-z]{4}"));
+	public void generateRandomTest() {
+		assertEquals(true,RandomUtil.generateRandom(4).matches("[0-9a-z]{4}"));
 	}
 	/**
 	 * Test method for {@link com.smt.data.format.generateExtendedRandom(int) }
