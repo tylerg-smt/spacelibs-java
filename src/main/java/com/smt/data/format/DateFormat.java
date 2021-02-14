@@ -88,6 +88,13 @@ public class DateFormat {
 	}
 	
 	/**
+	 * Make the constructor private as this class has statics only
+	 */
+	private DateFormat() {
+		super();
+	}
+	
+	/**
 	 * Converts given ZonedDateTime format date to Date format date
 	 * "YYYY-MM-DD'T'HH:MMZ" to "EEE MMM DD HH:MM:SS zzz YYYY", Example:  "2021-01-22T07:13Z" to "Fri Jan 22 07:00:00 UTC 2021"
 	 * @param Takes in ZonedDateTime zdt as input;

@@ -13,7 +13,7 @@ package com.smt.data.util;
 public class EnumUtil {
 	
 	/**
-	 * 
+	 * Can't access if all methods static
 	 */
 	private EnumUtil() {
 		super();

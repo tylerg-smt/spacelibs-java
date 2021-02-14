@@ -100,7 +100,7 @@ public final class BeanDataMapper {
 				// We don't print the exception stack here - it's just noise in the logs.
 				// This exception is thrown when you pass a blank to a Date field (one scenario).
 				// log level changed to debug. -JM- 04/03/18
-				log.debug(String.format("Unable to parse data for %s=%s (%s)", fieldName, fieldValue, e.getMessage()));
+				log.error(String.format("Unable to parse data for %s=%s (%s)", fieldName, fieldValue, e.getMessage()));
 			}
 		}
 	}
@@ -113,16 +113,11 @@ public final class BeanDataMapper {
 	 * @param dtConverter 
 	 * @return
 	 */
-	private static Object getBeanArrayValue(Object fieldValue, Method m) {
-		if (((Object[]) fieldValue).length > 1) {
-			ParameterizedType pt = (ParameterizedType)m.getGenericParameterTypes()[0];
-			Type[] type = pt.getActualTypeArguments();
-			Class<?> c = null;
-			try {
-				c = Class.forName(type[0].toString().substring(5).trim());
-			} catch(Exception e) { log.error(e); }
+	static Object getBeanArrayValue(Object fieldValue, Method m) {
 
-			fieldValue = createList(c, (Object[]) fieldValue);
+		if (((Object[]) fieldValue).length > 1) {
+			System.out.println("# Vals: " + ((Object[]) fieldValue).length);
+			fieldValue = createList( m.getParameterTypes()[0], (Object[]) fieldValue);
 		} else {
 			fieldValue = ((Object[])fieldValue)[0];
 		}

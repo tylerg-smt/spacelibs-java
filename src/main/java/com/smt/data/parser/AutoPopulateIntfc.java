@@ -1,6 +1,6 @@
 package com.smt.data.parser;
 
-import java.sql.ResultSet;
+// J2EE
 import javax.servlet.http.HttpServletRequest;
 
 /****************************************************************************
@@ -36,15 +36,5 @@ public interface AutoPopulateIntfc {
 	 */
 	public default void populateData(HttpServletRequest req, String suffix) {
 		BeanDataMapper.parseBean(this, req.getParameterMap(), suffix);
-	}
-
-	/**
-	 * Maps the result set row (this method is careful to not increment the result set
-	 * counter) into the appropriate member variable.  This is accomplished using the
-	 * @Table and @Column Annotations in the base libs
-	 * @param rs Single row of the result set
-	 */
-	public default void populateData(ResultSet rs) {
-		// new DBProcessor(null).executePopulate(this, rs, null);
 	}
 }

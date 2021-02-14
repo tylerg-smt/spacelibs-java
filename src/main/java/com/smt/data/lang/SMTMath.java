@@ -24,7 +24,7 @@ public class SMTMath {
 	private SMTMath() {
 		super();
 	}
-	
+
 	/**
 	 * Calculates the Arc Cosine for the given value
 	 * @param radians

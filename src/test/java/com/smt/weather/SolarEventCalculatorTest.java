@@ -158,12 +158,33 @@ class SolarEventCalculatorTest {
 
 	@Test
 	public void testGetRightAscension() throws Exception {
-		System.out.println("******************************");
-		System.out.println(calc.getRightAscension(BigDecimal.valueOf(-25.1234)));
-		System.out.println(calc.getRightAscension(BigDecimal.valueOf(0.0)));
-		System.out.println(calc.getRightAscension(BigDecimal.valueOf(-10250.0)));
-		System.out.println(calc.getRightAscension(BigDecimal.valueOf(.999100009999)));
-		System.out.println("******************************");
+		assertEquals(BigDecimal.valueOf(-1.5521), calc.getRightAscension(BigDecimal.valueOf(-25.1234)));
+		assertEquals(BigDecimal.valueOf(-683.3873), calc.getRightAscension(BigDecimal.valueOf(-10250.0)));
+		assertEquals(BigDecimal.valueOf(0.0611), calc.getRightAscension(BigDecimal.valueOf(.999100009999)));
+		assertEquals(BigDecimal.valueOf(666666.6527), calc.getRightAscension(BigDecimal.valueOf(9999999.0)));
+		assertEquals(BigDecimal.valueOf(24.0611), calc.getRightAscension(BigDecimal.valueOf(361.0)));
+	}
+
+	@Test
+	public void testAdjustForDST() throws Exception {
+		Calendar cal = calc.getLocalTimeAsCalendar(BigDecimal.valueOf(6.2072), testDate);
+		assertEquals(BigDecimal.valueOf(1.0), calc.adjustForDST(BigDecimal.valueOf(25.0), cal));
+		assertEquals(BigDecimal.valueOf(10.0), calc.adjustForDST(BigDecimal.valueOf(10.0), cal));
+		
+		cal = GregorianCalendar.getInstance();
+		cal.set(Calendar.MONTH, 7);
+		cal.set(Calendar.YEAR, 2020);
+		assertEquals(BigDecimal.valueOf(11.0), calc.adjustForDST(BigDecimal.valueOf(10.0), cal));
+	}
+
+	@Test
+	public void testGetLocalTimeAsString() throws Exception {
+		assertEquals("00:00", calc.getLocalTimeAsString(BigDecimal.ZERO));
+		assertEquals("99:99", calc.getLocalTimeAsString(null));
+		assertEquals("00:07", calc.getLocalTimeAsString(BigDecimal.valueOf(-25.1234)));
+		assertEquals("15:30", calc.getLocalTimeAsString(BigDecimal.valueOf(15.50)));
+		assertEquals("00:00", calc.getLocalTimeAsString(BigDecimal.valueOf(24.00)));
+		assertEquals("11:00", calc.getLocalTimeAsString(BigDecimal.valueOf(10.999)));
 	}
 
 }

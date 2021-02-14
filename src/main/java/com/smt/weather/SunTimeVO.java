@@ -24,7 +24,7 @@ import com.smt.data.text.StringUtil;
  * @since Feb 15, 2019
  * @updates:
  ****************************************************************************/
-public class SunTimeVO extends BeanDataVO{ 
+public class SunTimeVO extends BeanDataVO { 
 	
 	private static final long serialVersionUID = -53123328524258786L;
 	private Date sunsetDate;

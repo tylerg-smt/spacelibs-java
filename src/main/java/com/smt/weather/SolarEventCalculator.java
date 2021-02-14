@@ -180,16 +180,13 @@ public class SolarEventCalculator {
      */
     protected BigDecimal getRightAscension(BigDecimal sunTrueLong) {
         BigDecimal tanL = new BigDecimal(Math.tan(SMTMath.convertDegreesToRadians(sunTrueLong).doubleValue()));
-
+        
         BigDecimal innerParens = SMTMath.multiplyBy(SMTMath.convertRadiansToDegrees(tanL), new BigDecimal("0.91764"));
         BigDecimal rightAscension = new BigDecimal(Math.atan(SMTMath.convertDegreesToRadians(innerParens).doubleValue()));
         rightAscension = setScale(SMTMath.convertRadiansToDegrees(rightAscension));
 
-        System.out.println("Val: " + sunTrueLong + "|" + rightAscension.doubleValue());
         if (rightAscension.doubleValue() < 0) {
             rightAscension = rightAscension.add(BigDecimal.valueOf(360));
-        } else if (rightAscension.doubleValue() > 360) {
-            rightAscension = rightAscension.subtract(BigDecimal.valueOf(360));
         }
 
         BigDecimal ninety = BigDecimal.valueOf(90);
@@ -302,7 +299,7 @@ public class SolarEventCalculator {
      * @param date
      * @return
      */
-    private BigDecimal adjustForDST(BigDecimal localMeanTime, Calendar date) {
+    BigDecimal adjustForDST(BigDecimal localMeanTime, Calendar date) {
         BigDecimal localTime = localMeanTime;
         if (timeZone.inDaylightTime(date.getTime())) {
             localTime = localTime.add(BigDecimal.ONE);
@@ -319,25 +316,26 @@ public class SolarEventCalculator {
      * @param localTime <code>BigDecimal</code> representation of the local rise/set time.
      * @return <code>String</code> representation of the local rise/set time in HH:MM format.
      */
-    private String getLocalTimeAsString(BigDecimal localTimeParam) {
+    String getLocalTimeAsString(BigDecimal localTimeParam) {
         if (localTimeParam == null) {
             return "99:99";
         }
 
         BigDecimal localTime = localTimeParam;
         if (localTime.compareTo(BigDecimal.ZERO) == -1) {
-            localTime = localTime.add(BigDecimal.valueOf(24.0D));
+            localTime = localTime.add(BigDecimal.valueOf(24.00));
         }
         String[] timeComponents = localTime.toPlainString().split("\\.");
         int hour = Integer.parseInt(timeComponents[0]);
 
-        BigDecimal minutes = new BigDecimal("0." + timeComponents[1]);
+        BigDecimal minutes = timeComponents.length < 2 ? BigDecimal.ZERO : new BigDecimal("0." + timeComponents[1]);
         minutes = minutes.multiply(BigDecimal.valueOf(60)).setScale(0, RoundingMode.HALF_EVEN);
+
         if (minutes.intValue() == 60) {
             minutes = BigDecimal.ZERO;
             hour += 1;
         }
-        if (hour == 24) {
+        if (hour == 24 || hour < 0) {
             hour = 0;
         }
 

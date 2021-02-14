@@ -2,7 +2,6 @@ package com.smt.data.parser;
 
 // JDK 11.x
 import java.io.Serializable;
-import java.sql.ResultSet;
 
 // J2E
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// Spaceforce Libs 1.x
 import com.smt.data.text.StringUtil;
 
 /********************************************************************
@@ -44,15 +44,6 @@ public class BeanDataVO implements Serializable, AutoPopulateIntfc {
 	public BeanDataVO(HttpServletRequest req) {
 		this();
 		populateData(req);
-	}
-
-	/**
-	 * 
-	 * @param rs
-	 */
-	public BeanDataVO(ResultSet rs) {
-		this();
-		populateData(rs);
 	}
 
 	/*
