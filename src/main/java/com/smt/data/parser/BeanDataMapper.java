@@ -2,8 +2,6 @@ package com.smt.data.parser;
 
 // JDK 1.8.x
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -48,21 +48,8 @@ class ExcelReportTest {
 		
 		// Assign the data
 		dataSet = new ArrayList<>();
-		Map<String, Object> dataMap1 = new HashMap<>();
-		dataMap1.put("ID", "12345");
-		dataMap1.put("NAME", "James Camire");
-		dataMap1.put("AGE", 56);
-		dataMap1.put("DOB", DateFormat.formatDate(DatePattern.DATE_DASH, "1964-08-25"));
-		
-		Map<String, Object> dataMap = new HashMap<>();
-		dataMap.put("ID", "12345");
-		dataMap.put("NAME", "James Camire");
-		dataMap.put("AGE", 56);
-		dataMap.put("DOB", DateFormat.formatDate(DatePattern.DATE_DASH, "1964-08-25"));
-		
-		dataSet.add(dataMap);
-		dataSet.add(dataMap1);
-		rpt.setData(dataSet);
+		dataSet.add(getRowData());
+		dataSet.add(getRowData());
 	}
 
 	/**
@@ -71,6 +58,7 @@ class ExcelReportTest {
 	 */
 	@Test
 	void testGenerateReport() throws IOException {
+		rpt.setData(dataSet);
 		byte[] data = rpt.generateReport();
 		assertNotNull(data);
 		assertEquals(4608, data.length);
@@ -116,19 +104,35 @@ class ExcelReportTest {
 	}
 
 	/**
-	 * Test method for {@link com.smt.data.report.ExcelReport#getBytes(org.apache.poi.ss.usermodel.Workbook)}.
+	 * Tests edge conditions of the create Sheet process
+	 * @throws Exception
 	 */
 	@Test
-	void testGetBytes() {
-		fail("Not yet implemented");
+	public void testCreateSheet() throws Exception {
+		List<Map<String, Object>> largeData = new ArrayList<>(1024);
+		for (int i=0; i < 73728; i++) {
+			largeData.add(getRowData());
+		}
+		
+		assertEquals(73728, largeData.size());
+		ExcelStyleInterface esi = ExcelStyleFactory.getExcelStyle(Styles.STANDARD);
+		esi.setExpandColumnFlag(true);
+		ExcelReport erpt = new ExcelReport(headerMap, esi);
+		erpt.setData(largeData);
+		erpt.createSheet("My New Sheet", "Test Create Sheet", headerMap,largeData);
 	}
-
+	
 	/**
-	 * Test method for {@link com.smt.data.report.ExcelReport#setCellValue(java.lang.Object, org.apache.poi.ss.usermodel.Cell)}.
+	 * Builds a row of data.  used to insert large number of rows
+	 * @return
 	 */
-	@Test
-	void testSetCellValue() {
-		fail("Not yet implemented");
+	private Map<String, Object> getRowData() {
+		Map<String, Object> data = new HashMap<>();
+		data.put("ID", "12345");
+		data.put("NAME", "James Camire");
+		data.put("AGE", 56);
+		data.put("DOB", DateFormat.formatDate(DatePattern.DATE_DASH, "1964-08-25"));
+		
+		return data;
 	}
-
 }

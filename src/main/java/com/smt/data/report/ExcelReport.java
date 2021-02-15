@@ -50,7 +50,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ExcelReport extends AbstractReport {
 	private static final long serialVersionUID = 1l;
-	private static final int MAX_ROWS_PER_SHEET = 65530;
+	private static final int MAX_ROWS_PER_SHEET = 64000;
 	protected transient Collection<Map<String, Object>> rowData;
 	protected transient Map<String, String> headerMap;
 	protected String titleText;
@@ -60,16 +60,23 @@ public class ExcelReport extends AbstractReport {
 	protected transient CellStyle bodyStyle;
 	protected transient CellStyle dateStyle;
 	protected transient CellStyle tempDateStyle;
-	protected boolean expandColumnFlg;
+	protected boolean expandColumnFlag;
 	protected boolean displayDate;
-	public enum WorkbookType {HSSF_WORKBOOK, XSSF_WORKBOOK}
 
 	/**
 	 * Constructor utilizes the NoStyle formatting
 	 * @param headerMap
 	 */
 	public ExcelReport(Map<String, String> headerMap) {
-		this(headerMap, Styles.NO_STYLE);
+		this(headerMap, ExcelStyleFactory.getExcelStyle(Styles.NO_STYLE));
+	}
+	
+	/**
+	 * Constructor utilizes the NoStyle formatting
+	 * @param headerMap
+	 */
+	public ExcelReport(Map<String, String> headerMap, Styles s) {
+		this(headerMap, ExcelStyleFactory.getExcelStyle(s));
 	}
 
 	/**
@@ -77,16 +84,15 @@ public class ExcelReport extends AbstractReport {
 	 * @param headerMap
 	 * @param s
 	 */
-	public ExcelReport(Map<String, String> headerMap, Styles s) {
+	public ExcelReport(Map<String, String> headerMap, ExcelStyleInterface style) {
 		super();
 		wb = new HSSFWorkbook();
 		this.headerMap = headerMap;
-		ExcelStyleInterface style = ExcelStyleFactory.getExcelStyle(s);
 		headerStyle = style.getHeadingStyle(wb);
 		titleStyle = style.getTitleStyle(wb);
 		bodyStyle =   style.getBodyStyle(wb);
 		dateStyle = style.getDateStyle(wb);
-		expandColumnFlg = style.getExpandColumnFlg();
+		expandColumnFlag = style.getExpandColumnFlag();
 		displayDate = style.displayDate();
 		tempDateStyle = wb.createCellStyle();
 		CreationHelper createHelper = wb.getCreationHelper();
@@ -109,28 +115,38 @@ public class ExcelReport extends AbstractReport {
 	 */
 	protected void createSheet(String sheetName, String title,Map<String, String> header, Collection<Map<String, Object>> rows) {
 		Sheet s = buildSheet(sheetName, title, header);
-		int count = 5;
+		int count = 0;
+		int sheetCount = 1;
 		Row row;
 		
 		//loop the data rows
 		for (Map<String, Object> lineData : rows) {
+			// If the rows exceeds the max, create a new sheet.  Resize columns on 
+			// initial sheet if requested
 			if (count > MAX_ROWS_PER_SHEET) {
-				s = buildSheet(sheetName, title, header);
-				count = 5;
+				resizeSheetColumns(s, header, rows.size());
+				s = buildSheet(sheetName + " - " + sheetCount++, title, header);
 			}
 
-			row = s.createRow(s.getPhysicalNumberOfRows());
 			//add the row data
+			row = s.createRow(s.getPhysicalNumberOfRows());
 			addRowData(row, lineData, header);
-
 			count++;
 		}
 
-		//making the cell more readable by expanding the cell widths.
-		// NOTE: This column resizing can be very costly on larger reports.
-		//calculate a cost based on rows*columns, and don't resize columns on larger reports.  an 8500-row report was taking 14s to resize!
-		int cost = rows.size() * s.getLastRowNum();
-		if (expandColumnFlg && cost < 50000) {
+		resizeSheetColumns(s, header, rows.size());
+	}
+	
+	/*
+	 * 	Making the cell more readable by expanding the cell widths. NOTE: This 
+	 *  column resizing can be very costly on larger reports. Calculate a cost
+	 *  based on rows*columns, and don't resize columns on larger reports.  
+	 *  An 8500-row report was taking 14s to resize!
+	 */
+	protected void resizeSheetColumns(Sheet s, Map<String, String> header, int rowCount) {
+		int cost = rowCount * s.getLastRowNum();
+		log.info("Data: " + expandColumnFlag + "|" + cost);
+		if (expandColumnFlag && cost < 50000) {
 			for (int i = 0; i < header.size(); i++)
 				s.autoSizeColumn(i);
 		}
@@ -284,17 +300,12 @@ public class ExcelReport extends AbstractReport {
 	 * @param wb
 	 * @return
 	 */
-	public static byte[] getBytes(Workbook wb) {
+	public byte[] getBytes(Workbook wb) {
 		int estSize = 0;
-		try {
-			Iterator<Sheet> sIter = wb.sheetIterator();
-			while(sIter.hasNext()) {
-				Sheet s = sIter.next();
-				estSize += s.getLastRowNum() * 5000; //figure 5kb for each row of data...a best guess.
-			}
-		} catch (Exception e) {
-			estSize = 100000;
-			/* ignoreable */
+		Iterator<Sheet> sIter = wb.sheetIterator();
+		while(sIter.hasNext()) {
+			Sheet s = sIter.next();
+			estSize += s.getLastRowNum() * 5000; //figure 5kb for each row of data...a best guess.
 		}
 
 		//check against empty Sheets.
@@ -329,23 +340,5 @@ public class ExcelReport extends AbstractReport {
 		} else {
 			c.setCellValue(StringUtils.defaultString(value + ""));
 		}
-	}
-
-	/**
-	 * checks out what sort of object the input is and converts it to a date object and returns.  will return null if it can't convert the object
-	 * @param value
-	 * @return
-	 */
-	protected Date setDateValue(Object value) {
-		Date parseDate = null;
-		
-		if (value instanceof String) {
-			parseDate = DateFormat.parseUnknownPattern(value+"");
-		}else if (value instanceof Timestamp) {
-			parseDate = new Date(((Timestamp) value).getTime());
-		}else {
-			parseDate = (Date) value;
-		}
-		return parseDate;
 	}
 }

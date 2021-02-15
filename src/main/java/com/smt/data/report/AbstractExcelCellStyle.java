@@ -204,8 +204,17 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 * @see com.siliconmtn.data.report.ExcelStyleInterface#getExpandColumnFlg()
 	 */
 	@Override
-	public boolean getExpandColumnFlg() {
+	public boolean getExpandColumnFlag() {
 		return expandColumnFlg;
+	}
+	
+	/*
+	 * (non-javadoc)
+	 * @see com.smt.data.report.ExcelStyleInterface#setExpandColumnFlag(boolean)
+	 */
+	@Override
+	public void setExpandColumnFlag(boolean expandColumnFlg) {
+		this.expandColumnFlg = expandColumnFlg;
 	}
 
 	/*

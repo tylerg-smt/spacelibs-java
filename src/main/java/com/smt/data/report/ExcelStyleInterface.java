@@ -40,7 +40,13 @@ public interface ExcelStyleInterface {
 	 * Defines whether the columns should be expanded by default
 	 * @return
 	 */
-	public boolean getExpandColumnFlg();
+	public boolean getExpandColumnFlag();
+	
+	/**
+	 * Sets whether the columns should be expanded by default
+	 * @return
+	 */
+	public void setExpandColumnFlag(boolean expandColumnFlag);
 	
 	/**
 	 * Defines whether the date should be displayed under the title row 
