@@ -9,15 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 // JDK 11.x
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 // SPace Libs 1.x
 import com.siliconmtn.data.format.DateFormat.DatePattern;
-import com.siliconmtn.data.report.ExcelReport;
-import com.siliconmtn.data.util.EnumUtil;
 
 /****************************************************************************
  * <b>Title</b>: BeanDataMapperTest.java
