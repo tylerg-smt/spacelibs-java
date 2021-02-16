@@ -4,15 +4,26 @@ package com.smt.data.report;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+
+// Apache POI 5.x
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 // JDK 11.x
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 // Space Libs 1.x
 import com.smt.data.format.DateFormat;
@@ -62,7 +73,6 @@ class ExcelReportTest {
 		byte[] data = rpt.generateReport();
 		assertNotNull(data);
 		assertEquals(4608, data.length);
-		Files.write(new File("/home/etewa/Desktop/test.xlsx").toPath(), data);
 	}
 
 	/**
@@ -79,14 +89,25 @@ class ExcelReportTest {
 	 * Test method for {@link com.smt.data.report.ExcelReport#setFileName(java.lang.String)}.
 	 */
 	@Test
-	void testSetFilename() {
+	void testSetFilename() throws Exception {
 		rpt.setFileName("MyReport.xlsx");
 		assertEquals("MyReport.xlsx", rpt.getFileName());
 		assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", rpt.getContentType());
+		
+		rpt.setFileName("AnotherReport.123");
+		assertNull(rpt.getContentType());
+		
+		try (MockedStatic<Files> theMock = Mockito.mockStatic(Files.class)) {
+			theMock.when(() -> Files.probeContentType(ArgumentMatchers.any())).thenThrow(new IOException());
+			ExcelReport rpt1 = new ExcelReport(headerMap);
+			rpt1.setFileName("MyReport.xlsx");
+			rpt1.setContentTypeByFileName();
+			assertNull(rpt.getContentType());
+		}
 	}
 
 	/**
-	 * Test method for {@link com.smt.data.report.ExcelReport#ExcelReport(java.util.Map, com.smt.data.report.ExcelStyleFactory.Styles)}.
+	 * Test method for {@link com.smt.data.report.ExcelReport#ExcelReport(java.util.Map, com.smt.data.report.ExcelStyleFactory.Styles)}
 	 */
 	@Test
 	void testExcelReportMapOfStringStringStyles() {
@@ -104,22 +125,146 @@ class ExcelReportTest {
 	}
 
 	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#createSheet(java.lang.String, java.lang.String, java.util.Map)}
 	 * Tests edge conditions of the create Sheet process
 	 * @throws Exception
 	 */
 	@Test
 	public void testCreateSheet() throws Exception {
 		List<Map<String, Object>> largeData = new ArrayList<>(1024);
-		for (int i=0; i < 73728; i++) {
+		for (int i=0; i < 800; i++) {
 			largeData.add(getRowData());
 		}
 		
-		assertEquals(73728, largeData.size());
+		assertEquals(800, largeData.size());
 		ExcelStyleInterface esi = ExcelStyleFactory.getExcelStyle(Styles.STANDARD);
 		esi.setExpandColumnFlag(true);
+		esi.setDisplayDate(false);
+		ExcelReport erpt = new ExcelReport(headerMap, esi);
+		erpt.setMaxRowsPerSheet(700);
+		erpt.setData(largeData);
+		erpt.createSheet("My New Sheet", "Test Create Sheet", headerMap,largeData);
+	}
+	
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#createSheet(java.lang.String, java.lang.String, java.util.Map)}
+	 * Tests edge conditions of the create Sheet process
+	 * @throws Exception
+	 */
+	@Test
+	public void testCreateSheetNoExpand() throws Exception {
+		List<Map<String, Object>> largeData = new ArrayList<>(1024);
+		for (int i=0; i < 50; i++) {
+			largeData.add(getRowData());
+		}
+		
+		assertEquals(50, largeData.size());
+		ExcelStyleInterface esi = ExcelStyleFactory.getExcelStyle(Styles.STANDARD);
+		esi.setExpandColumnFlag(true);
+		esi.setDisplayDate(true);
 		ExcelReport erpt = new ExcelReport(headerMap, esi);
 		erpt.setData(largeData);
 		erpt.createSheet("My New Sheet", "Test Create Sheet", headerMap,largeData);
+	}
+
+
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#getBytes()}
+	 * Validates the ability to create a custom WB and convert to a byte[]
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetBytes() throws Exception {
+		assertNotNull(rpt.getBytes(null));
+		Workbook wb = new HSSFWorkbook();
+		assertEquals(3584, rpt.getBytes(wb).length);
+		wb.close();
+	}
+
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#setCellValue(java.lang.Object, org.apache.poi.ss.usermodel.Cell)}
+	 * @throws Exception
+	 */
+	@Test
+	public void testSetCellValue() throws Exception {
+		Workbook wb = new HSSFWorkbook();
+		Sheet s = wb.createSheet();
+		Row row = s.createRow(0);
+		Cell cell = row.createCell(0);
+		
+		rpt.setCellValue("12", cell);
+		assertEquals(12, cell.getNumericCellValue());
+		
+		rpt.setCellValue("12.25", cell);
+		assertEquals(12.25, cell.getNumericCellValue());
+		
+		rpt.setCellValue(true, cell);
+		assertTrue(cell.getBooleanCellValue());
+		
+		rpt.setCellValue(Boolean.TRUE, cell);
+		assertTrue(cell.getBooleanCellValue());
+		
+		rpt.setCellValue("James Camire", cell);
+		assertEquals("James Camire", cell.getStringCellValue());
+		
+		wb.close();
+	}
+
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#setMaxRowsPerSheet(int)}
+	 * Tests changing the max allowable rows per sheet
+	 * @throws Exception
+	 */
+	@Test
+	public void testSetMaxRowsPerSheet() throws Exception {
+		rpt.setMaxRowsPerSheet(0);
+		assertEquals(10, rpt.getMaxRowsPerSheet());
+		
+		rpt.setMaxRowsPerSheet(100000);
+		assertEquals(ExcelReport.MAX_ROWS_PER_SHEET, rpt.getMaxRowsPerSheet());
+		
+		rpt.setMaxRowsPerSheet(1000);
+		assertEquals(1000, rpt.getMaxRowsPerSheet());
+	}
+	
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#setHeaderAttachment(boolean)}
+	 * Test the ability to set/unset the report as an attachment
+	 * @throws Exception
+	 */
+	@Test
+	public void testAttachment() throws Exception {
+		rpt.setHeaderAttachment(false);
+		assertFalse(rpt.isHeaderAttachment());
+		
+		rpt.setHeaderAttachment(true);
+		assertTrue(rpt.isHeaderAttachment());
+	}
+	
+	/**
+	 * Test method for {@link com.smt.data.report.ExcelReport#getAttributes()}
+	 * Test the ability to set/unset the report dynamic attributes
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetAttributes() throws Exception {
+		Date dob = DateFormat.formatDate(DatePattern.DATE_DASH, "1991-01-01");
+		rpt.addAttribute("NAME", "James");
+		rpt.addAttribute("AGE", 30);
+		rpt.addAttribute("DOB", dob);
+		assertEquals("James", rpt.getAttributes().get("NAME"));
+		assertEquals(30, rpt.getAttributes().get("AGE"));
+		assertEquals(dob, rpt.getAttributes().get("DOB"));
+		
+		Map<String, ?> map = rpt.getAttributes();
+		
+		rpt.setAttributes(null);
+		assertEquals(0, rpt.getAttributes().size());
+		
+		rpt.setAttributes(map);
+		assertEquals("James", rpt.getAttributes().get("NAME"));
+		assertEquals(30, rpt.getAttributes().get("AGE"));
+		assertEquals(dob, rpt.getAttributes().get("DOB"));
 	}
 	
 	/**
@@ -131,7 +276,12 @@ class ExcelReportTest {
 		data.put("ID", "12345");
 		data.put("NAME", "James Camire");
 		data.put("AGE", 56);
-		data.put("DOB", DateFormat.formatDate(DatePattern.DATE_DASH, "1964-08-25"));
+		
+		// Randomly add a timestamp or date
+		if (new Random().nextBoolean())
+			data.put("DOB", DateFormat.formatDate(DatePattern.DATE_DASH, "1964-08-25"));
+		else
+			data.put("DOB", DateFormat.formatTimestamp(new Date()));
 		
 		return data;
 	}

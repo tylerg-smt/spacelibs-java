@@ -27,7 +27,7 @@ public abstract class AbstractReport implements Serializable {
 	private static final long serialVersionUID = -3789238527320645654L;
 	protected String contentType = null;
 	protected String fileName = null;
-	protected Boolean isAttachment = Boolean.FALSE;
+	protected boolean isAttachment = false;
 	protected Map<String, Object> attributes = new LinkedHashMap<>();
 	
 	
@@ -36,7 +36,7 @@ public abstract class AbstractReport implements Serializable {
 	 * must be overwritten by all implementing classes.
 	 * must always return a byte array
 	 */
-	public abstract byte[] generateReport();
+	public abstract byte[] generateReport() throws IOException;
 	
 	
 	/**
@@ -64,7 +64,7 @@ public abstract class AbstractReport implements Serializable {
 	    try {
 			contentType = Files.probeContentType(path);
 		} catch (IOException e) {
-			/* Nothing to do here */
+			contentType = null;
 		}
 	}
 	
@@ -77,7 +77,7 @@ public abstract class AbstractReport implements Serializable {
 	}
 
 	/**
-	 * 
+	 * Sets the file name.  The content type is also set based upon the file extension
 	 * @param f
 	 */
 	public void setFileName(String fileName) {
@@ -85,23 +85,49 @@ public abstract class AbstractReport implements Serializable {
 		setContentTypeByFileName();
 	}
 	
-	public void isHeaderAttachment(Boolean b) {
+	/**
+	 * Sets the header attachment, which is used when streaming a file to the browser
+	 * @param b
+	 */
+	public void setHeaderAttachment(boolean b) {
 		isAttachment = b;
 	}
-	public Boolean isHeaderAttachment() {
+	
+	/**
+	 * Gets the header attachment, which is used when streaming a file to the browser
+	 * @return
+	 */
+	public boolean isHeaderAttachment() {
 		return isAttachment;
 	}
 	
-//	public Map<String,?> getAttributes() {
-//		return attributes;
-//	}
-//
-//	public void setAttributes(Map<String, ?> attributes) {
-//		this.attributes.putAll(attributes);
-//	}
-//	
-//	public void addAttributes(String key, Object value) {
-//		attributes.put(key, value);
-//	}
+	/**
+	 * Gets the attribute by the provided key
+	 * @return
+	 */
+	public Map<String,?> getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * Overwrites the existing attributes with the new map
+	 * @param attributes
+	 */
+	public void setAttributes(Map<String, ?> attributes) {
+		if (attributes == null) {
+			this.attributes = new LinkedHashMap<>();
+		} else {
+			this.attributes.putAll(attributes);
+		}
+	}
+	
+	/**
+	 * Adds an element to the attribute map
+	 * @param key
+	 * @param value
+	 */
+	public void addAttribute(String key, Object value) {
+		attributes.put(key, value);
+	}
 
 }

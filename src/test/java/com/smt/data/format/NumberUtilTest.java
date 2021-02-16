@@ -100,5 +100,13 @@ class NumberUtilTest {
 		assertEquals(-6.0, NumberUtil.toDouble("-6.", 0.0, true));
 	}
 
+	@Test
+	public void testGetNumber() throws Exception {
+		assertEquals(Long.valueOf(5), NumberUtil.getNumber("5"));
+		assertEquals(Double.valueOf(5.5f), NumberUtil.getNumber("5.5f"));
+		assertEquals(Double.valueOf(23456.1234567), NumberUtil.getNumber("23456.1234567"));
+		assertNull(NumberUtil.getNumber("Test"));
+	}
+
 
 }

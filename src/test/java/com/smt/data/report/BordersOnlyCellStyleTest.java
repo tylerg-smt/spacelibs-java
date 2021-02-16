@@ -31,4 +31,15 @@ class BordersOnlyCellStyleTest {
 		assertNotNull(ncs);
 	}
 
+	/**
+	 * tests that the displayDate gets set
+	 * @throws Exception
+	 */
+	@Test
+	public void testSetDisplayDate() throws Exception {
+		BordersOnlyCellStyle ncs = new BordersOnlyCellStyle();
+		ncs.setDisplayDate(false);
+		assertFalse(ncs.displayDate);
+	}
+
 }

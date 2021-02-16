@@ -35,4 +35,13 @@ public class NoStyleCellStyle extends AbstractExcelCellStyle {
 		setStyleMap(styleMap);
 	}
 
+	/*
+	 * (non-javadoc)
+	 * @see com.smt.data.report.ExcelStyleInterface#setDisplayDate()
+	 */
+	@Override
+	public void setDisplayDate(boolean displayDate) {
+		this.displayDate = displayDate;
+	}
+
 }

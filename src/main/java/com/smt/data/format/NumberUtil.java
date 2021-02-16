@@ -1,5 +1,8 @@
 package com.smt.data.format;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 // Spacelibs 1.x
 import com.smt.data.text.StringUtil;
 
@@ -304,5 +307,19 @@ public class NumberUtil {
 	 */
 	private static boolean checkForNegativeValue(String val) {
 		return "-".equals(val.substring(0, 1));
+	}
+	
+	/**
+	 * Determines if the provided String is a number
+	 * @param numberText String to test
+	 * @return Number object.  Null if not a number
+	 */
+	public static Number getNumber(String numberText) {
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		try {
+			return numberFormat.parse(numberText);
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 }

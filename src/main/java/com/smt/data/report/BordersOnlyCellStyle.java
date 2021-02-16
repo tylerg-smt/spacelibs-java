@@ -79,4 +79,12 @@ public class BordersOnlyCellStyle extends AbstractExcelCellStyle {
 		return headerStyleMap;
 	}
 
+	/*
+	 * (non-javadoc)
+	 * @see com.smt.data.report.ExcelStyleInterface#setDisplayDate()
+	 */
+	@Override
+	public void setDisplayDate(boolean displayDate) {
+		this.displayDate = displayDate;
+	}
 }

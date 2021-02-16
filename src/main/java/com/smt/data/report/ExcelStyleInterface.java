@@ -53,6 +53,12 @@ public interface ExcelStyleInterface {
 	 * @return
 	 */
 	public boolean displayDate();
+	
+	/**
+	 * Sets the flag to display the date on the report header
+	 * @param displayDate
+	 */
+	public void setDisplayDate(boolean displayDate);
 
 	/**
 	 * @param wb

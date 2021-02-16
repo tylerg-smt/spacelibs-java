@@ -120,7 +120,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 * @param headerMap
 	 * @param wb 
 	 */
-	private void setFont(CellStyle style, Map<String, Object> innerStyleMap, Workbook wb) {
+	protected void setFont(CellStyle style, Map<String, Object> innerStyleMap, Workbook wb) {
 
 		Font font = wb.createFont();
 
@@ -128,7 +128,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 			font.setBold(BooleanUtil.toBoolean(innerStyleMap.get(BOLD_WEIGHT)));
 		}
 		if (innerStyleMap.get(FONT_COLOR)!= null){
-			innerStyleMap.get(FONT_COLOR);
+			font.setColor(Short.parseShort(innerStyleMap.get(FONT_COLOR) + ""));
 		}
 
 		style.setFont(font);
@@ -141,7 +141,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 */
 	@Override
 	public CellStyle getTitleStyle(Workbook wb) {
-		if (styleMap != null && styleMap.containsKey(TITLE_MAP)){
+		if (styleMap.containsKey(TITLE_MAP)){
 			return buildStyle(styleMap.get(TITLE_MAP), wb);
 		}else{
 			return wb.createCellStyle();
@@ -153,7 +153,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 */
 	@Override
 	public CellStyle getBodyStyle(Workbook wb) {
-		if (styleMap != null && styleMap.containsKey(BODY_MAP)){
+		if (styleMap.containsKey(BODY_MAP)){
 			return buildStyle(styleMap.get(BODY_MAP), wb);
 		}else{
 			return wb.createCellStyle();
@@ -166,9 +166,9 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 */
 	@Override
 	public CellStyle getDateStyle(Workbook wb) {
-		if (styleMap != null && styleMap.containsKey(DATE_MAP)){
+		if (styleMap.containsKey(DATE_MAP)){
 			return buildStyle(styleMap.get(DATE_MAP), wb);
-		}else{
+		} else {
 			return wb.createCellStyle();
 		}
 	}
@@ -179,9 +179,9 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	 */
 	@Override
 	public CellStyle getHeadingStyle(Workbook wb) {
-		if (styleMap != null && styleMap.containsKey(HEADER_MAP)){
+		if (styleMap.containsKey(HEADER_MAP)){
 			return buildStyle(styleMap.get(HEADER_MAP), wb);
-		}else{
+		} else {
 			return wb.createCellStyle();
 		}
 	}

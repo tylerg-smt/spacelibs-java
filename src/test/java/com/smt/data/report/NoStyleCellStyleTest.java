@@ -37,4 +37,14 @@ class NoStyleCellStyleTest {
 		assertNotNull(ncs);
 	}
 
+	/**
+	 * tests that the displayDate gets set
+	 * @throws Exception
+	 */
+	@Test
+	public void testSetDisplayDate() throws Exception {
+		NoStyleCellStyle ncs = new NoStyleCellStyle();
+		ncs.setDisplayDate(false);
+		assertFalse(ncs.displayDate);
+	}
 }

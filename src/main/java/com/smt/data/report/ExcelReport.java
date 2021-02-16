@@ -30,9 +30,6 @@ import com.smt.data.format.DateFormat.DatePattern;
 import com.smt.data.format.NumberUtil;
 import com.smt.data.report.ExcelStyleFactory.Styles;
 
-// Lombok 1.18.x
-import lombok.extern.log4j.Log4j2;
-
 /****************************************************************************
  * <b>Title</b>: ExcelReport.java<p/>
  * <b>Project</b>: SpaceLibs-Java<p/>
@@ -47,10 +44,15 @@ import lombok.extern.log4j.Log4j2;
  * @since Feb 14, 2021
  * @updates
  ****************************************************************************/
-@Log4j2
+
 public class ExcelReport extends AbstractReport {
+	/**
+	 * Sets the maximum allowable rows per sheet
+	 */
+	public static final int MAX_ROWS_PER_SHEET = 64000;
+
+	// Members
 	private static final long serialVersionUID = 1l;
-	private static final int MAX_ROWS_PER_SHEET = 64000;
 	protected transient Collection<Map<String, Object>> rowData;
 	protected transient Map<String, String> headerMap;
 	protected String titleText;
@@ -62,6 +64,7 @@ public class ExcelReport extends AbstractReport {
 	protected transient CellStyle tempDateStyle;
 	protected boolean expandColumnFlag;
 	protected boolean displayDate;
+	protected int maxRowsPerSheet = MAX_ROWS_PER_SHEET;
 
 	/**
 	 * Constructor utilizes the NoStyle formatting
@@ -103,7 +106,7 @@ public class ExcelReport extends AbstractReport {
 	 * @see com.siliconmtn.data.report.SMTReportVO#generateReport()
 	 */
 	@Override
-	public byte[] generateReport() {
+	public byte[] generateReport() throws IOException {
 		createSheet(null, titleText, headerMap, rowData);
 		return getBytes(wb);
 	}
@@ -123,7 +126,7 @@ public class ExcelReport extends AbstractReport {
 		for (Map<String, Object> lineData : rows) {
 			// If the rows exceeds the max, create a new sheet.  Resize columns on 
 			// initial sheet if requested
-			if (count > MAX_ROWS_PER_SHEET) {
+			if (count > maxRowsPerSheet) {
 				resizeSheetColumns(s, header, rows.size());
 				s = buildSheet(sheetName + " - " + sheetCount++, title, header);
 			}
@@ -145,7 +148,7 @@ public class ExcelReport extends AbstractReport {
 	 */
 	protected void resizeSheetColumns(Sheet s, Map<String, String> header, int rowCount) {
 		int cost = rowCount * s.getLastRowNum();
-		log.info("Data: " + expandColumnFlag + "|" + cost);
+		
 		if (expandColumnFlag && cost < 50000) {
 			for (int i = 0; i < header.size(); i++)
 				s.autoSizeColumn(i);
@@ -300,7 +303,8 @@ public class ExcelReport extends AbstractReport {
 	 * @param wb
 	 * @return
 	 */
-	public byte[] getBytes(Workbook wb) {
+	public byte[] getBytes(Workbook wb) throws IOException {
+		if (wb == null) return new byte[0];
 		int estSize = 0;
 		Iterator<Sheet> sIter = wb.sheetIterator();
 		while(sIter.hasNext()) {
@@ -314,16 +318,7 @@ public class ExcelReport extends AbstractReport {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(estSize)) {
 			wb.write(baos);
 			return baos.toByteArray();
-		} catch (IOException ioe) {
-			log.error("could not write output stream", ioe);
-		} finally {
-			try {
-				wb.close();
-			} catch (Exception e) {
-				log.error("could not close workbook", e );
-			}
 		}
-		return new byte[0];
 	}
 
 	/**
@@ -332,13 +327,32 @@ public class ExcelReport extends AbstractReport {
 	 * @return
 	 */
 	public void setCellValue(Object value, Cell c) {
-
-		if (value instanceof Number || "0".equals(value) ) {
-			c.setCellValue(NumberUtil.toDouble(value+"",0));
+		Number num = NumberUtil.getNumber(value + "");
+		if (num != null) {
+			if (num instanceof Long) c.setCellValue(num.longValue());
+			else c.setCellValue(num.doubleValue());
 		} else if (value instanceof Boolean) {
 			c.setCellValue(BooleanUtil.toBoolean(value));
 		} else {
 			c.setCellValue(StringUtils.defaultString(value + ""));
 		}
+	}
+	
+	/**
+	 * Sets the max rows per sheet up to the maximum value for Excel.  If greater,
+	 * max is reduced to the max allowable.  A minimum of 10 rows per sheet
+	 * @param max
+	 */
+	public void setMaxRowsPerSheet(int max) {
+		max = max < 10 ? 10 : max;
+		maxRowsPerSheet = max > MAX_ROWS_PER_SHEET ? MAX_ROWS_PER_SHEET : max;
+	}
+	
+	/**
+	 * Retrieves the valueof the max rows per sheet
+	 * @return
+	 */
+	public int getMaxRowsPerSheet() {
+		return maxRowsPerSheet;
 	}
 }
