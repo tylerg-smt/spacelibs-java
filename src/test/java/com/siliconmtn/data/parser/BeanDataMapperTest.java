@@ -2,19 +2,31 @@ package com.siliconmtn.data.parser;
 
 // Junit 5
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 // JDK 11.x
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 // SPace Libs 1.x
 import com.siliconmtn.data.format.DateFormat.DatePattern;
+import com.siliconmtn.data.report.ExcelReport;
+import com.siliconmtn.data.util.EnumUtil;
 
 /****************************************************************************
  * <b>Title</b>: BeanDataMapperTest.java
@@ -52,6 +64,7 @@ class BeanDataMapperTest {
 		when(req.getParameterMap()).thenReturn(map);
 		
 		dbvo = new TestDataBeanVO();
+		dbvo.setCurrDate(new Date());
 	}
 
 	/**
@@ -61,7 +74,18 @@ class BeanDataMapperTest {
 	void testParseBeanObjectMapOfStringString() {
 		BeanDataMapper.parseBean(dbvo, map);
 		assertEquals("SMT", dbvo.getName());
-		assertEquals(3, dbvo.getNames().size());
+		System.out.println(dbvo);
+		assertEquals(3, dbvo.getArrNames().length);
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.data.parser.BeanDataMapper#parseBean(java.lang.Object, java.util.Map)}.
+	 */
+	@Test
+	void testParseBeanObjectMapOfStringStringNull() {
+		map.put("name", null);
+		BeanDataMapper.parseBean(dbvo, map);
+		assertNull(dbvo.getName());
 	}
 
 	/**
@@ -69,15 +93,29 @@ class BeanDataMapperTest {
 	 */
 	@Test
 	void testParseBeanObjectMapOfStringStringString() {
-		fail("Not yet implemented");
+		
+		ConvertUtilsBean obj = Mockito.mock(ConvertUtilsBean.class);
+		when(obj.convert(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+		.thenThrow(new ConversionException(""));
+		Mockito.spy(obj);
+		BeanDataMapper.createList(String.class, new Object[] {"one", "two"});
+		
 	}
 
 	/**
 	 * Test method for {@link java.lang.Object#toString()}.
 	 */
 	@Test
-	void testToString() {
-		fail("Not yet implemented");
+	void testConstructors() {
+		dbvo = new TestDataBeanVO(req);
+		assertEquals("SMT", dbvo.getName());
+		
+		req = Mockito.mock(HttpServletRequest.class);
+		Map<String, String[]> testMap = new HashMap<>();
+		testMap.put("name_test", new String[] { "Suffix Test"});
+		when(req.getParameterMap()).thenReturn(testMap);
+		dbvo = new TestDataBeanVO(req, "_test");
+		assertEquals("Suffix Test", dbvo.getName());
 	}
 
 }

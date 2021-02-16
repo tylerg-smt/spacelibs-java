@@ -24,9 +24,9 @@ public class ExcelStyleFactory {
 	 * Styles enum with fully qualified class names
 	 */
 	public enum Styles {
-		STANDARD("com.smt.data.report.GreyHeadingBorderDataCellStyle"), 
-		BORDERS_ONLY("com.smt.data.report.BordersOnlyCellStyle"),
-		NO_STYLE("com.smt.data.report.NoStyleCellStyle");
+		STANDARD("com.siliconmtn.data.report.GreyHeadingBorderDataCellStyle"), 
+		BORDERS_ONLY("com.siliconmtn.data.report.BordersOnlyCellStyle"),
+		NO_STYLE("com.siliconmtn.data.report.NoStyleCellStyle");
 		
 		String classPath;
 		Styles(String classPath) { this.classPath = classPath; }

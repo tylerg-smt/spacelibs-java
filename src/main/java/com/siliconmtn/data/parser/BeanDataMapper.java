@@ -70,28 +70,25 @@ public final class BeanDataMapper {
 
 			//Create a Request FieldName with the passed Suffix.
 			String reqFieldName = fieldName + suffix;
-
+			
 			//Lookup FieldValue using reqFieldName instead.
 			Object fieldValue = data.get(reqFieldName);
-
+			if (fieldValue == null) continue;
+			
 			// If the array of values is larger than 1, convert it to a List instead
-			if (fieldValue != null && fieldValue.getClass().isArray()) {
-				fieldValue = getBeanArrayValue(fieldValue, m);
-			}
+			fieldValue = getBeanArrayValue(fieldValue, m);
 
 			// Make sure the type is not an enum.  If so, convert it to the proper
 			// Class type
-			if (fieldValue != null && m.getParameterTypes()[0].isEnum()) {
+			if (m.getParameterTypes()[0].isEnum()) {
 				try {
 					fieldValue = EnumUtil.safeValueOf((Class<Enum>) Class.forName(m.getParameterTypes()[0].getName()), fieldValue.toString());
-				} catch(ClassNotFoundException cnfe) {
-					log.error("Issue with enum", cnfe);
-				}
+				} catch(ClassNotFoundException cnfe) { /* Nothing to do */ }
 			}
 
 			// Assign value to the class
 			try {
-				if (fieldValue != null) BeanUtils.setProperty(o, fieldName, fieldValue);
+				BeanUtils.setProperty(o, fieldName, fieldValue);
 			} catch (Exception e) {
 				// Typically this is circumstantial (missing or uncastable data), not an error.
 				// We don't print the exception stack here - it's just noise in the logs.
@@ -113,7 +110,6 @@ public final class BeanDataMapper {
 	static Object getBeanArrayValue(Object fieldValue, Method m) {
 
 		if (((Object[]) fieldValue).length > 1) {
-			System.out.println("# Vals: " + ((Object[]) fieldValue).length);
 			fieldValue = createList( m.getParameterTypes()[0], (Object[]) fieldValue);
 		} else {
 			fieldValue = ((Object[])fieldValue)[0];
@@ -133,7 +129,7 @@ public final class BeanDataMapper {
 	 * @param dtConverter 
 	 * @return
 	 */
-	private static List<?> createList(Class<?> cls, Object[] data) {
+	protected static List<?> createList(Class<?> cls, Object[] data) {
 		// Create the converter and register the date converter
 		ConvertUtilsBean cub = new ConvertUtilsBean();
 		cub.register(dtConverter, Date.class);
@@ -148,9 +144,7 @@ public final class BeanDataMapper {
 				if (entry.getClass().isAssignableFrom(cls))
 					coll.add(entry);
 			}
-		} catch (Exception e) {
-			log.error("Unable to create list", e);
-		}
+		} catch (Exception e) { /* Nothing to do */ }
 
 		return coll;
 	}

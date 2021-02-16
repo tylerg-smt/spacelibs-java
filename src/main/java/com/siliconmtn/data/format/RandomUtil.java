@@ -25,6 +25,13 @@ public class RandomUtil {
 	private final static String symbol="!*$#";
 	
 	/**
+	 * Private constructor.  Static only class
+	 */
+	private RandomUtil() {
+		super();
+	}
+	
+	/**
 	 * Generates a random string of desired length with string "abcdefghijklmnopqrstuvwxyz1234567890"
 	 * @param len of string
 	 * @return Generated random string

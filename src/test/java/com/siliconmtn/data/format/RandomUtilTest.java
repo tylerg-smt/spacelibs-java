@@ -25,7 +25,9 @@ public class RandomUtilTest {
 	 */
 	@Test
 	public void generateRandomNumberTest() {
-		assertTrue(2 <= RandomUtil.generateRandomNumber(2, 8) && RandomUtil.generateRandomNumber(2, 8) < 8 );
+		int number = RandomUtil.generateRandomNumber(2, 8);
+		assertEquals(number, Integer.max(1, number));
+		assertEquals(number, Integer.min(9, number));
 	}
 
 	/**

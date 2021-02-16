@@ -53,6 +53,7 @@ class GreyHeadingBorderDataCellStyleTest {
 	@Test
 	void testGetStyleMap() throws Exception {
 		GreyHeadingBorderDataCellStyle ncs = new GreyHeadingBorderDataCellStyle();
+		ncs.setDisplayDate(true);
 		assertNotNull(ncs.getStyleMap());
 		assertEquals(3, ncs.getStyleMap().size());
 	}

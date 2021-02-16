@@ -8,11 +8,11 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 
+// Space Libs 1.x
 import com.siliconmtn.data.format.BooleanUtil;
 import com.siliconmtn.data.format.NumberUtil;
-
-import org.apache.poi.ss.usermodel.BorderStyle;
 
 /****************************************************************************
  * <b>Title</b>: AbstractExcelCellStyle.java <p/>
