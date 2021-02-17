@@ -171,7 +171,7 @@ public class SMTHttpConnectionManager {
 	/**
 	 * Retrieves data from an HTTP server and returns the data
 	 * @param url fully qualified URL (http://www.somedomain.com)
-	 * @param parameters HTTP POST data as a Map of <key, value> pairs
+	 * @param parameters HTTP POST data as a Map of key, value pairs
 	 * @return binary data containing information retrieved from the site
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * Defaults to POST if type is null
@@ -186,7 +186,7 @@ public class SMTHttpConnectionManager {
 	/**
 	 * Retrieves data from an HTTP server and returns the data
 	 * @param url fully qualified URL (http://www.somedomain.com)
-	 * @param parameters HTTP POST data as a Map of <key, value> pairs
+	 * @param parameters HTTP POST data as a Map of key, value pairs
 	 * @return binary data containing information retrieved from the site
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * Defaults to POST if type is null
@@ -222,8 +222,8 @@ public class SMTHttpConnectionManager {
 	/**
 	 * Connects to the end device and returns a stream so the data can be 
 	 * processed sequentially.
-	 * @param actionUrl URL for the connection
-	 * @param parameters Post data to pass as a Map <key, value> pairs
+	 * @param url URL for the connection
+	 * @param params Post data to pass as a Map key, value pairs
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * @return Connection stream to the data
 	 * @throws IOException

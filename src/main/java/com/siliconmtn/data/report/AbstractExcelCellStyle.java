@@ -117,7 +117,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	/**
 	 * sets font styles
 	 * @param style
-	 * @param headerMap
+	 * @param innerStyleMap
 	 * @param wb 
 	 */
 	protected void setFont(CellStyle style, Map<String, Object> innerStyleMap, Workbook wb) {

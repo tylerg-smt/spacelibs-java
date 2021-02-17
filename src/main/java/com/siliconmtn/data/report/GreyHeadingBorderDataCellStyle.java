@@ -19,7 +19,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
  * <b>Company:</b> Silicon Mountain Technologies<p/>
  * @author James Camire
  * @version 1.0
- * @since Feb 14, 2021/>
+ * @since Feb 14, 2021
  * @updates:
  ****************************************************************************/
 public class GreyHeadingBorderDataCellStyle extends AbstractExcelCellStyle {

@@ -100,7 +100,6 @@ public final class HashCodeUtil {
 	 * <code>aObject</code> is a possibly-null object field, and possibly an array.
 	 * If <code>aObject</code> is an array, then each element may be a primitive or
 	 * a possibly-null object.
-	 * @param aSeed
 	 * @param aObject
 	 * @return
 	 */
@@ -139,8 +138,7 @@ public final class HashCodeUtil {
 	}
 
 	/**
-	 * 
-	 * @param aSeed
+	 * Grabs the first term
 	 * @return
 	 */
 	private static int firstTerm() {

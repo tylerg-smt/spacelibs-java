@@ -126,7 +126,6 @@ public final class BeanDataMapper {
 	 * @param cls Generic type of the list.  Used to convert the data from a String / Object
 	 * to the appropriate type.
 	 * @param data Data to add to the List
-	 * @param dtConverter 
 	 * @return
 	 */
 	protected static List<?> createList(Class<?> cls, Object[] data) {

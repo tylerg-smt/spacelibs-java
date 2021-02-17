@@ -3,6 +3,7 @@ package com.siliconmtn.data.text;
 // JDK 11.x
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.UUID;
 
 // Apache Commons 3.1.1
 import org.apache.commons.lang3.StringUtils;
@@ -176,5 +177,22 @@ public class StringUtil extends StringUtils {
 
 		sb.append("]");
 		return sb.toString();
+	}
+	
+	
+	/**
+	 * Check if a given string is a valid UUID and return it as a UUID or null
+	 * @param potentialUUID the string to test
+	 * @return the UUID if valid, else null
+	 */
+	public static UUID getUUID(String potentialUUID) {
+		if (potentialUUID == null || potentialUUID.length() != 36)
+			return null;		
+		
+		try {
+			return UUID.fromString(potentialUUID);
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 }

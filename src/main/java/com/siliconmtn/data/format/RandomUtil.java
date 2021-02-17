@@ -5,7 +5,7 @@ import java.util.Random;
 /****************************************************************************
  * <b>Title</b>RandomUtil.java
  * <p/>
- * <b>Description: Generate random string from generic character & extended character set </b>
+ * <b>Description: Generate random string from generic character &amp; extended character set </b>
  * <p/>
  * <b>Copyright:</b> Copyright (c) 2021
  * <p/>
@@ -64,8 +64,8 @@ public class RandomUtil {
 
 	/**
 	 * Generates a random number
-	 * @param Integer value indicating lowLimit inclusive and Integer value
-	 *                indicating highLimitExclusive
+	 * @param lowLimitInclusive value indicating lowLimit inclusive 
+	 * @param highLimitExclusive Integer value indicating highLimitExclusive
 	 * @return Generated Random number in set limits
 	 */
 	public static int generateRandomNumber(int lowLimitInclusive, int highLimitExclusive) {

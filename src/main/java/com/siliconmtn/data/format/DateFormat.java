@@ -23,6 +23,9 @@ import org.apache.commons.lang3.time.FastDateFormat;
  **********************************************************************************************************/
 public class DateFormat {
 	
+	/**
+	 * Enum to provide the pattern name and date pattern for specifying types
+	 */
 	public enum DatePattern{
 				// Defining and declaring enum type Date and Time Patterns
 		        		        
@@ -76,12 +79,18 @@ public class DateFormat {
 	    
 		private final String pattern;
 		
-		//initialization of patterns
+		/**
+		 * Initialization of patterns
+		 * @param pattern
+		 */
 		private DatePattern(final String pattern) {
 			this.pattern=pattern;
 		}
 		
-		//Returning pattern when called to get a specific pattern
+		/**
+		 * Returning pattern when called to get a specific pattern
+		 * @return String representation of the pattern
+		 */
 		public String getPattern() {
 	        return this.pattern;
 	    }
@@ -97,7 +106,7 @@ public class DateFormat {
 	/**
 	 * Converts given ZonedDateTime format date to Date format date
 	 * "YYYY-MM-DD'T'HH:MMZ" to "EEE MMM DD HH:MM:SS zzz YYYY", Example:  "2021-01-22T07:13Z" to "Fri Jan 22 07:00:00 UTC 2021"
-	 * @param Takes in ZonedDateTime zdt as input;
+	 * @param zdt in ZonedDateTime zdt as input;
 	 * @return Date to use as the end date of a query
 	 */
 	public static Date zoneDateToDate(ZonedDateTime zdt) throws ParseException {
@@ -129,7 +138,7 @@ public class DateFormat {
 	
 	/**
 	 * Converts a String date into a Date date
-	 * @param Enum PatternName dp
+	 * @param dp Pattern Enum
 	 * @param dateText text to be converted
 	 * @return null if unable to convert, if successful return Date
 	 */
@@ -153,8 +162,8 @@ public class DateFormat {
 	
 	/**
 	 * Converts given Date object into a given Specific pattern
-	 * @param Enum PatternName dp
-	 * @param Date object
+	 * @param dp PatternName Date pattern
+	 * @param date Date to be formatted
 	 * @return Converts to String date in desired pattern, else empty string
 	 */
 	public static String toFormattedString(DatePattern dp, Date date) {
@@ -171,9 +180,9 @@ public class DateFormat {
 	 * The date is adjusted in the field entry and by the amount.  For example, 
 	 * if the date is 1/1/2008 and you want to move the month back one month use:
 	 * formatDate(date, Calendar.MONTH, -1);
-	 * @param d
-	 * @param field
-	 * @param amount
+	 * @param d Date to be adjusted
+	 * @param field What to adjust (day, month ...)
+	 * @param amount Amount of adjustment
 	 * @return
 	 */
 	public static Date adjustDate(Date d, int field, int amount) {
@@ -195,7 +204,7 @@ public class DateFormat {
 	}
 	/**
 	 * Overloaded to take an object and checks to see if it is a date.
-	 * @param oDate
+	 * @param oDate Date to check
 	 * @return
 	 */
 	public static boolean isDate(Object oDate) {
@@ -213,7 +222,7 @@ public class DateFormat {
 	/**
 	 * Converts a java.util.Date to a java.sql.Date
 	 * @param val
-	 * @param defaultToday Uses current date and time if true
+	 * @param defaultNow Uses current date and time if true
 	 * @return java.sql.Date Object. Null if the value param is null and defaultNow
 	 * is false.  Otherwise, on null, current date and time will be returned
 	 */
@@ -229,7 +238,7 @@ public class DateFormat {
 	}
 	/**
 	 * Converts a String into a java.sql.Date Object
-	 * @param Enum PatternName datePattern
+	 * @param datePattern PatternName
 	 * @param dateText text to be converted
 	 * @return null if unable to convert, else java.sql.Date object
 	 */
@@ -248,7 +257,7 @@ public class DateFormat {
 	}
 	/**
 	 * Creates a SQL Timestamp out of a String date that matches the supplied pattern
-	 * @param Enum PatternName datePattern
+	 * @param datePattern PatternName
 	 * @param dateText text to be converted
 	 * @return Timestamp
 	 */ 
@@ -260,7 +269,7 @@ public class DateFormat {
 	/**
 	 * takes a java.util.Date object and if it's not null converts it to a 
 	 * java.sql.Timestamp, for insertion into DBs.
-	 * @param  Date dt
+	 * @param  dt Date to convert to a timestamp
 	 * @return Timestamp 
 	 */
 	public static Timestamp formatTimestamp(Date dt) {
@@ -290,14 +299,14 @@ public class DateFormat {
 		return Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 	}
 	/**
-	 * Returns the current day of a month as an integer, dates in the range of 1-30, 1-31, 1-28, leap year->1-29
+	 * Returns the current day of a month as an integer, dates in the range of 1-30, 1-31, 1-28, leap year, 1-29
 	 * @return
 	 */
 	public static int getCurrentDayOfMonth() {
 		return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 	}
 	/**
-	 * Returns the current date as an integer , dates in the range of 1-30, 1-31, 1-28, leap year->1-29
+	 * Returns the current date as an integer , dates in the range of 1-30, 1-31, 1-28, leap year, 1-29
 	 * @return
 	 */
 	public static int getCurrentDate() {

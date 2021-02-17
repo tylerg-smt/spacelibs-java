@@ -83,8 +83,8 @@ public class ExcelReport extends AbstractReport {
 
 	/**
 	 * Excel report using the provided style
-	 * @param headerMap
-	 * @param s
+	 * @param headerMap Map of the id and name for each column heading
+	 * @param style
 	 */
 	public ExcelReport(Map<String, String> headerMap, ExcelStyleInterface style) {
 		super();
@@ -212,6 +212,9 @@ public class ExcelReport extends AbstractReport {
 		for(String code : header.keySet()) {
 			Cell c = row.createCell(cellCnt++);
 			Object value = lineData.get(code);
+			
+			// Convert nulls to empty so they display properly in the spreadsheet
+			if (value == null) value = "";
 			setCellValue(value, c);
 			boolean isDate = (value instanceof Date || value instanceof Timestamp || DateFormat.isDate(value));
 			setBodyCellStyle(c, lineData, code, isDate);
@@ -221,7 +224,7 @@ public class ExcelReport extends AbstractReport {
 	/**
 	 * Here to allow sub-classes to override and apply individual styling to a cell versus blanket styling. Last two 
 	 * parameters to be utilized for customized logic around applying styles in subclasses.
-	 * @param Cell
+	 * @param cell HSSF cell object
 	 * @param rowData - the rowData
 	 * @param column - the column name
 	 */
@@ -281,7 +284,7 @@ public class ExcelReport extends AbstractReport {
 	/**
 	 * sets the boolean flag and sets the title string so a title cell can be triggered
 	 * and added to the report before generation. 
-	 * @param contents
+	 * @param titleText Title of the document
 	 */
 	public void setTitle(String titleText) {
 		this.titleText = titleText;
@@ -322,8 +325,8 @@ public class ExcelReport extends AbstractReport {
 
 	/**
 	 * Determines the cell type based upon the cell data and sets cell value appropriately
-	 * @param value
-	 * @return
+	 * @param value Value to store in the cell
+	 * @param c HSSF cell object
 	 */
 	public void setCellValue(Object value, Cell c) {
 		Number num = NumberUtil.getNumber(value + "");

@@ -65,8 +65,8 @@ public class SMTMath {
 
     /**
      * BigDecimal division with rounding to 4 digits
-     * @param multiplicand
-     * @param multiplier
+     * @param dividend
+     * @param divisor
      * @return
      */
     public static  BigDecimal divideBy(BigDecimal dividend, BigDecimal divisor) {
