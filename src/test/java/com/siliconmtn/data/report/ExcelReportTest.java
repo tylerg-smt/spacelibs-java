@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 // Space Libs 1.x
 import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.DateFormat.DatePattern;
+import com.siliconmtn.data.report.ExcelReport.CellValueType;
 import com.siliconmtn.data.report.ExcelStyleFactory.Styles;
 
 // Apache POI 5.x
@@ -306,7 +307,8 @@ class ExcelReportTest {
 		Sheet s = wb.createSheet();
 		Row row = s.createRow(0);
 		Cell cell = row.createCell(0);
-		rpt.setBodyCellStyle(cell, false);
-		rpt.setBodyCellStyle(cell, true);
+		rpt.setBodyCellStyle(cell, CellValueType.DATE);
+		rpt.setBodyCellStyle(cell, CellValueType.TIMESTAMP);
+		rpt.setBodyCellStyle(cell, CellValueType.STRING);
 	}
 }

@@ -48,6 +48,14 @@ import com.siliconmtn.data.report.ExcelStyleFactory.Styles;
 
 public class ExcelReport extends AbstractReport {
 	/**
+	 * Apache Cell Types lack important types.  Assign a cell value tye for 
+	 * each cell so we can format the cell as desired 
+	 */
+	public enum CellValueType {
+		BOOLEAN, DOUBLE, DATE, INTEGER, STRING, TIMESTAMP;
+	}
+	
+	/**
 	 * Sets the maximum allowable rows per sheet
 	 */
 	public static final int MAX_ROWS_PER_SHEET = 64000;
@@ -217,8 +225,8 @@ public class ExcelReport extends AbstractReport {
 			
 			// Convert nulls to empty so they display properly in the spreadsheet
 			if (value == null) value = "";
-			boolean isDate = setCellValue(value, c);
-			setBodyCellStyle(c, isDate);
+			CellValueType type = setCellValue(value, c);
+			setBodyCellStyle(c, type);
 		}
 	}
 
@@ -229,8 +237,8 @@ public class ExcelReport extends AbstractReport {
 	 * @param rowData - the rowData
 	 * @param column - the column name
 	 */
-	protected void setBodyCellStyle(Cell cell, boolean isDate) {
-		if(isDate) {
+	protected void setBodyCellStyle(Cell cell, CellValueType type) {
+		if(CellValueType.DATE.equals(type) || CellValueType.TIMESTAMP.equals(type)) {
 			cell.setCellStyle(dateStyle);
 		} else {
 			cell.setCellStyle(bodyStyle); 
@@ -329,36 +337,42 @@ public class ExcelReport extends AbstractReport {
 	 * @param value Value to store in the cell
 	 * @param c HSSF cell object
 	 */
-	public boolean setCellValue(Object value, Cell c) {
-		boolean isDate = false;
-		Number num = null;
-		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
-			num = NumberUtil.getNumber(value.toString());
-		}
+	public CellValueType setCellValue(Object value, Cell c) {
+		CellValueType cvt = CellValueType.STRING;
 		
-		if (num != null) {
-			if (num instanceof Long) c.setCellValue(num.longValue());
-			else c.setCellValue(num.doubleValue());
+		// 
+		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
+			Number num = NumberUtil.getNumber(value.toString());
+			if (num instanceof Long) {
+				c.setCellValue(num.longValue());
+				cvt = CellValueType.INTEGER;
+			} else {
+				c.setCellValue(num.doubleValue());
+				cvt = CellValueType.DOUBLE;
+			}
 		} else if (value instanceof Boolean) {
 			c.setCellValue(BooleanUtil.toBoolean(value));
+			cvt = CellValueType.BOOLEAN;
 		} else if (value instanceof Timestamp) {
 			c.setCellValue((Timestamp)value);
+			cvt = CellValueType.TIMESTAMP;
 		} else if (value instanceof Date) {
 			c.setCellValue((Date)value);
+			cvt = CellValueType.DATE;
 		} else {
 			if (Pattern.matches("^(\\d{4}-\\d{2}-\\d{2}).*", value + "")) {
-				isDate = true;
 				Date d = value.toString().length() > 10 ? 
 						DateFormat.formatDate(DatePattern.DATE_TIME_DASH, value + "") : 
 						DateFormat.formatDate(DatePattern.DATE_DASH, value + "");
 				
 				c.setCellValue(d);
+				cvt = CellValueType.DATE;
 			} else {
 				c.setCellValue(StringUtils.defaultString(value.toString()));
 			}
 		}
 		
-		return isDate;
+		return cvt;
 	}
 	
 	/**
