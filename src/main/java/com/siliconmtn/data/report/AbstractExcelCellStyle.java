@@ -169,7 +169,9 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 		if (styleMap.containsKey(DATE_MAP)){
 			return buildStyle(styleMap.get(DATE_MAP), wb);
 		} else {
-			return wb.createCellStyle();
+			CellStyle dateStyle = wb.createCellStyle();
+			dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("yyyy-mm-dd"));
+			return dateStyle;
 		}
 	}
 	

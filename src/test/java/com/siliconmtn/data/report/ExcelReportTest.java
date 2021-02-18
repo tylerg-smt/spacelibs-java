@@ -55,6 +55,7 @@ class ExcelReportTest {
 		headerMap.put("NAME", "Name");
 		headerMap.put("AGE", "Age");
 		headerMap.put("DOB", "Date of Birth");
+		headerMap.put("NULL", "Null Column");
 		rpt = new ExcelReport(headerMap);
 		
 		// Assign the data
@@ -207,6 +208,18 @@ class ExcelReportTest {
 		rpt.setCellValue("James Camire", cell);
 		assertEquals("James Camire", cell.getStringCellValue());
 		
+		rpt.setCellValue("2021-01-01", cell);
+		assertNotNull(cell.getDateCellValue());
+		
+		rpt.setCellValue("2021-01-01 01:00:00", cell);
+		assertNotNull(cell.getDateCellValue());
+		
+		rpt.setCellValue(new Date(), cell);
+		assertNotNull(cell.getDateCellValue());
+		
+		rpt.setCellValue(DateFormat.formatTimestamp(new Date()), cell);
+		assertNotNull(cell.getDateCellValue());
+		
 		wb.close();
 	}
 
@@ -276,6 +289,7 @@ class ExcelReportTest {
 		data.put("ID", "12345");
 		data.put("NAME", "James Camire");
 		data.put("AGE", 56);
+		data.put("NULL", null);
 		
 		// Randomly add a timestamp or date
 		if (new Random().nextBoolean())
@@ -284,5 +298,15 @@ class ExcelReportTest {
 			data.put("DOB", DateFormat.formatTimestamp(new Date()));
 		
 		return data;
+	}
+
+	@Test
+	public void testSetBodyCellStyle() throws Exception {
+		Workbook wb = rpt.getWorkbook();
+		Sheet s = wb.createSheet();
+		Row row = s.createRow(0);
+		Cell cell = row.createCell(0);
+		rpt.setBodyCellStyle(cell, false);
+		rpt.setBodyCellStyle(cell, true);
 	}
 }

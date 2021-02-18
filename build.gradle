@@ -17,9 +17,10 @@ plugins {
 	id 'signing'
 }
 
-group = 'com.smt'
+group = 'com.siliconmtn'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+archivesBaseName = "java-libraries"
 
 repositories {
     // Use jcenter for resolving dependencies.

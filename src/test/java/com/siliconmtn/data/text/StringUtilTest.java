@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
+// JDK 11.x
+import java.util.UUID;
+
 // Mockito 3.7.0
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,6 +34,10 @@ class StringUtilTest {
 	@Mock
 	Node mockNode = Mockito.mock(Node.class);
 
+	// Members
+	String uuid = "40e6215d-b5c6-4896-987c-f30f3678f608";
+	String baduuid = "40e6215d-b5c6-4896-987c-f30f3678fzzz";
+	
 	/**
 	 * Test method for {@link com.siliconmtn.data.text.StringUtil#everyIndexOf(java.lang.CharSequence, java.lang.CharSequence)}.
 	 */
@@ -124,5 +131,18 @@ class StringUtilTest {
 
 		when(mockNode.getNodeId()).thenThrow(new IllegalArgumentException("Test"));
 		assertTrue(StringUtil.getToString(mockNode, "|").contains("|"));
+	}
+	
+	
+	@Test
+	void checkExceptionGetUUID() {
+		assertEquals(UUID.fromString(uuid), StringUtil.getUUID(uuid));
+		assertNull(StringUtil.getUUID(null));
+		assertNull(StringUtil.getUUID("Too Small"));
+	}
+
+	@Test
+	void checkThrowsExceptionGetUUID() {
+		assertEquals(null, StringUtil.getUUID(baduuid));
 	}
 }

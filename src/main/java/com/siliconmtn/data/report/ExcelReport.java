@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 // Apache commons 3.x
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+// Space Libs 1.x
 import com.siliconmtn.data.format.BooleanUtil;
 import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.NumberUtil;
@@ -215,9 +217,8 @@ public class ExcelReport extends AbstractReport {
 			
 			// Convert nulls to empty so they display properly in the spreadsheet
 			if (value == null) value = "";
-			setCellValue(value, c);
-			boolean isDate = (value instanceof Date || value instanceof Timestamp || DateFormat.isDate(value));
-			setBodyCellStyle(c, lineData, code, isDate);
+			boolean isDate = setCellValue(value, c);
+			setBodyCellStyle(c, isDate);
 		}
 	}
 
@@ -228,7 +229,7 @@ public class ExcelReport extends AbstractReport {
 	 * @param rowData - the rowData
 	 * @param column - the column name
 	 */
-	protected void setBodyCellStyle(Cell cell, Map<String, Object> rowData, String column, boolean isDate) {
+	protected void setBodyCellStyle(Cell cell, boolean isDate) {
 		if(isDate) {
 			cell.setCellStyle(dateStyle);
 		} else {
@@ -328,16 +329,36 @@ public class ExcelReport extends AbstractReport {
 	 * @param value Value to store in the cell
 	 * @param c HSSF cell object
 	 */
-	public void setCellValue(Object value, Cell c) {
-		Number num = NumberUtil.getNumber(value + "");
+	public boolean setCellValue(Object value, Cell c) {
+		boolean isDate = false;
+		Number num = null;
+		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
+			num = NumberUtil.getNumber(value.toString());
+		}
+		
 		if (num != null) {
 			if (num instanceof Long) c.setCellValue(num.longValue());
 			else c.setCellValue(num.doubleValue());
 		} else if (value instanceof Boolean) {
 			c.setCellValue(BooleanUtil.toBoolean(value));
+		} else if (value instanceof Timestamp) {
+			c.setCellValue((Timestamp)value);
+		} else if (value instanceof Date) {
+			c.setCellValue((Date)value);
 		} else {
-			c.setCellValue(StringUtils.defaultString(value + ""));
+			if (Pattern.matches("^(\\d{4}-\\d{2}-\\d{2}).*", value + "")) {
+				isDate = true;
+				Date d = value.toString().length() > 10 ? 
+						DateFormat.formatDate(DatePattern.DATE_TIME_DASH, value + "") : 
+						DateFormat.formatDate(DatePattern.DATE_DASH, value + "");
+				
+				c.setCellValue(d);
+			} else {
+				c.setCellValue(StringUtils.defaultString(value.toString()));
+			}
 		}
+		
+		return isDate;
 	}
 	
 	/**
@@ -356,5 +377,13 @@ public class ExcelReport extends AbstractReport {
 	 */
 	public int getMaxRowsPerSheet() {
 		return maxRowsPerSheet;
+	}
+	
+	/**
+	 * Returns the workbook
+	 * @return
+	 */
+	public Workbook getWorkbook() {
+		return wb;
 	}
 }

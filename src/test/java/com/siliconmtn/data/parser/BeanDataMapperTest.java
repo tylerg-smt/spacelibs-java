@@ -67,7 +67,6 @@ class BeanDataMapperTest {
 	void testParseBeanObjectMapOfStringString() {
 		BeanDataMapper.parseBean(dbvo, map);
 		assertEquals("SMT", dbvo.getName());
-		System.out.println(dbvo);
 		assertEquals(3, dbvo.getArrNames().length);
 	}
 	
