@@ -41,7 +41,7 @@ public class EnumUtil {
 	 * (SomeVal.equals(myVal)) // Evaluates to true
 	 * @param enumType Enum class to pass.  For Example: MyEnum.class
 	 * @param val String value to assign to the enum
-	 * @param dafaultVal Default value if no match
+	 * @param defaultVal Default value if no match
 	 * @return Typed Enum.  Null if val can't be converted.
 	 */
 	public static <E extends Enum<E>>  E safeValueOf(Class<E> enumType, String val, E defaultVal) {

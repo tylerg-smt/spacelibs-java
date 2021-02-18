@@ -8,11 +8,11 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 
+// Space Libs 1.x
 import com.siliconmtn.data.format.BooleanUtil;
 import com.siliconmtn.data.format.NumberUtil;
-
-import org.apache.poi.ss.usermodel.BorderStyle;
 
 /****************************************************************************
  * <b>Title</b>: AbstractExcelCellStyle.java <p/>
@@ -117,7 +117,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	/**
 	 * sets font styles
 	 * @param style
-	 * @param headerMap
+	 * @param innerStyleMap
 	 * @param wb 
 	 */
 	protected void setFont(CellStyle style, Map<String, Object> innerStyleMap, Workbook wb) {
@@ -169,7 +169,9 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 		if (styleMap.containsKey(DATE_MAP)){
 			return buildStyle(styleMap.get(DATE_MAP), wb);
 		} else {
-			return wb.createCellStyle();
+			CellStyle dateStyle = wb.createCellStyle();
+			dateStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("yyyy-mm-dd"));
+			return dateStyle;
 		}
 	}
 	

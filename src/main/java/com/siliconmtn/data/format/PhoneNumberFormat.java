@@ -217,9 +217,7 @@ public class PhoneNumberFormat implements Serializable {
 
 	/**
 	 * returns an obfuscated version of the provided phone number.
-	 * e.g.: (XXX)XXX-1234
-	 * @param phoneNumber
-	 * @return
+	 * @return obfuscated number e.g.: (XXX)XXX-1234
 	 */
 	public String obfuscatePhoneNumber() {
 		StringBuilder sb = new StringBuilder();

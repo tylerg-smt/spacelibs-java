@@ -147,7 +147,7 @@ public class Node implements Serializable, Comparable<Node> {
 
 	/**
 	 * Sets the parent id
-	 * @return
+	 * @param parentId Sets the parent id of this node
 	 */
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
@@ -163,7 +163,7 @@ public class Node implements Serializable, Comparable<Node> {
 
 	/**
 	 * Sets the node name
-	 * @return
+	 * @param nodeName Sets the name of the nodes
 	 */
 	public void setNodeName(String nodeName) {
 		this.nodeName = nodeName;
@@ -181,7 +181,7 @@ public class Node implements Serializable, Comparable<Node> {
 	/**
 	 * Sets the user object.  This allows the node to store any type
 	 * of data elements as part of the tree/node
-	 * @return
+	 * @param userObject Custom object associated with this node
 	 */
 	public void setUserObject(Object userObject) {
 		this.userObject = userObject;
@@ -189,7 +189,7 @@ public class Node implements Serializable, Comparable<Node> {
 	
 	/**
 	 * Sets the node depth level from root
-	 * @return
+	 * @param treeLevel level in the tree hierarchy
 	 */
 	public void setDepthLevel(int treeLevel) { 
 		this.depthLevel = treeLevel;
@@ -229,7 +229,7 @@ public class Node implements Serializable, Comparable<Node> {
 	
 	/**
 	 * Sets the root node
-	 * @return
+	 * @param root sets the root element
 	 */
 	public void setRoot(boolean root) {
 		this.root = root;
@@ -356,7 +356,7 @@ public class Node implements Serializable, Comparable<Node> {
 
 	/**
 	 * sets the order number (ordering) for this node
-	 * @return
+	 * @param orderNo Order of the display of this node
 	 */
 	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;

@@ -57,7 +57,6 @@ public abstract class AbstractReport implements Serializable {
 	
 	/**
 	 * Takes the file extension and sets the content type
-	 * @param ext
 	 */
 	protected void setContentTypeByFileName() {
 		Path path = new File(this.fileName).toPath();
@@ -78,7 +77,7 @@ public abstract class AbstractReport implements Serializable {
 
 	/**
 	 * Sets the file name.  The content type is also set based upon the file extension
-	 * @param f
+	 * @param fileName Name of the file
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

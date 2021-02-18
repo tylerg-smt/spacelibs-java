@@ -68,7 +68,7 @@ public class SunTimeVO extends BeanDataVO {
 	}
 
 	/**
-	 * @param sunSiteDate the sunSiteDate to set
+	 * @param sunSetDate the sunSetDate to set
 	 */
 	public void setSunsetDate(Date sunSetDate) {
 		this.sunsetDate = sunSetDate;
@@ -82,7 +82,7 @@ public class SunTimeVO extends BeanDataVO {
 	}
 
 	/**
-	 * @param sunRiseDate the sunRiseDate to set
+	 * @param sunriseDate the sunriseDate to set
 	 */
 	public void setSunriseDate(Date sunriseDate) {
 		this.sunriseDate = sunriseDate;

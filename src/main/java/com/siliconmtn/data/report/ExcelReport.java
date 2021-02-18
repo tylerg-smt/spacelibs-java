@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 // Apache commons 3.x
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+// Space Libs 1.x
 import com.siliconmtn.data.format.BooleanUtil;
 import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.NumberUtil;
@@ -45,6 +47,14 @@ import com.siliconmtn.data.report.ExcelStyleFactory.Styles;
  ****************************************************************************/
 
 public class ExcelReport extends AbstractReport {
+	/**
+	 * Apache Cell Types lack important types.  Assign a cell value tye for 
+	 * each cell so we can format the cell as desired 
+	 */
+	public enum CellValueType {
+		BOOLEAN, DOUBLE, DATE, INTEGER, STRING, TIMESTAMP;
+	}
+	
 	/**
 	 * Sets the maximum allowable rows per sheet
 	 */
@@ -83,8 +93,8 @@ public class ExcelReport extends AbstractReport {
 
 	/**
 	 * Excel report using the provided style
-	 * @param headerMap
-	 * @param s
+	 * @param headerMap Map of the id and name for each column heading
+	 * @param style
 	 */
 	public ExcelReport(Map<String, String> headerMap, ExcelStyleInterface style) {
 		super();
@@ -212,21 +222,23 @@ public class ExcelReport extends AbstractReport {
 		for(String code : header.keySet()) {
 			Cell c = row.createCell(cellCnt++);
 			Object value = lineData.get(code);
-			setCellValue(value, c);
-			boolean isDate = (value instanceof Date || value instanceof Timestamp || DateFormat.isDate(value));
-			setBodyCellStyle(c, lineData, code, isDate);
+			
+			// Convert nulls to empty so they display properly in the spreadsheet
+			if (value == null) value = "";
+			CellValueType type = setCellValue(value, c);
+			setBodyCellStyle(c, type);
 		}
 	}
 
 	/**
 	 * Here to allow sub-classes to override and apply individual styling to a cell versus blanket styling. Last two 
 	 * parameters to be utilized for customized logic around applying styles in subclasses.
-	 * @param Cell
+	 * @param cell HSSF cell object
 	 * @param rowData - the rowData
 	 * @param column - the column name
 	 */
-	protected void setBodyCellStyle(Cell cell, Map<String, Object> rowData, String column, boolean isDate) {
-		if(isDate) {
+	protected void setBodyCellStyle(Cell cell, CellValueType type) {
+		if(CellValueType.DATE.equals(type) || CellValueType.TIMESTAMP.equals(type)) {
 			cell.setCellStyle(dateStyle);
 		} else {
 			cell.setCellStyle(bodyStyle); 
@@ -281,7 +293,7 @@ public class ExcelReport extends AbstractReport {
 	/**
 	 * sets the boolean flag and sets the title string so a title cell can be triggered
 	 * and added to the report before generation. 
-	 * @param contents
+	 * @param titleText Title of the document
 	 */
 	public void setTitle(String titleText) {
 		this.titleText = titleText;
@@ -322,19 +334,45 @@ public class ExcelReport extends AbstractReport {
 
 	/**
 	 * Determines the cell type based upon the cell data and sets cell value appropriately
-	 * @param value
-	 * @return
+	 * @param value Value to store in the cell
+	 * @param c HSSF cell object
 	 */
-	public void setCellValue(Object value, Cell c) {
-		Number num = NumberUtil.getNumber(value + "");
-		if (num != null) {
-			if (num instanceof Long) c.setCellValue(num.longValue());
-			else c.setCellValue(num.doubleValue());
+	public CellValueType setCellValue(Object value, Cell c) {
+		CellValueType cvt = CellValueType.STRING;
+		
+		// 
+		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
+			Number num = NumberUtil.getNumber(value.toString());
+			if (num instanceof Long) {
+				c.setCellValue(num.longValue());
+				cvt = CellValueType.INTEGER;
+			} else {
+				c.setCellValue(num.doubleValue());
+				cvt = CellValueType.DOUBLE;
+			}
 		} else if (value instanceof Boolean) {
 			c.setCellValue(BooleanUtil.toBoolean(value));
+			cvt = CellValueType.BOOLEAN;
+		} else if (value instanceof Timestamp) {
+			c.setCellValue((Timestamp)value);
+			cvt = CellValueType.TIMESTAMP;
+		} else if (value instanceof Date) {
+			c.setCellValue((Date)value);
+			cvt = CellValueType.DATE;
 		} else {
-			c.setCellValue(StringUtils.defaultString(value + ""));
+			if (Pattern.matches("^(\\d{4}-\\d{2}-\\d{2}).*", value + "")) {
+				Date d = value.toString().length() > 10 ? 
+						DateFormat.formatDate(DatePattern.DATE_TIME_DASH, value + "") : 
+						DateFormat.formatDate(DatePattern.DATE_DASH, value + "");
+				
+				c.setCellValue(d);
+				cvt = CellValueType.DATE;
+			} else {
+				c.setCellValue(StringUtils.defaultString(value.toString()));
+			}
 		}
+		
+		return cvt;
 	}
 	
 	/**
@@ -353,5 +391,13 @@ public class ExcelReport extends AbstractReport {
 	 */
 	public int getMaxRowsPerSheet() {
 		return maxRowsPerSheet;
+	}
+	
+	/**
+	 * Returns the workbook
+	 * @return
+	 */
+	public Workbook getWorkbook() {
+		return wb;
 	}
 }

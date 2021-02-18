@@ -13,11 +13,14 @@ plugins {
     id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id "io.freefair.lombok" version '5.3.0'
+	id 'maven-publish'
+	id 'signing'
 }
 
-group = 'com.smt'
+group = 'com.siliconmtn'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+archivesBaseName = "java-libraries"
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -36,24 +39,18 @@ dependencies {
 	implementation 'org.mockito:mockito-inline:3.7.0'
 	implementation 'org.apache.logging.log4j:log4j-api:2.14.0'
 	implementation 'org.apache.logging.log4j:log4j-core:2.14.0'
-	// https://mvnrepository.com/artifact/org.apache.poi/poi
-	compile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
-	
+	implementation 'org.apache.poi:poi:5.0.0'
 	
 	// Spring Boot (Starters -> https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-starter)
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
-	   // Testing
+    // Testing
 	testImplementation('org.springframework.boot:spring-boot-starter-test'){
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
-	
-    // Use JUnit test framework
-    // testImplementation 'junit:junit:4.12'
-    //testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
-    //testImplementation('org.junit.vintage:junit-vintage-engine:5.7.0')
+
 }
 
 // Prevent Spring Boot from looking for a main()
@@ -77,3 +74,19 @@ jacocoTestReport {
 	}
 	dependsOn test
 }
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+

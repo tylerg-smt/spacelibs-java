@@ -151,7 +151,7 @@ public class NumberUtil {
 	/**
 	 * Converts a String into an Float
 	 * @param val
-	 * @param i
+	 * @param defaultValue Default value if val is null/empty
 	 * @return
 	 */
 	public static float toFloat(String val, float defaultValue) {
@@ -203,8 +203,8 @@ public class NumberUtil {
 
 	/**
 	 * Converts a String into a double with default double value.
-	 * @param parameter
-	 * @param d
+	 * @param val String to convert
+	 * @param d Default value if val is empty
 	 * @return
 	 */
 	public static double toDouble(String val, double d) {

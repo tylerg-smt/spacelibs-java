@@ -44,7 +44,8 @@ public interface ExcelStyleInterface {
 	
 	/**
 	 * Sets whether the columns should be expanded by default
-	 * @return
+	 * @param expandColumnFlag Determines if the excel columns should
+	 * be expanded to fit
 	 */
 	public void setExpandColumnFlag(boolean expandColumnFlag);
 	

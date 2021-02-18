@@ -102,7 +102,7 @@ public class TimeZoneVO {
 	}
 
 	/**
-	 * @param isoId the isoId to set
+	 * @param isoCode the isoId to set
 	 */
 	public void setIsoCode(String isoCode) {
 		this.isoCode = isoCode;
