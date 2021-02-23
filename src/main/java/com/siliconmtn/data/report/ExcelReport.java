@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 // Apache POI 3.13
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -98,7 +98,7 @@ public class ExcelReport extends AbstractReport {
 	 */
 	public ExcelReport(Map<String, String> headerMap, ExcelStyleInterface style) {
 		super();
-		wb = new HSSFWorkbook();
+		wb = new XSSFWorkbook();
 		this.headerMap = headerMap;
 		headerStyle = style.getHeadingStyle(wb);
 		titleStyle = style.getTitleStyle(wb);
@@ -233,7 +233,7 @@ public class ExcelReport extends AbstractReport {
 	/**
 	 * Here to allow sub-classes to override and apply individual styling to a cell versus blanket styling. Last two 
 	 * parameters to be utilized for customized logic around applying styles in subclasses.
-	 * @param cell HSSF cell object
+	 * @param cell XSSF cell object
 	 * @param rowData - the rowData
 	 * @param column - the column name
 	 */
@@ -268,7 +268,7 @@ public class ExcelReport extends AbstractReport {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setData(Object rows) {
-		if (rows == null) rows = new ArrayList<>();
+		if (rows == null) this.rowData = new ArrayList<>();
 		else if (rows instanceof Collection)
 			this.rowData = (Collection<Map<String, Object>>) rows;
 	}
@@ -335,12 +335,13 @@ public class ExcelReport extends AbstractReport {
 	/**
 	 * Determines the cell type based upon the cell data and sets cell value appropriately
 	 * @param value Value to store in the cell
-	 * @param c HSSF cell object
+	 * @param c XSSF cell object
 	 */
 	public CellValueType setCellValue(Object value, Cell c) {
 		CellValueType cvt = CellValueType.STRING;
-		
-		// 
+		if (value == null) value = "";
+
+		// Determines the type of data nd csts it into the cell
 		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
 			Number num = NumberUtil.getNumber(value.toString());
 			if (num instanceof Long) {
@@ -362,7 +363,7 @@ public class ExcelReport extends AbstractReport {
 		} else {
 			if (Pattern.matches("^(\\d{4}-\\d{2}-\\d{2}).*", value + "")) {
 				Date d = value.toString().length() > 10 ? 
-						DateFormat.formatDate(DatePattern.DATE_TIME_DASH, value + "") : 
+						DateFormat.formatDate(DatePattern.ISO_SHORT, value + "") : 
 						DateFormat.formatDate(DatePattern.DATE_DASH, value + "");
 				
 				c.setCellValue(d);

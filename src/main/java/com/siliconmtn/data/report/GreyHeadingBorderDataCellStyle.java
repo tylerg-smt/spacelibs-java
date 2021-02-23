@@ -38,6 +38,8 @@ public class GreyHeadingBorderDataCellStyle extends AbstractExcelCellStyle {
 		headerStyleMap.put(FILL_FOREGROUND_COLOR, IndexedColors.GREY_25_PERCENT.index);
 		headerStyleMap.put(FILL_PATTERN, FillPatternType.SOLID_FOREGROUND);
 		headerStyleMap.put(BOLD_WEIGHT, Boolean.TRUE);
+		headerStyleMap.put(BORDER_RIGHT, BorderStyle.THIN);
+		headerStyleMap.put(BORDER_LEFT, BorderStyle.THIN);
 		return headerStyleMap;
 	}
 	/**
@@ -63,6 +65,19 @@ public class GreyHeadingBorderDataCellStyle extends AbstractExcelCellStyle {
 		bodyStyleMap.put(BORDER_LEFT, BorderStyle.THIN);
 		return bodyStyleMap;
 	}
+	
+	/**
+	 * builds the body style map
+	 * @return
+	 */
+	private Map<String, Object> buildDateStyle(){
+		Map<String, Object> bodyStyleMap = new HashMap<>();
+		bodyStyleMap.put(BORDER_BOTTOM, BorderStyle.THIN);
+		bodyStyleMap.put(BORDER_TOP, BorderStyle.THIN);
+		bodyStyleMap.put(BORDER_RIGHT, BorderStyle.THIN);
+		bodyStyleMap.put(BORDER_LEFT, BorderStyle.THIN);
+		return bodyStyleMap;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.siliconmtn.data.report.AbstractExcelCellStyle#buildStyleMap()
@@ -73,6 +88,7 @@ public class GreyHeadingBorderDataCellStyle extends AbstractExcelCellStyle {
 		styleMap.put(HEADER_MAP, buildHeaderStyle());
 		styleMap.put(TITLE_MAP, buildTitleStyle());
 		styleMap.put(BODY_MAP, buildBodyStyle());
+		styleMap.put(DATE_MAP, buildDateStyle());
 		setStyleMap(styleMap);
 	}
 

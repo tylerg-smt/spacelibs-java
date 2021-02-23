@@ -78,6 +78,7 @@ class DateFormatTest {
 	void formatDateTest() {
 		assertEquals(null,DateFormat.formatDate(DatePattern.DATE_SLASH, null));
 		assertEquals("Sat Oct 28 00:00:00 MDT 1995",DateFormat.formatDate(DatePattern.DATE_SLASH,"10/28/1995").toString());
+		assertEquals("Thu Feb 04 16:57:00 MST 2021",DateFormat.formatDate(DatePattern.ISO_SHORT,"2021-02-04T16:57:00.000Z").toString());
 	}
 	/**
 	 * Test method for {@link com.siliconmtn.data.format.DateFormat#dateToPattern(DatePattern, Date)}
