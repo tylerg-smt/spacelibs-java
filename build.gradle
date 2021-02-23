@@ -20,7 +20,7 @@ plugins {
 group = 'com.siliconmtn'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-archivesBaseName = "java-libraries"
+archivesBaseName = "spacelibs.java"
 
 repositories {
     // Use jcenter for resolving dependencies.
