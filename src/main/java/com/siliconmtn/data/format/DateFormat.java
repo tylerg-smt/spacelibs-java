@@ -110,10 +110,9 @@ public class DateFormat {
 	 * @return Date to use as the end date of a query
 	 */
 	public static Date zoneDateToDate(ZonedDateTime zdt) throws ParseException {
-		String zdt_str=zdt.toString();
+		String zdtStr = zdt.toString();
 		FastDateFormat fastDateFormat = FastDateFormat.getInstance("YYYY-MM-DD'T'HH:MM'Z'");
-		Date myDate = fastDateFormat.parse(zdt_str);
-		return myDate;
+		return fastDateFormat.parse(zdtStr);
 	}
 	
 	/**
@@ -124,18 +123,19 @@ public class DateFormat {
 	 */
 	public static Date parseUnknownPattern(String theDate) {	
 		if (theDate == null) return null;
-		theDate = theDate.replaceAll(",", "");
+		theDate = theDate.replace(",", "");
 		theDate = theDate.trim();
 		Date d = null;
 	
 		for(DatePattern pn: DatePattern.values()) {
+			System.out.println(pn.toString());
 			d = formatDate(pn, theDate);
 			if (d != null)
 				break;
 		}
 		return d;
 	}
-	
+
 	/**
 	 * Converts a String date into a Date date
 	 * @param dp Pattern Enum
@@ -367,7 +367,9 @@ public class DateFormat {
 	 * @return returns UTC ZonedDateTime
 	 */
 	public static ZonedDateTime anyZoneToUTC(String date, String fromZone) {
-		return anyZoneToUTC(parseUnknownPattern(date),fromZone);
+		Date d = parseUnknownPattern(date);
+		if (d == null) return null;
+		return anyZoneToUTC(d,fromZone);
 	}
 	/**
 	 * Converts date to UTC as ZonedDateTime object.
@@ -382,8 +384,7 @@ public class DateFormat {
 	    // create an OffsetDateTime using the parsed offset
 	    OffsetDateTime odt = OffsetDateTime.of(ldt, zoneOffSet);	
 	    // create a ZonedDateTime from the OffsetDateTime and use UTC as time zone
-	    ZonedDateTime utcZdt = odt.atZoneSameInstant(ZoneOffset.UTC);	   
-	    return utcZdt;		
+	    return odt.atZoneSameInstant(ZoneOffset.UTC);	   
 	}	
 }
 	
