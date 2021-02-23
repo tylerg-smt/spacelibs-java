@@ -128,7 +128,6 @@ public class DateFormat {
 		Date d = null;
 	
 		for(DatePattern pn: DatePattern.values()) {
-			System.out.println(pn.toString());
 			d = formatDate(pn, theDate);
 			if (d != null)
 				break;
