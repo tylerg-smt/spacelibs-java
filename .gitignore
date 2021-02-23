@@ -9,3 +9,4 @@ gradle/
 .dbeaver-data-sources.xml
 bin/
 .DS_Store
+.attach*
