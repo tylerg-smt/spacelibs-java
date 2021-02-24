@@ -34,6 +34,7 @@ class SunriseSunsetCalculatorTest {
 	
 	@BeforeEach
 	void setUpBeforeEach() throws Exception {
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Denver"));
 		coord = new Coordinate("100.123", "-34.5678");
 		tz = TimeZone.getTimeZone("America/Denver");
 		ssCal = new SunriseSunsetCalculator(coord, tz);
