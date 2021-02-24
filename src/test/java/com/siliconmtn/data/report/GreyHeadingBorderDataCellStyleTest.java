@@ -34,7 +34,7 @@ class GreyHeadingBorderDataCellStyleTest {
 	void testBuildStyleMap() {
 		GreyHeadingBorderDataCellStyle ncs = new GreyHeadingBorderDataCellStyle();
 		ncs.buildStyleMap();
-		assertEquals(3, ncs.getStyleMap().size());
+		assertEquals(4, ncs.getStyleMap().size());
 	}
 
 	/**
@@ -55,7 +55,7 @@ class GreyHeadingBorderDataCellStyleTest {
 		GreyHeadingBorderDataCellStyle ncs = new GreyHeadingBorderDataCellStyle();
 		ncs.setDisplayDate(true);
 		assertNotNull(ncs.getStyleMap());
-		assertEquals(3, ncs.getStyleMap().size());
+		assertEquals(4, ncs.getStyleMap().size());
 	}
 	
 	/**
