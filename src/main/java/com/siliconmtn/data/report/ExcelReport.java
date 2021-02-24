@@ -234,8 +234,7 @@ public class ExcelReport extends AbstractReport {
 	 * Here to allow sub-classes to override and apply individual styling to a cell versus blanket styling. Last two 
 	 * parameters to be utilized for customized logic around applying styles in subclasses.
 	 * @param cell XSSF cell object
-	 * @param rowData - the rowData
-	 * @param column - the column name
+	 * @param type - the type of the cell value (Data Type)
 	 */
 	protected void setBodyCellStyle(Cell cell, CellValueType type) {
 		if(CellValueType.DATE.equals(type) || CellValueType.TIMESTAMP.equals(type)) {
