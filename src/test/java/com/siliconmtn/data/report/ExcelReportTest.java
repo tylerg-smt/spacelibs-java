@@ -74,7 +74,7 @@ class ExcelReportTest {
 		rpt.setData(dataSet);
 		byte[] data = rpt.generateReport();
 		assertNotNull(data);
-		assertEquals(4608, data.length);
+		assertTrue(data.length > 3000);
 	}
 
 	/**
@@ -188,7 +188,7 @@ class ExcelReportTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testSetCellValue() throws Exception {
+	void testSetCellValue() throws Exception {
 		Workbook wb = new HSSFWorkbook();
 		Sheet s = wb.createSheet();
 		Row row = s.createRow(0);
@@ -212,7 +212,7 @@ class ExcelReportTest {
 		rpt.setCellValue("2021-01-01", cell);
 		assertNotNull(cell.getDateCellValue());
 		
-		rpt.setCellValue("2021-01-01 01:00:00", cell);
+		rpt.setCellValue("2021-02-04T16:57:00.000Z", cell);
 		assertNotNull(cell.getDateCellValue());
 		
 		rpt.setCellValue(new Date(), cell);
@@ -220,6 +220,9 @@ class ExcelReportTest {
 		
 		rpt.setCellValue(DateFormat.formatTimestamp(new Date()), cell);
 		assertNotNull(cell.getDateCellValue());
+		
+		rpt.setCellValue(null, cell);
+		assertEquals("", cell.getStringCellValue());
 		
 		wb.close();
 	}
