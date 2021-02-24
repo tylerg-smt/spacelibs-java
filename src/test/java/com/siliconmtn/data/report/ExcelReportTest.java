@@ -96,7 +96,7 @@ class ExcelReportTest {
 		assertEquals("MyReport.xlsx", rpt.getFileName());
 		assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", rpt.getContentType());
 		
-		rpt.setFileName("AnotherReport.123");
+		rpt.setFileName("AnotherReport.123xyz");
 		assertNull(rpt.getContentType());
 		
 		try (MockedStatic<Files> theMock = Mockito.mockStatic(Files.class)) {

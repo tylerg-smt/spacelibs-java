@@ -13,6 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // Space Libs 1.x
@@ -34,6 +36,11 @@ import com.siliconmtn.data.format.DateFormat.DatePattern;
  * @updates:
  ****************************************************************************/
 class DateFormatTest {
+	
+	@BeforeEach
+	void setUpBeforeEach() throws Exception {
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Denver"));
+	}
 	
 	/**
 	 * Test method for {@link com.siliconmtn.data.format.DateFormat#zoneDateToDate(ZonedDateTime)}
