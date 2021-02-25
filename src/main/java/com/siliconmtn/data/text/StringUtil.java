@@ -195,4 +195,66 @@ public class StringUtil extends StringUtils {
 			return null;
 		}
 	}
+	
+	/**
+	 * Pads the supplied character to fill in the empty spaces.  For example, 
+	 * to create a string with a length of 5, and fill blanks with 0 ... to the 
+	 * left or right<br/>
+	 * <p>padLeft("d", "0", 5); </p>
+	 * <p>This will return "0000d"</p>
+	 * <p> If the length of the src String is greater than the length, the
+	 * returned string will be truncated</p>
+	 * @param src Source String to pad
+	 * @param fill Character to use to pad the string
+	 * @param length final length of the string.  All characters less than the length 
+	 * will be padded with the fill character
+	 * @return
+	 */
+	public static String padLeft(String src, char fill, int length) {
+		return  pad(src, fill, length, false);
+	}
+	
+	/**
+	 * Pads the supplied character to fill in the empty spaces.  For example, 
+	 * to create a string with a length of 5, and fill blanks with 0 ...<br/>
+	 * This is a function that performs either padding
+	 * @param src Source String to pad
+	 * @param fill Character to use to pad the string
+	 * @param length final length of the string.  All characters less than the length 
+	 * will be padded with the fill character
+	 * @param isPadRight Boolean to determine if the padding is left or right
+	 * @return
+	 */
+	private static String pad(String src, char fill, int length, boolean isPadRight) {
+		if (src == null) src = ""; 
+		StringBuilder sb = new StringBuilder();
+		int startLoc = length - src.length();
+
+		int stringLen = src.length();
+		if (stringLen > length) stringLen = length;
+		if (isPadRight) sb.append(src.substring(0, stringLen));
+		for (int i = 0; i < startLoc; i++) {
+			sb.append(fill);
+		}
+		
+		if (! isPadRight)sb.append(src.substring(0, stringLen));
+
+		return sb.toString();
+	}
+
+	/**
+	 * Pads the supplied character to fill in the empty spaces.  For example, 
+	 * to create a string with a length of 5, and fill blanks with 0 ...<br/>
+	 * <p>padLeft("d", "0", 5); </p>
+	 * <p>This will return "d0000"</p>
+	 * <p> If the length of the src String is greater than the length, the
+	 * returned string will be truncated</p>
+	 * @param src
+	 * @param fill
+	 * @param length
+	 * @return
+	 */
+	public static String padRight(String src, char fill, int length) {
+		return pad(src, fill, length, true);
+	}
 }

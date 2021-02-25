@@ -120,7 +120,7 @@ class StringUtilTest {
 	 * Test method for {@link com.siliconmtn.data.text.StringUtil#getToString(java.lang.Object, java.lang.String)}.
 	 */
 	@Test
-	public void testGetToStringObjectString() throws Exception {
+	void testGetToStringObjectString() throws Exception {
 		Node n = new Node("one", "two", "three");
 		assertTrue(StringUtil.getToString(n, "|").contains("one"));
 		assertTrue(StringUtil.getToString(n, "|").contains("two"));
@@ -144,5 +144,23 @@ class StringUtilTest {
 	@Test
 	void checkThrowsExceptionGetUUID() {
 		assertEquals(null, StringUtil.getUUID(baduuid));
+	}
+
+	@Test
+	void testPadLeft() throws Exception {
+		assertEquals("00000", StringUtil.padLeft("", '0', 5));
+		assertEquals("00000", StringUtil.padLeft(null, '0', 5));
+		assertEquals("ABCDE", StringUtil.padLeft("ABCDEF", '0', 5));
+		assertEquals("0000A", StringUtil.padLeft("A", '0', 5));
+		assertEquals("0ABCD", StringUtil.padLeft("ABCD", '0', 5));
+	}
+
+	@Test
+	void testPadRight() throws Exception {
+		assertEquals("00000", StringUtil.padRight("", '0', 5));
+		assertEquals("00000", StringUtil.padRight(null, '0', 5));
+		assertEquals("ABCDE", StringUtil.padRight("ABCDEF", '0', 5));
+		assertEquals("A0000", StringUtil.padRight("A", '0', 5));
+		assertEquals("ABCD0", StringUtil.padRight("ABCD", '0', 5));
 	}
 }
