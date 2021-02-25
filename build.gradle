@@ -18,9 +18,9 @@ plugins {
 }
 
 group = 'com.siliconmtn'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '11'
-archivesBaseName = "spacelibs.java"
+archivesBaseName = "spacelibs-java"
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -90,4 +90,41 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-
+// This section is necessary to make Gradle produce a Maven-style pom file when we build and publish
+publishing {
+  publications {
+    spaceLibsJava(MavenPublication) {
+      from components.java
+      pom {
+        name = "spacelibs-java"
+        description = "A libary of useful tools and helper objects."
+        url = "https://github.com/smtadmin/spacelibs-java"
+        licenses {
+          license {
+            name = "MIT License"
+            url = "https://opensource.org/licenses/mit-license.php"
+          }
+        }
+        developers {
+          developer {
+            id = "etewa"
+            name = "James Camire"
+            email = "james@siliconmtn.com"
+            organization = "Silicon Mountain Technologies, Inc."
+            organizationUrl = "https://www.siliconmtn.com"
+          }
+        }
+        scm {
+          connection = "scm:git:git://github.com/smtadmin/spacelibs-java.git"
+          developerConnection = "scm:git:ssh://github.com:smtadmin/spacelibs-java.git"
+          url = "https://github.com/smtadmin/spacelibs-java/tree/main"
+        }
+      }
+    }
+  }
+  repositories {
+      maven {
+        url = "$buildDir"
+      }
+  }
+}
