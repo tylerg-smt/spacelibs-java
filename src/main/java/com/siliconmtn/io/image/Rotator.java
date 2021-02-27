@@ -76,7 +76,7 @@ class Rotator {
 	 * The the image extension from the file name.   Image extension.  "jpg" if not provided
 	 * @return
 	 */
-	private String getImageType() {
+	protected String getImageType() {
 		
 		String fileName = image.getName();
 		if (fileName.contains(".")) return fileName.substring(fileName.indexOf('.') + 1);

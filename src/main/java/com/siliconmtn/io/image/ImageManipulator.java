@@ -3,8 +3,9 @@ package com.siliconmtn.io.image;
 // JDK 11
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
+// Apache commons 3.x
+import org.apache.commons.lang3.StringUtils;
 
 /****************************************************************************
  * <b>Title</b>: ImageManipulator.java
@@ -28,8 +29,9 @@ public class ImageManipulator {
 	 * Constructor requires the path to the image to be manipulated
 	 * @param filePath
 	 */
-	public ImageManipulator(String filePath) {
+	public ImageManipulator(String filePath) throws IOException {
 		super();
+		if (StringUtils.isEmpty(filePath)) throw new IOException("File path must be provided");
 		this.image = new File(filePath);
 	}
 
@@ -37,8 +39,11 @@ public class ImageManipulator {
 	 * Constructor requires the path to the image to be manipulated
 	 * @param filePath
 	 */
-	public ImageManipulator(File image) {
+	public ImageManipulator(File image) throws IOException {
 		super();
+		if (image == null || ! image.exists())  
+			throw new IOException("File must exist");
+		
 		this.image = image;
 	}
 	
@@ -52,18 +57,4 @@ public class ImageManipulator {
 		Rotator ir = new Rotator(image);
 		return ir.rotate(degrees);
 	}
-	
-	/**
-	 * Rotates the image and writes the image to the provided file
-	 * @param degrees number of degrees to rotate in a clockwise direction
-	 * @return rotated image in a byte array
-	 * @throws IOException 
-	 */
-	public void rotateImage(int degrees, File newImage) throws IOException {
-		Rotator ir = new Rotator(image);
-		Files.write(Paths.get(newImage.toURI()), ir.rotate(degrees));
-	}
-	
-	
-	
 }
