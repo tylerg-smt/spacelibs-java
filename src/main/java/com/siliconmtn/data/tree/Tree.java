@@ -142,14 +142,12 @@ public class Tree implements Serializable {
 	 * @param nodes
 	 * @param hldr
 	 */
-	public static void createPreorder(List<Node> nodes, List<Node> hldr) {
+	public void createPreorder(List<Node> nodes, List<Node> hldr) {
 		if (!nodes.isEmpty()) {
 			for (Node n : nodes) {
 				hldr.add(n);
 				createPreorder(n.getChildren(), hldr);
 			}
-		} else {
-			return;
 		}
 	}
 
@@ -212,8 +210,7 @@ public class Tree implements Serializable {
 		}
 		// Remove the assigned elements from the data list
 		data.removeAll(removed);
-		if (newChildren.isEmpty()) return;
-		else build(data, newChildren);
+		if (! newChildren.isEmpty()) build(data, newChildren);
 	}
 
 	/**

@@ -166,7 +166,7 @@ class DateFormatTest {
 	 */
 	
 	@Test
-	public void formatTimestampTest() {
+	void formatTimestampTest() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		java.sql.Timestamp ts =java.sql.Timestamp.valueOf(
 		        java.time.LocalDate.of(1995,10,28).atStartOfDay()
@@ -186,7 +186,7 @@ class DateFormatTest {
 	 */
 	
 	@Test
-	public void getCurrentTest() {
+	void getCurrentTest() {
 		assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1,DateFormat.getCurrentMonth());
 		assertEquals(Calendar.getInstance().get(Calendar.YEAR),DateFormat.getCurrentYear() );
 		assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_WEEK),DateFormat.getCurrentDayOfWeek());
@@ -199,7 +199,7 @@ class DateFormatTest {
 	 * Test method for {@link com.siliconmtn.data.format.DateFormat#getEndOfDaY(Date)}
 	 */
 	@Test
-	public void getEndDateTest() {
+	void getEndDateTest() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,23,59,59).getTime();
 		assertEquals(ud_new.toInstant(),DateFormat.getEndOfDay("10/28/1995").toInstant());
@@ -212,7 +212,7 @@ class DateFormatTest {
 	 * Test method for {@link com.siliconmtn.data.format.DateFormat#getStartOfDate(Date)}
 	 */
 	@Test
-	public void getStartDateTest() {
+	void getStartDateTest() {
 		Date ud = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		Date ud_new = new GregorianCalendar(1995, Calendar.OCTOBER, 28,0,0,0).getTime();
 		assertEquals(ud_new.getTime(),DateFormat.getStartOfDay("10/28/1995").getTime());
@@ -226,7 +226,7 @@ class DateFormatTest {
 	 * Test method for {@link com.siliconmtn.data.format.DateFormat#anyZoneToUTC(Date, String)}
 	 */
 	@Test
-	public void anyZoneToUTCTest() {
+	void anyZoneToUTCTest() {
 		Date d = new GregorianCalendar(1995, Calendar.OCTOBER, 29,0,0,0).getTime();
 		ZonedDateTime then = DateFormat.anyZoneToUTC(d,TimeZone.getDefault().getID().toString());
 		ZonedDateTime then2 = DateFormat.anyZoneToUTC("10/29/1995",TimeZone.getDefault().getID().toString());

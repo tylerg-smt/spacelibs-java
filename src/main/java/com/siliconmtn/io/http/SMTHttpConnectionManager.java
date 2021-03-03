@@ -255,8 +255,6 @@ public class SMTHttpConnectionManager {
 				conn.disconnect();
 				return connectStream(createURL(redirUrl), postDataBytes, ++redirectAttempt, type);
 			}
-		} else if(redirectAttempt == redirectLimit) {
-			log.debug(String.format("Terminating Redirect Loop: %s", conn.getHeaderField("Location")));
 		}
 
 		// return the response stream from the server - if the request failed return the error stream
@@ -449,6 +447,14 @@ public class SMTHttpConnectionManager {
 	 */
 	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
 		this.sslSocketFactory = sslSocketFactory;
+	}
+
+	/**
+	 * Returns the socket factory
+	 * @return sslSocketFactory
+	 */
+	public SSLSocketFactory getSslSocketFactory() {
+		return this.sslSocketFactory;
 	}
 
 	/**

@@ -39,7 +39,6 @@ public final class BeanDataMapper {
 	static {
 		// Bean utils requires that the date formats be set into the class
 		dtConverter = new DateConverter();
-		//dtConverter.setPatterns(Convert.loadDatePatterns());
 		ConvertUtils.register(dtConverter, Date.class);
 	}
 

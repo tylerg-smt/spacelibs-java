@@ -129,7 +129,7 @@ public class NumberUtil {
 				convertedString = Long.parseLong(signedValue(StringUtil.removeNonAlphaNumeric(val), negative));
 			}else {
 				//else just try and parse the string as is
-				convertedString = Long.parseLong(val.toString());
+				convertedString = Long.parseLong(val);
 			}
 
 		} catch (Exception nfe) {

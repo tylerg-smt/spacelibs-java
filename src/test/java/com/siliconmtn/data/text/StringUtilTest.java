@@ -109,7 +109,7 @@ class StringUtilTest {
 	 * Test method for {@link com.siliconmtn.data.text.StringUtil#getToString(java.lang.Array, char)}.
 	 */
 	@Test
-	public void testGetToStringObjectArrayChar() throws Exception {
+	void testGetToStringObjectArrayChar() throws Exception {
 		assertEquals("[1,2,3,4]", StringUtil.getToString(new Integer[] {1,2,3,4}, ","));
 		assertEquals("[one|two|three]", StringUtil.getToString(new String[] {"one", "two", "three"}, "|"));
 		assertEquals("[one^^three]", StringUtil.getToString(new String[] {"one", null, "three"}, "^"));

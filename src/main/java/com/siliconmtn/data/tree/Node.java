@@ -58,7 +58,7 @@ public class Node implements Serializable, Comparable<Node> {
 		this.leaf = n.leaf;
 		this.root = n.root;
 
-		this.setChildren(new ArrayList<Node>());
+		this.setChildren(new ArrayList<>());
 		this.setUserObject(n.getUserObject());
 	}
 	

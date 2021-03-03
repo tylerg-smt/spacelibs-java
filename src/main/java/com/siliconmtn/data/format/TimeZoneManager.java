@@ -26,7 +26,7 @@ public class TimeZoneManager {
 	/**
 	 * Assigns the time zones and their associate meta data
 	 */
-	public static final Map<String, TimeZoneVO> TIME_ZONES = new LinkedHashMap<>() {
+	protected static final Map<String, TimeZoneVO> TIME_ZONES = new LinkedHashMap<>() {
 		private static final long serialVersionUID = -6567107924085271771L; {
 			put("Asia/Kabul", new TimeZoneVO("Asia/Kabul", "Afghanistan Standard Time", "(GMT +04:30) Kabul", ""));
 			put("America/Anchorage", new TimeZoneVO("America/Anchorage", "Alaskan Standard Time", "(GMT -09:00) Alaska", ""));
@@ -164,9 +164,9 @@ public class TimeZoneManager {
 	 * @return
 	 */
 	public static List<TimeZoneVO> getTimeZoneByIsoCode(String isoCode) {
-		if (StringUtils.isEmpty(isoCode)) return null;
-		
 		List<TimeZoneVO> zones = new ArrayList<>();
+		if (StringUtils.isEmpty(isoCode)) return zones;
+		
 		for (Map.Entry<String, TimeZoneVO> entry : TIME_ZONES.entrySet()) {
 			if (isoCode.equalsIgnoreCase(entry.getValue().getIsoCode()))
 				zones.add(entry.getValue());

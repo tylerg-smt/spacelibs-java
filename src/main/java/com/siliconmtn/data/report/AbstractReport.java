@@ -104,7 +104,7 @@ public abstract class AbstractReport implements Serializable {
 	 * Gets the attribute by the provided key
 	 * @return
 	 */
-	public Map<String,?> getAttributes() {
+	public Map<String,Object> getAttributes() {
 		return attributes;
 	}
 

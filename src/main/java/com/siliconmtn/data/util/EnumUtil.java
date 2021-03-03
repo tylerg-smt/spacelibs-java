@@ -48,7 +48,7 @@ public class EnumUtil {
 		E e = null;
 		
 		try {
-			e = (E)Enum.valueOf(enumType, val);
+			e = Enum.valueOf(enumType, val);
 		} catch (Exception ex) {
 			if (defaultVal != null) e = defaultVal;
 		}
