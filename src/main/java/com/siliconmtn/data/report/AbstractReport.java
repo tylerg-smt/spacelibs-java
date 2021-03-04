@@ -28,7 +28,7 @@ public abstract class AbstractReport implements Serializable {
 	protected String contentType = null;
 	protected String fileName = null;
 	protected boolean isAttachment = false;
-	protected Map<String, Object> attributes = new LinkedHashMap<>();
+	protected transient Map<String, Object> attributes = new LinkedHashMap<>();
 	
 	
 	/**

@@ -303,15 +303,25 @@ class ExcelReportTest {
 		
 		return data;
 	}
-
+	
+	/**
+	 * tests the assignment of the body cell type
+	 * @throws Exception
+	 */
 	@Test
 	void testSetBodyCellStyle() throws Exception {
 		Workbook wb = rpt.getWorkbook();
 		Sheet s = wb.createSheet();
 		Row row = s.createRow(0);
 		Cell cell = row.createCell(0);
+		
 		rpt.setBodyCellStyle(cell, CellValueType.DATE);
+		assertEquals(164, cell.getCellStyle().getDataFormat());
+		
 		rpt.setBodyCellStyle(cell, CellValueType.TIMESTAMP);
+		assertEquals(164, cell.getCellStyle().getDataFormat());
+		
 		rpt.setBodyCellStyle(cell, CellValueType.STRING);
+		assertEquals(0, cell.getCellStyle().getDataFormat());
 	}
 }

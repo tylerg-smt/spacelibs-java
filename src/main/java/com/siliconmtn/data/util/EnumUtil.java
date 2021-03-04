@@ -1,5 +1,8 @@
 package com.siliconmtn.data.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /********************************************************************
  * <b>Title: </b>EnumUtil.java<br/>
  * <b>Description: </b>Utility Class Housing Enum Utilities and time savers<br/>
@@ -54,6 +57,24 @@ public class EnumUtil {
 		}
 		
 		return e;
+	}
+	
+	/**
+	 * Takes an array of string an converts each one using the single safeValueOf
+	 * method and returns the collection
+	 * @param enumType numType Enum class to pass.  For Example: MyEnum.class
+	 * @param vals Array of strings to be converted.  Null if string doesn't match
+	 * @return
+	 */
+	public static <E extends Enum<E>>  List<E> safeValuesOf(Class<E> enumType, String[] vals) {
+		List<E> enums = new ArrayList<>();
+		
+		for (String val : vals) {
+			E e = safeValueOf(enumType, val.trim(), null);
+			if (e != null) enums.add(e);
+		}
+		
+		return enums;
 	}
 
 }

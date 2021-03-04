@@ -3,6 +3,7 @@ package com.siliconmtn.data.parser;
 // JDK 1.8.x
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -58,11 +59,8 @@ public final class BeanDataMapper {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void parseBean(Object o, Map<String, String[]> data, String suffix) {
-
-		for (Method m : o.getClass().getMethods()) {
-			// Get the setters
-			if (! m.getName().startsWith("set")) continue;
-
+		
+		for (Method m : (Method[])Arrays.stream(o.getClass().getMethods()).filter(x -> ! x.getName().startsWith("set")).toArray()) {
 			// Parse out the set out of the method name and lowercase the first letter
 			String fieldName = m.getName().substring(3);
 			fieldName = Character.toLowerCase(fieldName.charAt(0)) + fieldName.substring(1);
@@ -127,7 +125,7 @@ public final class BeanDataMapper {
 	 * @param data Data to add to the List
 	 * @return
 	 */
-	protected static List<?> createList(Class<?> cls, Object[] data) {
+	protected static List<Object> createList(Class<?> cls, Object[] data) {
 		// Create the converter and register the date converter
 		ConvertUtilsBean cub = new ConvertUtilsBean();
 		cub.register(dtConverter, Date.class);

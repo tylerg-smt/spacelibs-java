@@ -176,6 +176,7 @@ class TreeTest {
 		
 		Tree t = new Tree(pathNodes, root);
 		t.buildNodePaths(root, "/", true);
+		System.out.println(firstFirstChild.getFullPath());
 		assertEquals(2, firstFirstChild.getDepthLevel());
 		
 		t = new Tree(nodes, root);

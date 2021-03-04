@@ -268,17 +268,17 @@ public class Tree implements Serializable {
 	 * @param useName
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
+		if (StringUtils.isEmpty(parentNode.getFullPath())) parentNode.setFullPath(delimiter);
+		
 		for (Node child : parentNode.getChildren()) {
 			StringBuilder path = new StringBuilder(50);
-			if (parentNode.getFullPath() != null) path.append(parentNode.getFullPath());
-			if (path.length() > 0) path.append(delimiter);
-			if(useName) {
-				if (child.getNodeName() != null) path.append(child.getNodeName());
-			} else {
-				if (child.getNodeId() != null) path.append(child.getNodeId());
-			}
-			if (path.length() > 0) child.setFullPath(path.toString());
+			child.setFullPath(child.getFullPath().replace("null", ""));
 
+			if (StringUtils.isEmpty(child.getFullPath())) path.append(parentNode.getFullPath());
+			path.append(child.getFullPath());
+			path.append(useName && !StringUtils.isEmpty(child.getNodeName()) ? child.getNodeName() : child.getNodeId());
+
+			child.setFullPath(path.toString());
 			buildNodePaths(child, delimiter, useName);
 		}
 	}
