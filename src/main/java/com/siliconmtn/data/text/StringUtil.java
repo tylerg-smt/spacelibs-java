@@ -5,9 +5,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.UUID;
 
-// Apache Commons 3.1.1
-import org.apache.commons.lang3.StringUtils;
-
 /****************************************************************************
  * <b>Title</b>: StringUtil.java
  * <b>Project</b>: SpaceLibs-Java
@@ -21,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since Jan 12, 2021
  * @updates:
  ****************************************************************************/
-public class StringUtil extends StringUtils {
+public class StringUtil {
 
 	/**
 	 * 
@@ -31,21 +28,121 @@ public class StringUtil extends StringUtils {
 	}
 	
 	/**
+	 * Determines if the provided string is empty, null or blank
+	 * @param str The value to evaluate for empty
+	 * @return true if empty.  False otherwise
+	 */
+	public static boolean isEmpty(CharSequence str) {
+		return (str == null || str.toString().trim().length() == 0);
+	}
+	
+	
+	/**
+	 * <p>
+	 * Counts how many times the char appears in the given string.
+	 * </p>
+	 *
+	 * <p>
+	 * A {@code null} or empty ("") String input returns {@code 0}.
+	 * </p>
+	 *
+	 * <pre>
+	 * StringUtil.countMatches(null, *)       	= 0
+	 * StringUtil.countMatches("", *)         	= 0
+	 * StringUtil.countMatches("abba", 0)  		= 0
+	 * StringUtil.countMatches("abba", 'a')   	= 2
+	 * StringUtil.countMatches("abba", 'b')  	= 2
+	 * StringUtil.countMatches("abba", 'x')	 	= 0
+	 * </pre>
+	 *
+	 * @param str the CharSequence to check, may be null
+	 * @param ch  the char to count
+	 * @return the number of occurrences, 0 if the CharSequence is {@code null}
+	 */
+	public static int countMatches(final CharSequence str, final char ch) {
+		if (isEmpty(str))  return 0;
+		
+		return countMatches(str.toString(), String.valueOf(ch));
+	}
+
+	/**
+	 * <p>
+	 * Counts how many times the substring appears in the larger string. Note that
+	 * the code only counts non-overlapping matches.
+	 * </p>
+	 *
+	 * <p>
+	 * A {@code null} or empty ("") String input returns {@code 0}.
+	 * </p>
+	 *
+	 * <pre>
+	 * StringUtil.countMatches(null, *)       = 0
+	 * StringUtil.countMatches("", *)         = 0
+	 * StringUtil.countMatches("abba", null)  = 0
+	 * StringUtil.countMatches("abba", "")    = 0
+	 * StringUtil.countMatches("abba", "a")   = 2
+	 * StringUtil.countMatches("abba", "ab")  = 1
+	 * StringUtil.countMatches("abba", "xxx") = 0
+	 * StringUtil.countMatches("ababa", "aba") = 1
+	 * </pre>
+	 *
+	 * @param str the CharSequence to check, may be null
+	 * @param sub the substring to count, may be null
+	 * @return the number of occurrences, 0 if either CharSequence is {@code null}
+	 */
+	public static int countMatches(final String str, final String sub) {
+        if (isEmpty(str) || isEmpty(sub)) return 0;
+
+        int count = 0;
+        int len = Math.floorDiv(str.length(), sub.length());
+        for (int i = 0; i < len; i++ ) {
+           int end = (i + 1) * sub.length();
+           int start = i * sub.length();
+           String val = str.substring(start, end);
+           if (sub.equals(val)) count++;
+        }
+        
+        return count;
+	}
+
+	
+	/**
+	 * Returns the provided string if it is not null, blank or has whitespace.
+	 * Otherwise, we return the defaultVal
+	 * @param val String value to evaluate
+	 * @param defaultVal Value to be returned if empty
+	 * @return trimmed string
+	 */
+	public static String defaultString(String val, String defaultVal) {
+		if (val == null || val.isBlank()) return defaultVal == null ? "" : defaultVal;
+		else return val.trim();
+	}
+	
+	/**
+	 * Returns the provided string if it is not null, blank or has whitespace.
+	 * @param val value to check.
+	 * @return trimmed string
+	 */
+	public static String defaultString(String val) {
+		if (val == null || val.isBlank()) return "";
+		else return val.trim();
+	}
+	
+	/**
 	 * Returns an array of the index for each of the matching 
 	 * @param str
 	 * @param searchStr
 	 * @return
 	 */
-	public static int[] everyIndexOf(CharSequence str, CharSequence searchStr) {
-		int[] items;
+	public static int[] everyIndexOf(String str, String searchStr) {
 		if (isEmpty(str) || isEmpty(searchStr)) return new int[0];
 		
-		items = new int[countMatches(str, searchStr)];
+		int[] items = new int[countMatches(str, searchStr)];
 		int loc = -1;
 		
 		for (int i=0; i < items.length; i++) {
 			
-			loc = str.toString().indexOf(searchStr.toString(), loc + 1);
+			loc = str.indexOf(searchStr, loc + 1);
 			items[i] = loc;
 		}
 
@@ -103,7 +200,7 @@ public class StringUtil extends StringUtils {
 	 * @return parsed data.
 	 */
 	public static String removeNonNumeric(String data) {
-		if (StringUtils.isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 
 		StringBuilder newVal = new StringBuilder();
 		for (char a : data.toCharArray()) {

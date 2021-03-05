@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
+// Spacelibs 1.x
 import com.siliconmtn.core.HashCodeUtil;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: Tree.java<p/>
@@ -189,7 +188,7 @@ public class Tree implements Serializable {
 		List<Node> removed = new ArrayList<>();
 		for (Node dataNode : data) {
 			for (Node childNode : children) {
-				if (StringUtils.defaultString(dataNode.getParentId()).equalsIgnoreCase(childNode.getNodeId())) {
+				if (StringUtil.defaultString(dataNode.getParentId()).equalsIgnoreCase(childNode.getNodeId())) {
 					// To avoid recursive pointers within the nodes, assign the 
 					// Data node to a new node object. Also assign the 
 					// current depth level
@@ -268,15 +267,15 @@ public class Tree implements Serializable {
 	 * @param useName
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
-		if (StringUtils.isEmpty(parentNode.getFullPath())) parentNode.setFullPath(delimiter);
+		if (StringUtil.isEmpty(parentNode.getFullPath())) parentNode.setFullPath(delimiter);
 		
 		for (Node child : parentNode.getChildren()) {
 			StringBuilder path = new StringBuilder(50);
 			child.setFullPath(child.getFullPath().replace("null", ""));
 
-			if (StringUtils.isEmpty(child.getFullPath())) path.append(parentNode.getFullPath());
+			if (StringUtil.isEmpty(child.getFullPath())) path.append(parentNode.getFullPath());
 			path.append(child.getFullPath());
-			path.append(useName && !StringUtils.isEmpty(child.getNodeName()) ? child.getNodeName() : child.getNodeId());
+			path.append(useName && !StringUtil.isEmpty(child.getNodeName()) ? child.getNodeName() : child.getNodeId());
 
 			child.setFullPath(path.toString());
 			buildNodePaths(child, delimiter, useName);

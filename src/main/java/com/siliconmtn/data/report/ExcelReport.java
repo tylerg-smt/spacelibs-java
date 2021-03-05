@@ -11,9 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
 // Apache POI 3.13
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,6 +27,7 @@ import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.NumberUtil;
 import com.siliconmtn.data.format.DateFormat.DatePattern;
 import com.siliconmtn.data.report.ExcelStyleFactory.Styles;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: ExcelReport.java<p/>
@@ -177,10 +175,10 @@ public class ExcelReport extends AbstractReport {
 		Sheet s = wb.createSheet();
 
 		//name the sheet if desired
-		if (!StringUtils.isEmpty(sheetName)) wb.setSheetName(wb.getSheetIndex(s), sheetName);
+		if (!StringUtil.isEmpty(sheetName)) wb.setSheetName(wb.getSheetIndex(s), sheetName);
 
 		//if requested add title row
-		if (!StringUtils.isEmpty(title)) addTitleCell(s, title, header.keySet().size());
+		if (!StringUtil.isEmpty(title)) addTitleCell(s, title, header.keySet().size());
 
 		// if requested, add current date
 		if (displayDate) addDateRow(s, header.keySet().size());
@@ -368,7 +366,7 @@ public class ExcelReport extends AbstractReport {
 				c.setCellValue(d);
 				cvt = CellValueType.DATE;
 			} else {
-				c.setCellValue(StringUtils.defaultString(value.toString()));
+				c.setCellValue(StringUtil.defaultString(value.toString()));
 			}
 		}
 		

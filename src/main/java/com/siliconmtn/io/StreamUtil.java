@@ -8,10 +8,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-
 // SpaceLibs 1.x
 import com.siliconmtn.data.report.AbstractReport;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: StreamUtil.java
@@ -51,7 +50,7 @@ public class StreamUtil {
 		response.setContentType(report.getContentType());
 
 		// Set the name of the file if it is set.  Add the header tags for the name and type
-		if (! StringUtils.isEmpty(report.getFileName())) {
+		if (! StringUtil.isEmpty(report.getFileName())) {
 			String attachment = (report.isHeaderAttachment()) ? "attachment; " : "";
 			response.setHeader("Content-Disposition", attachment + "filename=\"" + report.getFileName() + "\"");
 		}

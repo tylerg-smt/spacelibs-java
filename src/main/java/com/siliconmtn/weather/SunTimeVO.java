@@ -4,13 +4,11 @@ package com.siliconmtn.weather;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
 // Spacelibs 1.x
 import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.DateFormat.DatePattern;
 import com.siliconmtn.data.parser.BeanDataVO;
+import com.siliconmtn.data.text.StringUtil;
 
 
 /****************************************************************************
@@ -159,7 +157,7 @@ public class SunTimeVO extends BeanDataVO {
 	 */
 	public void setSunriseTime(String sunriseTime) {
 		this.sunriseTime = sunriseTime;
-		if (StringUtils.isEmpty(this.sunriseTime)) return;
+		if (StringUtil.isEmpty(this.sunriseTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
 		String d = DateFormat.toFormattedString(DatePattern.DATE_DASH, sourceDate);
@@ -178,7 +176,7 @@ public class SunTimeVO extends BeanDataVO {
 	 */
 	public void setSunsetTime(String sunsetTime) {
 		this.sunsetTime = sunsetTime;
-		if (StringUtils.isEmpty(sunsetTime)) return;
+		if (StringUtil.isEmpty(sunsetTime)) return;
 		if (sourceDate == null) sourceDate = new Date();
 		
 		String d = DateFormat.toFormattedString(DatePattern.DATE_DASH, sourceDate);

@@ -1,15 +1,24 @@
 package com.siliconmtn.data.format;
+
+// JDK 11.x
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.sql.Timestamp;
-import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import org.apache.commons.lang3.time.FastDateFormat;
+
+// Spaceforce 1.x
+import com.siliconmtn.data.text.StringUtil;
+
+// Lombok 1.18.x
+import lombok.extern.log4j.Log4j2;
 
 /*********************************************************************************************************
  * <b>Title</b>: Convert<p/> Utilities for Date parsing, formatting and conversions
@@ -21,6 +30,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * @since 01.25.2021 
  * @updates:         
  **********************************************************************************************************/
+@Log4j2
 public class DateFormat {
 	
 	/**
@@ -109,10 +119,14 @@ public class DateFormat {
 	 * @param zdt in ZonedDateTime zdt as input;
 	 * @return Date to use as the end date of a query
 	 */
-	public static Date zoneDateToDate(ZonedDateTime zdt) throws ParseException {
-		String zdtStr = zdt.toString();
-		FastDateFormat fastDateFormat = FastDateFormat.getInstance("YYYY-MM-DD'T'HH:MM'Z'");
-		return fastDateFormat.parse(zdtStr);
+	public static Date zoneDateToDate(ZonedDateTime zdt) {
+        
+        // Convert ZonedDateTime to Instant instance
+        // We just say what Instant is and how it used in the blog
+        Instant instant = zdt.toInstant();
+        
+        // Create Date instance out of Instant
+		return Date.from(instant);
 	}
 	
 	/**
@@ -142,21 +156,17 @@ public class DateFormat {
 	 * @return null if unable to convert, if successful return Date
 	 */
 	public static Date formatDate(DatePattern dp, String dateText) {	
-		if(dateText == null) 
-			return null;
-		if(dateText.length()<4)
-			return null;
-		// Instantiate the fastDateFormat with the appropriate date/time
-		// pattern
-		FastDateFormat fastDateFormat = FastDateFormat.getInstance(dp.getPattern());
-		Date myDate = null;
+		if(StringUtil.isEmpty(dateText) || dateText.length()<4) return null;
+
+		SimpleDateFormat formatter = new SimpleDateFormat(dp.getPattern(), Locale.ENGLISH);
+		Date theDate = null;
 		try {
-			// Parse the fastDateFormat object into a date object			
-			myDate = fastDateFormat.parse(dateText);			
-		} catch (ParseException e) {
-			return null;
+			theDate = formatter.parse(dateText);
+		} catch (Exception e) {
+			log.error("Unable to convert date", e);
 		}
-		return myDate;
+		
+		return theDate;
 	}
 	
 	/**
@@ -167,12 +177,10 @@ public class DateFormat {
 	 */
 	public static String toFormattedString(DatePattern dp, Date date) {
 		if (dp == null || date == null) return null;
-		
-		FastDateFormat fastDateFormat1 = FastDateFormat.getInstance(dp.getPattern());
-		String formattedDate="";		
-		// Parse the fastDateFormat object into a date object				
-		formattedDate=fastDateFormat1.format(date);
-		return formattedDate;
+
+	    // create and return a new String using the date format we want
+		SimpleDateFormat formatter = new SimpleDateFormat(dp.getPattern());
+	    return formatter.format(date);
 	}
 	
 	/**

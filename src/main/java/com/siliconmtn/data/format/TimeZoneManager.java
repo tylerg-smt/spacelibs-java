@@ -7,10 +7,10 @@ import java.util.Map;
 
 // Apache commons 3.x
 import org.apache.commons.collections4.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
 
 // Spacelibs 1.0
 import com.siliconmtn.data.bean.GenericVO;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: TimeZoneManager.java
@@ -66,7 +66,7 @@ public class TimeZoneManager {
 	 */
 	public static List<TimeZoneVO> getTimeZoneByIsoCode(String isoCode) {
 		List<TimeZoneVO> zones = new ArrayList<>();
-		if (StringUtils.isEmpty(isoCode)) return zones;
+		if (StringUtil.isEmpty(isoCode)) return zones;
 		
 		for (Map.Entry<String, TimeZoneVO> entry : TIME_ZONES.entrySet()) {
 			if (isoCode.equalsIgnoreCase(entry.getValue().getIsoCode()))
