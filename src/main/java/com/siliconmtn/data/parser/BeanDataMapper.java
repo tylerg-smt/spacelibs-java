@@ -3,7 +3,6 @@ package com.siliconmtn.data.parser;
 // JDK 1.8.x
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ import org.apache.commons.beanutils.converters.DateTimeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// Space Libs 1.x
 import com.siliconmtn.data.util.EnumUtil;
 
 /********************************************************************
@@ -57,43 +57,57 @@ public final class BeanDataMapper {
 	 * @param o Java Bean
 	 * @param data Data to be mapped into the bean
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void parseBean(Object o, Map<String, String[]> data, String suffix) {
 		
-		for (Method m : (Method[])Arrays.stream(o.getClass().getMethods()).filter(x -> ! x.getName().startsWith("set")).toArray()) {
-			// Parse out the set out of the method name and lowercase the first letter
-			String fieldName = m.getName().substring(3);
-			fieldName = Character.toLowerCase(fieldName.charAt(0)) + fieldName.substring(1);
-
-			//Create a Request FieldName with the passed Suffix.
-			String reqFieldName = fieldName + suffix;
-			
-			//Lookup FieldValue using reqFieldName instead.
-			Object fieldValue = data.get(reqFieldName);
-			if (fieldValue == null) continue;
-			
-			// If the array of values is larger than 1, convert it to a List instead
-			fieldValue = getBeanArrayValue(fieldValue, m);
-
-			// Make sure the type is not an enum.  If so, convert it to the proper
-			// Class type
-			if (m.getParameterTypes()[0].isEnum()) {
+		for (Method m : o.getClass().getMethods()) {
+			if (m.getName().startsWith("set")) {
+				// Parse out the set out of the method name and lowercase the first letter
+				String fieldName = m.getName().substring(3);
+				fieldName = Character.toLowerCase(fieldName.charAt(0)) + fieldName.substring(1);
+	
+				//Create a Request FieldName with the passed Suffix.
+				String reqFieldName = fieldName + suffix;
+				
+				//Lookup FieldValue using reqFieldName instead.
+				Object fieldValue = data.get(reqFieldName);
+				if (fieldValue == null) continue;
+				
+				// If the array of values is larger than 1, convert it to a List instead
+				fieldValue = getBeanArrayValue(fieldValue, m);
+	
+				// Check the enum values
+				fieldValue = checkEnum(fieldValue, m);
+	
+				// Assign value to the class
 				try {
-					fieldValue = EnumUtil.safeValueOf((Class<Enum>) Class.forName(m.getParameterTypes()[0].getName()), fieldValue.toString());
-				} catch(ClassNotFoundException cnfe) { /* Nothing to do */ }
-			}
-
-			// Assign value to the class
-			try {
-				BeanUtils.setProperty(o, fieldName, fieldValue);
-			} catch (Exception e) {
-				// Typically this is circumstantial (missing or uncastable data), not an error.
-				// We don't print the exception stack here - it's just noise in the logs.
-				// This exception is thrown when you pass a blank to a Date field (one scenario).
-				// log level changed to debug. -JM- 04/03/18
-				log.error(String.format("Unable to parse data for %s=%s (%s)", fieldName, fieldValue, e.getMessage()));
+					BeanUtils.setProperty(o, fieldName, fieldValue);
+				} catch (Exception e) {
+					// Typically this is circumstantial (missing or uncastable data), not an error.
+					// We don't print the exception stack here - it's just noise in the logs.
+					// This exception is thrown when you pass a blank to a Date field (one scenario).
+					// log level changed to debug. -JM- 04/03/18
+					log.error(String.format("Unable to parse data for %s=%s (%s)", fieldName, fieldValue, e.getMessage()));
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Checks for an enum and assigns it
+	 * @param fieldValue
+	 * @param m
+	 * @return
+	 */
+	protected static Object checkEnum(Object fieldValue, Method m) {
+		
+		// Make sure the type is not an enum.  If so, convert it to the proper
+		// Class type
+		if (m.getParameterTypes()[0].isEnum()) {
+			String name = m.getParameterTypes()[0].getName();
+			fieldValue = EnumUtil.safeValueOf(name, fieldValue.toString());
+		}
+		
+		return fieldValue;
 	}
 
 
@@ -132,15 +146,14 @@ public final class BeanDataMapper {
 
 		// Loop the items in the array and convert data types and add to list
 		List<Object> coll = new ArrayList<>();
-		try {
-			for (Object o : data) {
-				Object entry = cub.convert(o, cls);
 
-				// Make sure the class types are compatible
-				if (entry.getClass().isAssignableFrom(cls))
-					coll.add(entry);
-			}
-		} catch (Exception e) { /* Nothing to do */ }
+		for (Object o : data) {
+			Object entry = cub.convert(o, cls);
+
+			// Make sure the class types are compatible
+			if (entry.getClass().isAssignableFrom(cls))
+				coll.add(entry);
+		}
 
 		return coll;
 	}

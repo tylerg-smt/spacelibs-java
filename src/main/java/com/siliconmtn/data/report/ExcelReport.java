@@ -269,6 +269,14 @@ public class ExcelReport extends AbstractReport {
 		else if (rows instanceof Collection)
 			this.rowData = (Collection<Map<String, Object>>) rows;
 	}
+	
+	/**
+	 * Gets the row data passed in
+	 * @return Collection of maps
+	 */
+	public Collection<Map<String, Object>> getRowData() {
+		return rowData;
+	}
 
 	/**
 	 * This method adds a cell to the top of the report with the title string info inside it

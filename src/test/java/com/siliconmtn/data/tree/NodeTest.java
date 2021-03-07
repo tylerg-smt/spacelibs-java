@@ -338,4 +338,16 @@ class NodeTest {
 		assertEquals(o, n.getUserObject());
 	}
 
+	@Test
+	void testEquals() throws Exception {
+		boolean isEqual = rootNode.equals(null);
+		assertFalse(isEqual);
+		
+		assertNotEquals(childNode, rootNode);
+		assertEquals(rootNode, rootNode);
+		
+		isEqual = rootNode.equals(null);
+		assertFalse(isEqual);
+	}
+
 }

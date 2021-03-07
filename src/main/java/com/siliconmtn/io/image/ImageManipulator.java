@@ -38,7 +38,7 @@ public class ImageManipulator {
 
 	/**
 	 * Constructor requires the path to the image to be manipulated
-	 * @param filePath
+	 * @param image Java file object with the path to the image
 	 */
 	public ImageManipulator(File image) throws IOException {
 		super();

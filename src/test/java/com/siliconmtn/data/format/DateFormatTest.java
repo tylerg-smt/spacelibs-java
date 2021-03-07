@@ -3,6 +3,7 @@ package com.siliconmtn.data.format;
 // Junit 5
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 // JDK 11
 import java.text.ParseException;
@@ -48,7 +49,7 @@ class DateFormatTest {
 	@Test
 	void ZoneDateToDateTest() throws ParseException {
 		ZonedDateTime dateTime5 = ZonedDateTime.of(LocalDateTime.of(2021, 01, 22, 07, 00),
-	            ZoneId.of("UTC"));
+	            ZoneId.of("America/Denver"));
 		assertEquals("Fri Jan 22 07:00:00 MST 2021",DateFormat.zoneDateToDate(dateTime5).toString());
 	}
 
@@ -95,6 +96,7 @@ class DateFormatTest {
 		Date date = new GregorianCalendar(1995, Calendar.OCTOBER, 28).getTime();
 		assertEquals("951028",DateFormat.toFormattedString(DatePattern.DATE_SHORT_NOSPACE,date));
 		assertEquals(null,DateFormat.formatDate(DatePattern.DATE_SHORT_NOSPACE,null));
+		assertEquals(null,DateFormat.toFormattedString(DatePattern.DATE_SHORT_NOSPACE,null));
 		assertEquals(null,DateFormat.toFormattedString(null,date));
 		assertEquals(null,DateFormat.formatDate(null,null));
 	}
@@ -232,5 +234,6 @@ class DateFormatTest {
 		ZonedDateTime then2 = DateFormat.anyZoneToUTC("10/29/1995",TimeZone.getDefault().getID().toString());
 		assertEquals("1995-10-29T06:00Z", then.toString());
 		assertEquals("1995-10-29T06:00Z", then2.toString());
+		assertNull(DateFormat.anyZoneToUTC("",""));
 	}
 }

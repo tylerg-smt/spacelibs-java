@@ -68,4 +68,11 @@ class EnumUtilTest {
 		
 	}
 
+	@Test
+	void testSafeValueOfStringString() throws Exception {
+		String enumString = "com.siliconmtn.data.format.DateFormat$DatePattern";
+		assertEquals(DatePattern.DATE_FULL_MONTH, EnumUtil.safeValueOf(enumString, "DATE_FULL_MONTH"));
+		assertNotEquals(DatePattern.DATE_FULL_MONTH, EnumUtil.safeValueOf("", "DATE_FULL_MONTH"));
+	}
+
 }

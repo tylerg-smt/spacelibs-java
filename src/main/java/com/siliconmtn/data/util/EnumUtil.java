@@ -40,6 +40,27 @@ public class EnumUtil {
 	 * Takes a String and converts it to an enum.  Must use the Enum CLass to make this work.  For example:
 	 * EnumTest et = new EnumTest();
 	 * SomeVal sv = SomeVal.val_two;
+	 * SomeVal myVal = et.safeValueOf("SomeVal", "val_two");
+	 * (SomeVal.equals(myVal)) // Evaluates to true
+	 * @param enumStringType String class of the enum to pass.  For Example: MyEnum.class
+	 * @param val String value to assign to the enum
+	 * @return Typed Enum.  Null if val can't be converted.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <E extends Enum<E>>  E safeValueOf(String enumStringType, String val) {
+		Class<E> enumType;
+		try {
+			enumType = (Class<E>)Class.forName(enumStringType);
+			return safeValueOf(enumType, val, null);
+		} catch (Exception e) { /* Nothing to do */  }
+		
+		return null;
+	}
+	
+	/**
+	 * Takes a String and converts it to an enum.  Must use the Enum CLass to make this work.  For example:
+	 * EnumTest et = new EnumTest();
+	 * SomeVal sv = SomeVal.val_two;
 	 * SomeVal myVal = et.safeValueOf(SomeVal.class, "val_two");
 	 * (SomeVal.equals(myVal)) // Evaluates to true
 	 * @param enumType Enum class to pass.  For Example: MyEnum.class

@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -323,5 +324,25 @@ class ExcelReportTest {
 		
 		rpt.setBodyCellStyle(cell, CellValueType.STRING);
 		assertEquals(0, cell.getCellStyle().getDataFormat());
+	}
+
+	/**
+	 * Tests the set data method
+	 * @throws Exception
+	 */
+	@Test
+	void testSetData() throws Exception {
+		rpt.setData(null);
+		assertNotNull(rpt.getRowData());
+		
+		rpt.setData("Hello");
+		assertNotNull(rpt.getRowData());
+		
+		Collection<Map<String, Object>> c = new ArrayList<>();
+		Map<String, Object> items = new HashMap<>();
+		items.put("key", "value");
+		c.add(items);
+		rpt.setData(c);
+		assertEquals(1, rpt.getRowData().size());
 	}
 }

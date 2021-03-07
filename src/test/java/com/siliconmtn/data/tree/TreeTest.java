@@ -184,6 +184,9 @@ class TreeTest {
 		
 		assertEquals(1, secondChild.getDepthLevel());
 		
+		t = new Tree(nodes, root);
+		t.buildNodePaths();
+		assertEquals(1, secondChild.getDepthLevel());		
 	}
 
 	/**
@@ -241,6 +244,16 @@ class TreeTest {
 	void testEqualsObject() {
 		Tree t = new Tree(nodes, root);
 		assertNotNull(t);
+	}
+
+	/**
+	 * Tests the equals method
+	 * @throws Exception
+	 */
+	@Test
+	void testEquals() throws Exception {
+		Tree t = new Tree(nodes);
+		assertFalse(t.equals(null));
 	}
 
 }
