@@ -253,7 +253,8 @@ class TreeTest {
 	@Test
 	void testEquals() throws Exception {
 		Tree t = new Tree(nodes);
-		assertFalse(t.equals(null));
+		boolean isEqual = t.equals(null);
+		assertFalse(isEqual);
 	}
 
 }
