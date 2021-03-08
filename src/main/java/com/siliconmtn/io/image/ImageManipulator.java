@@ -4,8 +4,9 @@ package com.siliconmtn.io.image;
 import java.io.File;
 import java.io.IOException;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
+// Space Libs 1.x
+import com.siliconmtn.data.text.StringUtil;
+
 
 /****************************************************************************
  * <b>Title</b>: ImageManipulator.java
@@ -31,13 +32,13 @@ public class ImageManipulator {
 	 */
 	public ImageManipulator(String filePath) throws IOException {
 		super();
-		if (StringUtils.isEmpty(filePath)) throw new IOException("File path must be provided");
+		if (StringUtil.isEmpty(filePath)) throw new IOException("File path must be provided");
 		this.image = new File(filePath);
 	}
 
 	/**
 	 * Constructor requires the path to the image to be manipulated
-	 * @param filePath
+	 * @param image Java file object with the path to the image
 	 */
 	public ImageManipulator(File image) throws IOException {
 		super();

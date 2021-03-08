@@ -19,13 +19,13 @@ import org.junit.jupiter.api.Test;
  * @since Feb 27, 2021
  * @updates:
  ****************************************************************************/
-public class RotatorTest {
+class RotatorTest {
 
 	/**
 	 * Test method for {@link com.siliconmtn.io.image.Rotator#Rotator(java.io.File)}.
 	 */
 	@Test
-	public void testRotator() throws Exception {
+	void testRotator() throws Exception {
 		Rotator r = new Rotator(new File("/hello.png"));
 		assertNotNull(r);
 	}
@@ -34,7 +34,7 @@ public class RotatorTest {
 	 * Test method for {@link com.siliconmtn.io.image.Rotator#getImageType()}.
 	 */
 	@Test
-	public void testGetImageType() throws Exception {
+	void testGetImageType() throws Exception {
 		Rotator r = new Rotator(new File("/hello.png"));
 		assertEquals("png", r.getImageType());
 	}
@@ -43,7 +43,7 @@ public class RotatorTest {
 	 * Test method for {@link com.siliconmtn.io.image.Rotator#getImageType()}.
 	 */
 	@Test
-	public void testGetImageTypeNoExt() throws Exception {
+	void testGetImageTypeNoExt() throws Exception {
 		Rotator r = new Rotator(new File("/hello"));
 		assertEquals("jpg", r.getImageType());
 	}

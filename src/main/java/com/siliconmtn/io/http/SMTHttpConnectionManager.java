@@ -19,12 +19,11 @@ import java.util.Map.Entry;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-// Apache Commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
 // Log4j 2.x
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: SMTHttpConnectionManager.java
@@ -179,7 +178,7 @@ public class SMTHttpConnectionManager {
 	 */
 	public byte[] getRequestData(String url, Map<String, Object> parameters, HttpConnectionType type) 
 	throws IOException {
-		if (StringUtils.isEmpty(url)) throw new IOException("Url is required");
+		if (StringUtil.isEmpty(url)) throw new IOException("Url is required");
 		return connect(createURL(url), convertPostData(parameters), type == null ? HttpConnectionType.POST : type);
 	}
 	
@@ -251,12 +250,10 @@ public class SMTHttpConnectionManager {
 		//see if we need to follow a redirect
 		if (followRedirects && (HttpURLConnection.HTTP_MOVED_PERM == responseCode || HttpURLConnection.HTTP_MOVED_TEMP == responseCode) && redirectAttempt < redirectLimit) {
 			String redirUrl = conn.getHeaderField("Location");
-			if (!StringUtils.isEmpty(redirUrl)) {
+			if (!StringUtil.isEmpty(redirUrl)) {
 				conn.disconnect();
 				return connectStream(createURL(redirUrl), postDataBytes, ++redirectAttempt, type);
 			}
-		} else if(redirectAttempt == redirectLimit) {
-			log.debug(String.format("Terminating Redirect Loop: %s", conn.getHeaderField("Location")));
 		}
 
 		// return the response stream from the server - if the request failed return the error stream
@@ -270,7 +267,7 @@ public class SMTHttpConnectionManager {
 	 * @throws IOException
 	 */
 	URL createURL(String actionUrl) throws IOException {
-		if (StringUtils.isEmpty(actionUrl)) throw new IOException("Invalid URL");
+		if (StringUtil.isEmpty(actionUrl)) throw new IOException("Invalid URL");
 		if (! actionUrl.startsWith("http")) {
 			actionUrl = ((sslSocketFactory == null) ? HTTP_CONN_PREFIX : HTTPS_CONN_PREFIX) + actionUrl;
 		}
@@ -375,7 +372,7 @@ public class SMTHttpConnectionManager {
 		while (conn.getHeaderField(c) != null) {
 			// Store each header param in the headerMap collection
 			String key = conn.getHeaderFieldKey(c);
-			String value = StringUtils.defaultString(conn.getHeaderField(c));
+			String value = StringUtil.defaultString(conn.getHeaderField(c));
 			headerMap.put(key, value);
 			
 			// Find the Set-Cookie parameters
@@ -417,7 +414,7 @@ public class SMTHttpConnectionManager {
 			if(entry.getValue() instanceof Object[] || entry.getValue() instanceof Collection) 
 				listParams(sb, entry);
 			else {
-				String value = StringUtils.defaultString(entry.getValue() + "", "");
+				String value = StringUtil.defaultString(entry.getValue() + "", "");
 				sb.append(entry.getKey()).append("=").append(URLEncoder.encode(value, StandardCharsets.UTF_8));
 			}
 		}
@@ -449,6 +446,14 @@ public class SMTHttpConnectionManager {
 	 */
 	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
 		this.sslSocketFactory = sslSocketFactory;
+	}
+
+	/**
+	 * Returns the socket factory
+	 * @return sslSocketFactory
+	 */
+	public SSLSocketFactory getSslSocketFactory() {
+		return this.sslSocketFactory;
 	}
 
 	/**

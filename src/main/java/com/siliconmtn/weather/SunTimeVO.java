@@ -4,6 +4,7 @@ package com.siliconmtn.weather;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
+// Spacelibs 1.x
 import com.siliconmtn.data.format.DateFormat;
 import com.siliconmtn.data.format.DateFormat.DatePattern;
 import com.siliconmtn.data.parser.BeanDataVO;

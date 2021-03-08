@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
+// Spacelibs 1.x
 import com.siliconmtn.core.HashCodeUtil;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: Tree.java<p/>
@@ -142,14 +141,12 @@ public class Tree implements Serializable {
 	 * @param nodes
 	 * @param hldr
 	 */
-	public static void createPreorder(List<Node> nodes, List<Node> hldr) {
+	public void createPreorder(List<Node> nodes, List<Node> hldr) {
 		if (!nodes.isEmpty()) {
 			for (Node n : nodes) {
 				hldr.add(n);
 				createPreorder(n.getChildren(), hldr);
 			}
-		} else {
-			return;
 		}
 	}
 
@@ -191,7 +188,7 @@ public class Tree implements Serializable {
 		List<Node> removed = new ArrayList<>();
 		for (Node dataNode : data) {
 			for (Node childNode : children) {
-				if (StringUtils.defaultString(dataNode.getParentId()).equalsIgnoreCase(childNode.getNodeId())) {
+				if (StringUtil.defaultString(dataNode.getParentId()).equalsIgnoreCase(childNode.getNodeId())) {
 					// To avoid recursive pointers within the nodes, assign the 
 					// Data node to a new node object. Also assign the 
 					// current depth level
@@ -212,8 +209,7 @@ public class Tree implements Serializable {
 		}
 		// Remove the assigned elements from the data list
 		data.removeAll(removed);
-		if (newChildren.isEmpty()) return;
-		else build(data, newChildren);
+		if (! newChildren.isEmpty()) build(data, newChildren);
 	}
 
 	/**
@@ -271,17 +267,17 @@ public class Tree implements Serializable {
 	 * @param useName
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
+		if (StringUtil.isEmpty(parentNode.getFullPath())) parentNode.setFullPath(delimiter);
+		
 		for (Node child : parentNode.getChildren()) {
 			StringBuilder path = new StringBuilder(50);
-			if (parentNode.getFullPath() != null) path.append(parentNode.getFullPath());
-			if (path.length() > 0) path.append(delimiter);
-			if(useName) {
-				if (child.getNodeName() != null) path.append(child.getNodeName());
-			} else {
-				if (child.getNodeId() != null) path.append(child.getNodeId());
-			}
-			if (path.length() > 0) child.setFullPath(path.toString());
+			child.setFullPath(child.getFullPath().replace("null", ""));
 
+			if (StringUtil.isEmpty(child.getFullPath())) path.append(parentNode.getFullPath());
+			path.append(child.getFullPath());
+			path.append(useName && !StringUtil.isEmpty(child.getNodeName()) ? child.getNodeName() : child.getNodeId());
+
+			child.setFullPath(path.toString());
 			buildNodePaths(child, delimiter, useName);
 		}
 	}

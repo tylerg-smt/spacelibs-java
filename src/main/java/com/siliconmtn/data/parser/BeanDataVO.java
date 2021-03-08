@@ -6,10 +6,7 @@ import java.io.Serializable;
 // J2E
 import javax.servlet.http.HttpServletRequest;
 
-//Log4j 2.x
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+// Spacelibs 1.x
 import com.siliconmtn.data.text.StringUtil;
 
 /********************************************************************
@@ -26,14 +23,12 @@ import com.siliconmtn.data.text.StringUtil;
  *******************************************************************/
 public class BeanDataVO implements Serializable, AutoPopulateIntfc {
 	private static final long serialVersionUID = 1L;
-	protected static Logger log;
 
 	/**
 	 * 
 	 */
 	public BeanDataVO() {
 		super();
-		log = LogManager.getLogger(getClass());
 	}
 
 	/**

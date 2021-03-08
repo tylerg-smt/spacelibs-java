@@ -71,12 +71,7 @@ public class GreyHeadingBorderDataCellStyle extends AbstractExcelCellStyle {
 	 * @return
 	 */
 	private Map<String, Object> buildDateStyle(){
-		Map<String, Object> bodyStyleMap = new HashMap<>();
-		bodyStyleMap.put(BORDER_BOTTOM, BorderStyle.THIN);
-		bodyStyleMap.put(BORDER_TOP, BorderStyle.THIN);
-		bodyStyleMap.put(BORDER_RIGHT, BorderStyle.THIN);
-		bodyStyleMap.put(BORDER_LEFT, BorderStyle.THIN);
-		return bodyStyleMap;
+		return buildBodyStyle();
 	}
 
 	/* (non-Javadoc)

@@ -3,9 +3,6 @@ package com.siliconmtn.data.format;
 // JDK 11
 import java.io.Serializable;
 
-// Apache commons 3.x
-import org.apache.commons.lang3.StringUtils;
-
 // Google Phone Libs 8.x
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
@@ -109,7 +106,7 @@ public class PhoneNumberFormat implements Serializable {
 	 * @return
 	 */
 	void assignFormattedNumber() {
-		if (StringUtils.isEmpty(phoneNumber)) return;
+		if (StringUtil.isEmpty(phoneNumber)) return;
 		
 		// If the request is for a dot or dash formatting for a non-US address
 		// Convert the formatting type to International formatting
@@ -137,7 +134,7 @@ public class PhoneNumberFormat implements Serializable {
 	 * @return
 	 */
 	String assignUSFormatting(char startDelim, char endDelim) {
-		if (StringUtils.isEmpty(formattedNumber) || formattedNumber.length() < 7) return formattedNumber; 
+		if (StringUtil.isEmpty(formattedNumber) || formattedNumber.length() < 7) return formattedNumber; 
 		StringBuilder sb = new StringBuilder();
 		sb.append(formattedNumber.substring(0,3)).append(startDelim);
 		sb.append(formattedNumber.substring(3,6)).append(endDelim);
@@ -212,7 +209,7 @@ public class PhoneNumberFormat implements Serializable {
 	 * @param countryCode the countryCode to set
 	 */
 	public void setCountryCode(String countryCode) {
-		this.countryCode = StringUtils.defaultString(countryCode, "US");
+		this.countryCode = StringUtil.defaultString(countryCode, "US");
 	}
 
 	/**
