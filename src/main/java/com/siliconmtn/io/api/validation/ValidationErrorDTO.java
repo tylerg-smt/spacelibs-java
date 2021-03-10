@@ -6,6 +6,7 @@ import java.io.Serializable;
 // Lombok 1.18.x
 import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /****************************************************************************
  * <b>Title</b>: ValidationErrorDTO.java
@@ -22,13 +23,13 @@ import lombok.AllArgsConstructor;
  ****************************************************************************/
 
 @Data
-@AllArgsConstructor
+@Builder
 public class ValidationErrorDTO implements Serializable {
 	/**
 	 * Enum containing the type of validation failed on the field
 	 */
 	public enum ValidationError {
-		REQUIRED, REGEX, RANGE, OPTION, CATASTROPHE
+		REQUIRED, REGEX, RANGE, OPTION, CATASTROPHE, PARSE
 	}
 
 	/**

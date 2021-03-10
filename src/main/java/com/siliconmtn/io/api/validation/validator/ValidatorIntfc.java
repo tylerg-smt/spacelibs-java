@@ -24,7 +24,7 @@ public interface ValidatorIntfc {
 	// Possible data types for a validator to have to handle
 	public enum ValidatorType {
 		STRING(StringValidator.class), 
-		INTEGER(NumberValidator.class), 
+		NUMBER(NumberValidator.class), 
 		DATE(DateValidator.class);
 		
 		Class<?> validator;
