@@ -33,15 +33,8 @@ public class ValidationUtil {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		
 		for (ValidationDTO field : fields) {
-			try {
-				Class<?> c = field.getType().getValidator();
-				if (c == null) continue;
-				
-				ValidatorIntfc validator = (ValidatorIntfc) c.getDeclaredConstructor().newInstance();
-				errors.addAll(validator.validate(field));
-			} catch (Exception e) {
-				
-			}
+			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());
+			errors.addAll(validator.validate(field));
 		}
 		return errors;
 	}
