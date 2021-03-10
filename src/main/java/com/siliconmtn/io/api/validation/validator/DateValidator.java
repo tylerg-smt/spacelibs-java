@@ -32,7 +32,8 @@ public class DateValidator extends AbstractValidator {
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		if (validation.getValue() != null && DateFormat.parseUnknownPattern(validation.getValue()) == null) {
 			List<ValidationErrorDTO> errors = new ArrayList<>();
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Unable to properly parse submitted date of " + validation.getValue(), ValidationError.PARSE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage( "Unable to properly parse submitted date of " + validation.getValue()).validationError(ValidationError.PARSE).build());
 			return errors;
 		} else {
 			return super.validate(validation);
@@ -48,11 +49,13 @@ public class DateValidator extends AbstractValidator {
 		if (validation.getValue() == null) return;
 		Date min = DateFormat.parseUnknownPattern(validation.getMin());
 		if (min == null) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Unable to properly parse required minimum date of " + validation.getMin(), ValidationError.PARSE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage( "Unable to properly parse required minimum date of " + validation.getMin()).validationError(ValidationError.PARSE).build());
 			return;
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).before(DateFormat.parseUnknownPattern(validation.getMin()))) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is under the required minimum length of " + validation.getMin(), ValidationError.RANGE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage( "Value is under the required minimum length of " + validation.getMin()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
@@ -65,11 +68,13 @@ public class DateValidator extends AbstractValidator {
 		if (validation.getValue() == null) return;
 		Date min = DateFormat.parseUnknownPattern(validation.getMax());
 		if (min == null) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Unable to properly parse required maximum date of " + validation.getMax(), ValidationError.PARSE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage( "Unable to properly parse required maximum date of " + validation.getMax()).validationError(ValidationError.PARSE).build());
 			return;
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).after(DateFormat.parseUnknownPattern(validation.getMax()))) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is over the required maximum length of " + validation.getMax(), ValidationError.RANGE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage("Value is over the required maximum length of " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
 

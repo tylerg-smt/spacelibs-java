@@ -5,6 +5,7 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 
 // Lombok 1.18.x
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /****************************************************************************
@@ -22,6 +23,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class ValidationDTO {
 
 	private String elementId;

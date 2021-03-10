@@ -30,9 +30,9 @@ public class ErrorValidator extends AbstractValidator {
 	@Override
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
-		
-		errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Failed to create proper validator for field, please contact an administrator about this issue", 
-				ValidationError.CATASTROPHE));
+
+		errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+				.errorMessage( "Failed to create proper validator for field, please contact an administrator about this issue").validationError(ValidationError.CATASTROPHE).build());
 		
 		return errors;
 	}

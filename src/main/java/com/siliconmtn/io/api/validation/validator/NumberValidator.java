@@ -33,7 +33,8 @@ public class NumberValidator extends AbstractValidator {
 		// Ensure that there are no non-numeric characters in the value
 		if (validation.getValue() != null && !StringUtil.defaultString(validation.getValue()).equals(StringUtil.removeNonNumeric(validation.getValue()))) {
 			List<ValidationErrorDTO> errors = new ArrayList<>();
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value contains non-numeric character " + validation.getValue(), ValidationError.PARSE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage( "Value contains non-numeric character " + validation.getValue()).validationError(ValidationError.PARSE).build());
 			return errors;
 		} else {
 			return super.validate(validation);
@@ -46,7 +47,8 @@ public class NumberValidator extends AbstractValidator {
 	@Override
 	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (NumberUtil.toInt(validation.getValue()) < NumberUtil.toInt(validation.getMin())) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is under the required minimum length of " + validation.getMin(), ValidationError.RANGE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage("Value is under the required minimum length of " + validation.getMin()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
@@ -56,7 +58,8 @@ public class NumberValidator extends AbstractValidator {
 	@Override
 	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (NumberUtil.toInt(validation.getValue()) > NumberUtil.toInt(validation.getMax())) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is over the required maximum length of " + validation.getMin(), ValidationError.RANGE));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+					.errorMessage("Value is over the required maximum length of " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
 

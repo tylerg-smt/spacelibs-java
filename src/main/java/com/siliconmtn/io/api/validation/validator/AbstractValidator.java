@@ -48,7 +48,7 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	 */
 	public void validateRequired(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (validation.isRequired() && StringUtil.isEmpty(validation.getValue())) {
-			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is required and nothing was set", ValidationError.REQUIRED));
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation).errorMessage("Value is required and nothing was set").validationError(ValidationError.REQUIRED).build());
 		}
 	}
 
