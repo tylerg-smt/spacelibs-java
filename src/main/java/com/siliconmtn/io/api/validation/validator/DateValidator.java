@@ -55,7 +55,7 @@ public class DateValidator extends AbstractValidator {
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).before(DateFormat.parseUnknownPattern(validation.getMin()))) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
-					.errorMessage( "Value is under the required minimum length of " + validation.getMin()).validationError(ValidationError.RANGE).build());
+					.errorMessage( "Value is before the minumum date of " + validation.getMin()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class DateValidator extends AbstractValidator {
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).after(DateFormat.parseUnknownPattern(validation.getMax()))) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
-					.errorMessage("Value is over the required maximum length of " + validation.getMax()).validationError(ValidationError.RANGE).build());
+					.errorMessage("Value is after the maximum date of " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
 

@@ -34,7 +34,7 @@ public class NumberValidator extends AbstractValidator {
 		if (validation.getValue() != null && !StringUtil.defaultString(validation.getValue()).equals(StringUtil.removeNonNumeric(validation.getValue()))) {
 			List<ValidationErrorDTO> errors = new ArrayList<>();
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
-					.errorMessage( "Value contains non-numeric character " + validation.getValue()).validationError(ValidationError.PARSE).build());
+					.errorMessage( "Value contains non-numeric characters " + validation.getValue()).validationError(ValidationError.PARSE).build());
 			return errors;
 		} else {
 			return super.validate(validation);
@@ -48,7 +48,7 @@ public class NumberValidator extends AbstractValidator {
 	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (NumberUtil.toInt(validation.getValue()) < NumberUtil.toInt(validation.getMin())) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
-					.errorMessage("Value is under the required minimum length of " + validation.getMin()).validationError(ValidationError.RANGE).build());
+					.errorMessage("Value is under the required minimum value " + validation.getMin()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
@@ -59,7 +59,7 @@ public class NumberValidator extends AbstractValidator {
 	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (NumberUtil.toInt(validation.getValue()) > NumberUtil.toInt(validation.getMax())) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
-					.errorMessage("Value is over the required maximum length of " + validation.getMax()).validationError(ValidationError.RANGE).build());
+					.errorMessage("Value is over the required maximum value " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
