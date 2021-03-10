@@ -43,7 +43,11 @@ public class ValidateAop {
 		   Method m = MethodSignature.class.cast(jp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
-		   log.info("################## Validating Types: " + validate.validationType() + "|" + validate.validationType().getValidator());
+		   if (validate != null) {
+			   // Open up request to the packager factory with the method signature and class name as the packager to look for.
+		   }
+		   
+		   log.info("################## ");
 	   } 
 
 }
