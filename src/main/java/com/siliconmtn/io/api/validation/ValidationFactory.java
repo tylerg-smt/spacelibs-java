@@ -4,7 +4,7 @@ package com.siliconmtn.io.api.validation;
 import java.lang.reflect.Constructor;
 
 // Spacelibs
-import com.siliconmtn.io.api.validation.validator.DefaultValidator;
+import com.siliconmtn.io.api.validation.validator.ErrorValidator;
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 
@@ -36,7 +36,7 @@ public class ValidationFactory {
 	 */
 	public static ValidatorIntfc getValidator(ValidatorType validator) {
 		try {
-			Class<?> validatorObj = validator.getClass();
+			Class<?> validatorObj = validator.getValidator();
 			Constructor<?> constructor = validatorObj.getDeclaredConstructor();
 			return (ValidatorIntfc) constructor.newInstance();
 
@@ -44,6 +44,6 @@ public class ValidationFactory {
 			log.error("Can not load validator class " + e);
 		}
 
-		return new DefaultValidator();
+		return new ErrorValidator();
 	}
 }

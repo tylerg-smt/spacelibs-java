@@ -9,6 +9,9 @@ import com.siliconmtn.data.text.StringUtil;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
+// Lombok 1.18.x
+import lombok.NoArgsConstructor;
+
 /****************************************************************************
  * <b>Title</b>: StringValidator.java
  * <b>Project</b>: spacelibs-java
@@ -22,6 +25,7 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  * @updates:
  ****************************************************************************/
 
+@NoArgsConstructor
 public class StringValidator extends AbstractValidator {
 
 	/**

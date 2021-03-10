@@ -1,5 +1,6 @@
 package com.siliconmtn.io.api.validation.validator;
 
+import java.util.ArrayList;
 // JDK 11.x
 import java.util.List;
 
@@ -7,9 +8,10 @@ import java.util.List;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 import com.siliconmtn.data.format.NumberUtil;
+import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
- * <b>Title</b>: NumberValidator.java
+ * <b>Title</b>: IntegerValidator.java
  * <b>Project</b>: spacelibs-java
  * <b>Description: </b> Validator that handles validation of integer parameters.
  * <b>Copyright:</b> Copyright (c) 2021
@@ -22,13 +24,28 @@ import com.siliconmtn.data.format.NumberUtil;
  ****************************************************************************/
 
 public class NumberValidator extends AbstractValidator {
-
+	
+	/**
+	 * Specialized validate method that checks to ensure that we have a proper number before we move on to other validations
+	 */
+	@Override
+	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
+		// Ensure that there are no non-numeric characters in the value
+		if (validation.getValue() != null && !StringUtil.defaultString(validation.getValue()).equals(StringUtil.removeNonNumeric(validation.getValue()))) {
+			List<ValidationErrorDTO> errors = new ArrayList<>();
+			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value contains non-numeric character " + validation.getValue(), ValidationError.PARSE));
+			return errors;
+		} else {
+			return super.validate(validation);
+		}
+	}
+	
 	/**
 	 * Ensure that the supplied number is not lower than the minimum
 	 */
 	@Override
 	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) {
-		if (NumberUtil.toLong(validation.getValue()) < NumberUtil.toLong(validation.getMin())) {
+		if (NumberUtil.toInt(validation.getValue()) < NumberUtil.toInt(validation.getMin())) {
 			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is under the required minimum length of " + validation.getMin(), ValidationError.RANGE));
 		}
 	}
@@ -38,7 +55,7 @@ public class NumberValidator extends AbstractValidator {
 	 */
 	@Override
 	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
-		if (NumberUtil.toLong(validation.getValue()) > NumberUtil.toLong(validation.getMax())) {
+		if (NumberUtil.toInt(validation.getValue()) > NumberUtil.toInt(validation.getMax())) {
 			errors.add(new ValidationErrorDTO(validation.getElementId(), validation.getValue(), "Value is over the required maximum length of " + validation.getMin(), ValidationError.RANGE));
 		}
 	}
