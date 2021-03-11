@@ -27,6 +27,7 @@ public interface ValidatorIntfc {
 		NUMBER(NumberValidator.class), 
 		DATE(DateValidator.class);
 		
+		
 		Class<?> validator;
 		ValidatorType(Class<?> validator) {
 			this.validator = validator;

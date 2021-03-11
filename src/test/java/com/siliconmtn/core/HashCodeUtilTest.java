@@ -1,12 +1,16 @@
 package com.siliconmtn.core;
 
 // Junit 5
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // JDK 11.x
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.siliconmtn.io.api.validation.factory.ParserFactory;
 
 /****************************************************************************
  * <b>Title</b>: HashCodeUtilTest.java
@@ -27,6 +31,7 @@ class HashCodeUtilTest {
 	 */
 	@Test
 	void testHashBoolean() {
+		
 		assertEquals(852, HashCodeUtil.hash(true));
 		assertEquals(851, HashCodeUtil.hash(false));
 	}
