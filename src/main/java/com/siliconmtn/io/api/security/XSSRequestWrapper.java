@@ -48,9 +48,14 @@ import com.siliconmtn.data.text.StringUtil;
  ****************************************************************************/
 public class XSSRequestWrapper extends HttpServletRequestWrapper{
 	
+	
+	
 	private byte[] rawData;
     private HttpServletRequest request;
     protected ResettableServletInputStream servletStream;
+    
+    // private variable for storing the request body created when we handle the XSS stripping process in house
+    private String body;
 
     /**
      * Constructor that assigns the request object and sets the servlet stream to
@@ -166,6 +171,26 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper{
         }
         
         return Collections.enumeration(result);
+    }
+    
+    /**
+     * Performs an in house stripping of any scripts and tags.
+     * @throws IOException
+     */
+    public void processStripXSS () throws IOException {
+		body = IOUtils.toString(getReader());	
+        if (!StringUtil.isEmpty(body)) {
+            body = XSSRequestWrapper.stripXSS(body);
+            resetInputStream(body.getBytes());
+        }
+    }
+    
+    /**
+     * Get the body of the request object created by teh processStripXSS method
+     * @return The requestbody.
+     */
+    public String getBody() {
+    	return body;
     }
     
     /**

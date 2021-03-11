@@ -1,29 +1,26 @@
 package com.siliconmtn.io.api.validation;
 
-import java.io.IOException;
 // JDK 11.x
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
-
 // Spring 5.5.x
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.siliconmtn.data.text.StringUtil;
 // Spacelibs 1.0
 import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.ApiResponse;
 import com.siliconmtn.io.api.security.XSSRequestWrapper;
-import com.siliconmtn.io.api.validation.packager.PackagerFactory;
-import com.siliconmtn.io.api.validation.packager.PackagerIntfc;
-import com.siliconmtn.io.api.validation.validator.ValidationDTO;
+import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 // Lombok 1.18.x
 import lombok.extern.log4j.Log4j2;
@@ -44,34 +41,36 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class ValidateAop {
+	
+	@Autowired
+	HttpServletRequest request;
 
 	   /** 
 	    * This is the method which I would like to execute
 	    * before a selected method execution.
+	 * @throws Throwable 
 	    */
-	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate) && args(.., @Request request)")
-	   public void aroundAdvice(JoinPoint jp, Object request) throws ApiRequestException {
+	   @Around("@annotation(com.siliconmtn.io.api.validation.Validate)")
+	   public Object beforeAdvice(ProceedingJoinPoint jp) throws Throwable {
+		   
 		   Method m = MethodSignature.class.cast(jp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
-	        XSSRequestWrapper wrappedRequest = new XSSRequestWrapper((HttpServletRequest) request);
-
-	        String body;
-			try {
-				body = IOUtils.toString(wrappedRequest.getReader());
-		        if (!StringUtil.isEmpty(body)) {
-		            body = XSSRequestWrapper.stripXSS(body);
-		            wrappedRequest.resetInputStream(body.getBytes());
-		        }
-			} catch (IOException e) {
-				throw new ApiRequestException(e.getCause(), HttpStatus.UNPROCESSABLE_ENTITY);
-			}
-		   
+	        XSSRequestWrapper wrappedRequest = new XSSRequestWrapper(request);
+	        
+	        wrappedRequest.processStripXSS();
+			
 		   if (validate != null) {
-			   validateReponse(body, m.getName()+ m.getClass().getName());
+			   List<ValidationErrorDTO> errors = validateReponse(wrappedRequest.getBody(), m.getName()+ m.getClass().getName());
+			   if (errors.size() > 0) {
+				   ApiResponse res = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Request failed validation", new ApiRequestException("Validation Failed"));
+				   res.getFailedValidations().addAll(errors);
+				   return res;
+			   }
 		   }
 		   
-		   log.info("################## ");
+		   return jp.proceed();
+		   
 	   } 
 	   
 	   
@@ -82,21 +81,14 @@ public class ValidateAop {
 	    * @param key The key that identifies the packager that needs to be created.
 	    * @throws ApiRequestException When there are validation errors this is thrown with information on what failed and why.
 	    */
-	   private void validateReponse(Object body, String key) throws ApiRequestException {
-		   PackagerIntfc packager = PackagerFactory.getPackager(key);
-		   List<ValidationDTO> fields = packager.packageDTOs(body);
-		   List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
-		   if (errors.size() > 0) {
-			   throw new ApiRequestException(prepareErrorMessage(errors), HttpStatus.UNPROCESSABLE_ENTITY);
+	   private List<ValidationErrorDTO> validateReponse(Object body, String key) throws ApiRequestException {
+		   List<ValidationErrorDTO> errors = new ArrayList<>();
+		   
+		   if (Math.random() > .5) {
+			   errors.add(ValidationErrorDTO.builder().errorMessage("Failed because math hates you").validationError(ValidationError.RANGE).value("test").elementId("test_id").build());
 		   }
-	   }
-	   
-	   private String prepareErrorMessage(List<ValidationErrorDTO> errors) {
-		   StringBuilder errorMsg = new StringBuilder();
 		   
-		   
-		   
-		   return errorMsg.toString();
+		   return errors;
 	   }
 
 }
