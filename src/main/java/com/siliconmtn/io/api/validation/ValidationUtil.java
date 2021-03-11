@@ -32,10 +32,13 @@ public class ValidationUtil {
 	public static List<ValidationErrorDTO> validateData(List<ValidationDTO> fields) {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		
+		if (fields == null) return errors;
+		
 		for (ValidationDTO field : fields) {
 			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());
 			errors.addAll(validator.validate(field));
 		}
+		
 		return errors;
 	}
 
