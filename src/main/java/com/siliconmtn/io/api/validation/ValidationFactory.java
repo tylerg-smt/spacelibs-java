@@ -12,7 +12,7 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 import lombok.extern.log4j.Log4j2;
 
 /****************************************************************************
- * <b>Title</b>: ValidationFactory.java
+ * <b>Title</b>: ParserFactory.java
  * <b>Project</b>: spacelibs-java
  * <b>Description: </b> Creates the validator for the supplied data type. If it cannot create
  * a proper validator it will create a validator that will always fail the data it is given.

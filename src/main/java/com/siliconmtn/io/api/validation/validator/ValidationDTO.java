@@ -5,7 +5,8 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 
 // Lombok 1.18.x
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 /****************************************************************************
  * <b>Title</b>: ValidationDTO.java
@@ -20,7 +21,8 @@ import lombok.Data;
  * @updates:
  ****************************************************************************/
 
-@Data
+@Getter
+@Builder
 @AllArgsConstructor
 public class ValidationDTO {
 
