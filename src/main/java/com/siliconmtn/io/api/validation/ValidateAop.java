@@ -2,10 +2,10 @@ package com.siliconmtn.io.api.validation;
 
 // JDK 11.x
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 // Spring 5.5.x
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,12 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 // Spacelibs 1.0
 import com.siliconmtn.io.api.ApiRequestException;
 import com.siliconmtn.io.api.ApiResponse;
 import com.siliconmtn.io.api.security.XSSRequestWrapper;
-import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
@@ -54,10 +53,12 @@ public class ValidateAop {
 	 * @throws Throwable 
 	    */
 	   @Around("@annotation(com.siliconmtn.io.api.validation.Validate)")
-	   public Object beforeAdvice(ProceedingJoinPoint jp) throws Throwable {
+	   public Object beforeAdvice(ProceedingJoinPoint pjp) throws Throwable {
 		   
-		   Method m = MethodSignature.class.cast(jp.getSignature()).getMethod();
+		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
+		   
+		   
 		   
 	        XSSRequestWrapper wrappedRequest = new XSSRequestWrapper(request);
 	        
@@ -72,7 +73,7 @@ public class ValidateAop {
 			   }
 		   }
 		   
-		   return jp.proceed();
+		   return pjp.proceed();
 		   
 	   } 
 	   
@@ -89,7 +90,7 @@ public class ValidateAop {
 		   ParserFactory pFact = new ParserFactory();
 		   List<ValidationDTO> fields;
 			try {
-				fields = pFact.parserDispatcher(key, body.getBytes());
+				fields = pFact.parserDispatcher(key).requestParser(body.getBytes());
 			} catch (Exception e) {
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 
