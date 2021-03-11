@@ -2,10 +2,10 @@ package com.siliconmtn.io.api.validation;
 
 // JDK 11.x
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 // Spring 5.5.x
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,6 +22,7 @@ import com.siliconmtn.io.api.ApiRequestException;
 import com.siliconmtn.io.api.ApiResponse;
 import com.siliconmtn.io.api.security.XSSRequestWrapper;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
+import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
 // Lombok 1.18.x
@@ -46,6 +47,9 @@ public class ValidateAop {
 	
 	@Autowired
 	HttpServletRequest request;
+	
+	@Autowired
+	ParserFactory pFact;
 
 	   /** 
 	    * This is the method which I would like to execute
@@ -59,13 +63,12 @@ public class ValidateAop {
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
 		   
-		   
 	        XSSRequestWrapper wrappedRequest = new XSSRequestWrapper(request);
 	        
 	        wrappedRequest.processStripXSS();
 			
 		   if (validate != null) {
-			   List<ValidationErrorDTO> errors = validateReponse(wrappedRequest.getBody(), m.getName()+ m.getClass().getName());
+			   List<ValidationErrorDTO> errors = validateReponse(wrappedRequest.getBody(),  m.getDeclaringClass().getName() + "." + m.getName());
 			   if (errors.size() > 0) {
 				   ApiResponse res = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Request failed validation", new ApiRequestException("Validation Failed"));
 				   res.getFailedValidations().addAll(errors);
@@ -87,14 +90,17 @@ public class ValidateAop {
 	    */
 	   private List<ValidationErrorDTO> validateReponse(String body, String key) throws ApiRequestException {
 		   
-		   ParserFactory pFact = new ParserFactory();
 		   List<ValidationDTO> fields;
 			try {
-				fields = pFact.parserDispatcher(key).requestParser(body.getBytes());
+				ParserIntfc parser =  pFact.parserDispatcher(key);
+				
+				if (parser == null) return Collections.emptyList();
+					
+				fields = parser.requestParser(body.getBytes());
 			} catch (Exception e) {
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 
-		   
+			
 		   return ValidationUtil.validateData(fields);
 	   }
 

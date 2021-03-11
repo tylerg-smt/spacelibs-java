@@ -4,6 +4,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
+
+import com.siliconmtn.data.text.StringUtil;
+import com.siliconmtn.io.api.ApiRequestException;
 
 /****************************************************************************
  * <b>Title</b>: ParserFactory.java
@@ -19,15 +24,21 @@ import org.springframework.context.annotation.Configuration;
  * @updates:
  ****************************************************************************/
 @Configuration
+@PropertySource("classpath:application.properties")
 public class ParserFactory {
 	
 	@Value("#{${users}}") 
 	private Map<String,String> builderMapper;
-	public ParserIntfc parserDispatcher(String controllerName) throws SecurityException, IllegalArgumentException, ClassNotFoundException, InstantiationException, IllegalAccessException{
-	
+	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
 		String parserClassName=builderMapper.get(controllerName);
-		Class<?> c = Class.forName(parserClassName);
-		return (ParserIntfc) c.newInstance(); 
+		if (StringUtil.isEmpty(parserClassName)) return null;
+		
+		try {
+			Class<?> c = Class.forName(parserClassName);
+			return (ParserIntfc) c.newInstance(); 
+		} catch (Exception e) {
+			throw new ApiRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }
