@@ -1,7 +1,14 @@
 package com.siliconmtn.io.api;
 
+// JDK 11.x
+import java.util.ArrayList;
+import java.util.List;
+
 // Spring 5.5.x
 import org.springframework.http.HttpStatus;
+
+// SPacelibs
+import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 
 /****************************************************************************
  * <b>Title</b>: ValidationException.java
@@ -27,6 +34,8 @@ public class ApiRequestException extends RuntimeException {
 	 * Sets the status to 400 by default
 	 */
 	private final HttpStatus status;
+
+    protected List<ValidationErrorDTO> failedValidations = new ArrayList<>();
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
@@ -74,5 +83,26 @@ public class ApiRequestException extends RuntimeException {
 	public HttpStatus getStatus() {
 		return status;
 	}
+    
+    /**
+     * Adds a single failed validation to the collection
+     * @param failedValidation
+     */
+    public void addFailedValidation(ValidationErrorDTO failedValidation) {
+    	failedValidations.add(failedValidation);
+    }
 
+    
+    /**
+     * Adds a all failed validation to the collection
+     * @param failedValidations
+     */
+    public void addAllFailedValidation(List<ValidationErrorDTO> failedValidations) {
+    	failedValidations.addAll(failedValidations);
+    }
+
+    public List<ValidationErrorDTO> getFailedValidations() {
+    	return failedValidations;
+    }
+    
 }

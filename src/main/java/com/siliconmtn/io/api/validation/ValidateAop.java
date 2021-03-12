@@ -2,15 +2,16 @@ package com.siliconmtn.io.api.validation;
 
 // JDK 11.x
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.aspectj.lang.JoinPoint;
 // Spring 5.5.x
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 // Spacelibs 1.0
 import com.siliconmtn.io.api.ApiRequestException;
-import com.siliconmtn.io.api.ApiResponse;
 import com.siliconmtn.io.api.security.XSSRequestWrapper;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
@@ -56,9 +56,8 @@ public class ValidateAop {
 	    * before a selected method execution.
 	 * @throws Throwable 
 	    */
-	   @Around("@annotation(com.siliconmtn.io.api.validation.Validate)")
-	   public Object beforeAdvice(ProceedingJoinPoint pjp) throws Throwable {
-		   
+	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate)")
+	   public Object beforeAdvice(JoinPoint pjp) throws Throwable {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
@@ -70,13 +69,12 @@ public class ValidateAop {
 		   if (validate != null) {
 			   List<ValidationErrorDTO> errors = validateReponse(wrappedRequest.getBody(),  m.getDeclaringClass().getName() + "." + m.getName());
 			   if (errors.size() > 0) {
-				   ApiResponse res = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Request failed validation", new ApiRequestException("Validation Failed"));
-				   res.getFailedValidations().addAll(errors);
-				   return res;
+				   ApiRequestException ex = new ApiRequestException("Failed to validate request");
+				   ex.addAllFailedValidation(errors);
+				   throw ex;
 			   }
 		   }
-		   
-		   return pjp.proceed();
+		return null;
 		   
 	   } 
 	   
@@ -95,7 +93,7 @@ public class ValidateAop {
 				ParserIntfc parser =  pFact.parserDispatcher(key);
 				
 				if (parser == null) return Collections.emptyList();
-					
+				
 				fields = parser.requestParser(body.getBytes());
 			} catch (Exception e) {
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -7,8 +7,8 @@ import java.util.List;
 // Junit 5
 import org.junit.jupiter.api.Test;
 
-import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 // Spacelibs
+import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 

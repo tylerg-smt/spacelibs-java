@@ -32,7 +32,7 @@ public class DateValidator extends AbstractValidator {
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		if (validation.getValue() != null && DateFormat.parseUnknownPattern(validation.getValue()) == null) {
 			List<ValidationErrorDTO> errors = new ArrayList<>();
-			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
 					.errorMessage( "Unable to properly parse submitted date of " + validation.getValue()).validationError(ValidationError.PARSE).build());
 			return errors;
 		} else {
@@ -49,12 +49,12 @@ public class DateValidator extends AbstractValidator {
 		if (validation.getValue() == null) return;
 		Date min = DateFormat.parseUnknownPattern(validation.getMin());
 		if (min == null) {
-			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
 					.errorMessage( "Unable to properly parse required minimum date of " + validation.getMin()).validationError(ValidationError.PARSE).build());
 			return;
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).before(DateFormat.parseUnknownPattern(validation.getMin()))) {
-			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
 					.errorMessage( "Value is before the minumum date of " + validation.getMin()).validationError(ValidationError.RANGE).build());
 		}
 	}
@@ -68,12 +68,12 @@ public class DateValidator extends AbstractValidator {
 		if (validation.getValue() == null) return;
 		Date min = DateFormat.parseUnknownPattern(validation.getMax());
 		if (min == null) {
-			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
 					.errorMessage( "Unable to properly parse required maximum date of " + validation.getMax()).validationError(ValidationError.PARSE).build());
 			return;
 		}
 		if (DateFormat.parseUnknownPattern(validation.getValue()).after(DateFormat.parseUnknownPattern(validation.getMax()))) {
-			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation)
+			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
 					.errorMessage("Value is after the maximum date of " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
