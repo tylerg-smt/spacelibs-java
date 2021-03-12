@@ -27,7 +27,7 @@ import com.siliconmtn.io.api.ApiRequestException;
 @PropertySource("classpath:application.properties")
 public class ParserFactory {
 	
-	@Value("#{${users}}") 
+	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
 	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
 		String parserClassName=builderMapper.get(controllerName);

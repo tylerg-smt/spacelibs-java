@@ -45,6 +45,15 @@ public class ApiRequestException extends RuntimeException {
 		super(message);
 		this.status = HttpStatus.BAD_REQUEST;
 	}
+	
+	/**
+	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
+	 * @param message
+	 */
+	public ApiRequestException(String message, List<ValidationErrorDTO> errors) {
+		this(message);
+		this.failedValidations = errors;
+	}
 
 	/**
 	 * Error message and status constructor
@@ -54,6 +63,16 @@ public class ApiRequestException extends RuntimeException {
 	public ApiRequestException(String message, HttpStatus status) {
 		super(message);
 		this.status = status;
+	}
+
+	/**
+	 * Error message and status constructor
+	 * @param message Error message to display
+	 * @param status HttpStatus to send
+	 */
+	public ApiRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
+		this(message, status);
+		this.failedValidations = errors;
 	}
 
 	/**

@@ -188,7 +188,7 @@ public class ValidationUtilTest {
 		// Succeeds min, max and requierd test, ignoring the regex despite one being passed
 		fields.add(new ValidationDTO("id", "5", "1", "7", "pointless", true, ValidatorType.NUMBER));
 		// Fails due to not providing a proper number
-		fields.add(new ValidationDTO("id", "1234Five", "1", "7", null, true, ValidatorType.NUMBER));
+		fields.add(new ValidationDTO("id", "1234Five", "1", "7", null, false, ValidatorType.NUMBER));
 		// Succeeds with decimal number
 		fields.add(new ValidationDTO("id", "5.0", "1", "7", null, true, ValidatorType.NUMBER));
 		// Fails due to min
@@ -215,9 +215,7 @@ public class ValidationUtilTest {
 	 */
 	@Test
 	public void testNoValidation() {
-		List<ValidationDTO> fields = new ArrayList<>(1);
-		
-		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
+		List<ValidationErrorDTO> errors = ValidationUtil.validateData(null);
 		
 		assert(errors.size() == 0);
 	}

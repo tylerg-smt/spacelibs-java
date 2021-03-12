@@ -22,6 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class StreamParser implements ParserIntfc{
 
+	/**
+	 * Convert the bytes to a list of usavle map objects.
+	 * @param ba
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	public List<Map<String, Object>> getMapList(byte[] ba) throws JsonProcessingException {
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -30,6 +36,12 @@ public abstract class StreamParser implements ParserIntfc{
 
 	}
 
+	/**
+	 * Maps the supplied byte array to a usable map of items.
+	 * @param ba
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMap(byte[] ba) throws JsonProcessingException {
 

@@ -7,25 +7,21 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.aspectj.lang.JoinPoint;
 // Spring 5.5.x
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.aspectj.lang.JoinPoint;
 
 
 // Spacelibs 1.0
 import com.siliconmtn.io.api.ApiRequestException;
-import com.siliconmtn.io.api.security.XSSRequestWrapper;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
-
-import lombok.extern.log4j.Log4j2;
 
 /****************************************************************************
  * <b>Title</b>: ValidateAop.java
@@ -41,7 +37,6 @@ import lombok.extern.log4j.Log4j2;
  ****************************************************************************/
 @Aspect
 @Component
-@Log4j2
 public class ValidateAop {
 	
 	@Autowired
@@ -59,13 +54,11 @@ public class ValidateAop {
 	   public void beforeAdvice(JoinPoint pjp, Object body) throws Throwable {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
-			log.info("(*&^^^^^&(*&^(*^(*&^(*&^(*&(*&(*^(*&^(*&");
+		   
 		   if (validate != null) {
 			   List<ValidationErrorDTO> errors = validateReponse(body,  m.getDeclaringClass().getName() + "." + m.getName());
 			   if (errors.size() > 0) {
-				   ApiRequestException ex = new ApiRequestException("Failed to validate request");
-				   ex.addAllFailedValidation(errors);
-				   throw ex;
+				   throw new ApiRequestException("Failed to validate request", errors);
 			   }
 		   }
 		   
@@ -87,7 +80,7 @@ public class ValidateAop {
 				
 				if (parser == null) return Collections.emptyList();
 				
-				fields = parser.requestParser(body.toString().getBytes());
+				fields = parser.requestParser(body);
 			} catch (Exception e) {
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 

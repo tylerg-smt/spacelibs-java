@@ -53,12 +53,8 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	}
 
 	/**
-	 * Empty validation checks to be overridden by the extending validators as needed.
-	 * When the child does not extend them they are used to ensure that the checks are
-	 * able to run without causing issues
+	 * Empty validation checks for regex as both numbers and dates do not use it, allowing them to not have to implement them.
 	 */
-	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
-	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
 	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
 	
 	

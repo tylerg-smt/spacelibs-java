@@ -17,6 +17,6 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  ****************************************************************************/
 public interface ParserIntfc {
 	
-	List<ValidationDTO> requestParser(byte[] ba) throws JsonProcessingException;
+	List<ValidationDTO> requestParser(Object ba) throws JsonProcessingException;
 
 }
