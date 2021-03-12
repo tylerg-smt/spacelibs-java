@@ -61,6 +61,64 @@ public class ValidationUtilTest {
 		assert(errors.get(4).getValidationError().equals(ValidationError.REQUIRED));
 		
 	}
+	
+	
+	/**
+	 * Test the email validator, testing it's ability to fail based on regex 
+	 * as the other methods are handled by its parent calss of StringValidator.
+	 */
+	@Test
+	public void testEmailValidators() {
+		List<ValidationDTO> fields = new ArrayList<>(7);
+
+		// Successful regex test
+		fields.add(ValidationDTO.builder().elementId("id").value("edamschroder@siliconmtn.com").type(ValidatorType.EMAIL).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("fakeemail@somerandomemaildomain.uk").type(ValidatorType.EMAIL).build());
+		// Fails due to regex
+		fields.add(ValidationDTO.builder().elementId("id").value("edamsc@hroder@siliconmtn.com").type(ValidatorType.EMAIL).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("edamschrodersiliconmtn.com").type(ValidatorType.EMAIL).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("edamsc@hroder@siliconmtncom").type(ValidatorType.EMAIL).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("edamsc@hroder@siliconmtn.").type(ValidatorType.EMAIL).build());
+		
+		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
+		
+		assert(errors.size() == 4);
+		assert(errors.get(0).getValidationError().equals(ValidationError.REGEX));
+		assert(errors.get(1).getValidationError().equals(ValidationError.REGEX));
+		assert(errors.get(2).getValidationError().equals(ValidationError.REGEX));
+		assert(errors.get(3).getValidationError().equals(ValidationError.REGEX));
+		
+	}
+	
+	
+	/**
+	 * Test the email validator, testing it's ability to fail based on regex 
+	 * as the other methods are handled by its parent calss of StringValidator.
+	 */
+	@Test
+	public void testUUIDValidators() {
+		List<ValidationDTO> fields = new ArrayList<>(6);
+
+		// Successful regex test
+		fields.add(ValidationDTO.builder().elementId("id").value("fjhq-p1d84-fjqA2239-fjqa3334-fq343f9").type(ValidatorType.UUID).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("FD98av-shef-AN526UF-hfaqsdf-adfdJf26").type(ValidatorType.UUID).build());
+		// Fails due to regex
+		fields.add(ValidationDTO.builder().elementId("id").value("FD9-8a!shef-ANc56UF-hf3asdf-adfJaaa6").type(ValidatorType.UUID).build());
+		fields.add(ValidationDTO.builder().elementId("id").value("FD98-icshef-AN5d6UF-hfa2sdfadfJ22ac6").type(ValidatorType.UUID).build());
+		// Fails due to min length
+		fields.add(ValidationDTO.builder().elementId("id").value("FD98-aisef-A56UF-hfadf-adfJ2").type(ValidatorType.UUID).build());
+		// Fails due to max length
+		fields.add(ValidationDTO.builder().elementId("id").value("FD98aiA-Sf3shef-AN5d6adsf43UF-hfads3shdf-adfafad3J26").type(ValidatorType.UUID).build());
+		
+		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
+		for (ValidationErrorDTO e : errors) System.out.println(e);
+		assert(errors.size() == 4);
+		assert(errors.get(0).getValidationError().equals(ValidationError.REGEX));
+		assert(errors.get(1).getValidationError().equals(ValidationError.REGEX));
+		assert(errors.get(2).getValidationError().equals(ValidationError.RANGE));
+		assert(errors.get(3).getValidationError().equals(ValidationError.RANGE));
+		
+	}
 
 
 	/**
@@ -125,7 +183,7 @@ public class ValidationUtilTest {
 	 */
 	@Test
 	public void testNumberValidator() {
-		List<ValidationDTO> fields = new ArrayList<>(1);
+		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Succeeds min, max and requierd test, ignoring the regex despite one being passed
 		fields.add(new ValidationDTO("id", "5", "1", "7", "pointless", true, ValidatorType.NUMBER));
@@ -150,6 +208,18 @@ public class ValidationUtilTest {
 		assert(errors.get(2).getValidationError().equals(ValidationError.RANGE));
 		assert(errors.get(3).getValidationError().equals(ValidationError.REQUIRED));
 		
+	}
+	
+	/**
+	 * Checks to ensure that an empty list of validatables returns properly.
+	 */
+	@Test
+	public void testNoValidation() {
+		List<ValidationDTO> fields = new ArrayList<>(1);
+		
+		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
+		
+		assert(errors.size() == 0);
 	}
 	
 	/**
