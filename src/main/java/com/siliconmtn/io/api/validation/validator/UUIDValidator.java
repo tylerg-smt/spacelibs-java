@@ -2,12 +2,9 @@ package com.siliconmtn.io.api.validation.validator;
 
 // JDK 11.x
 import java.util.List;
-import java.util.regex.Pattern;
 
 // Spacelibs
-import com.siliconmtn.data.text.StringUtil;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
-import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 // Lombok 1.18.x
 import lombok.NoArgsConstructor;
@@ -27,38 +24,28 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class UUIDValidator extends StringValidator {
+	
+	public static final String UUID_REGEX = "[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*";
+	public static final String UUID_LENGTH = "36";
+	
+
 
 	/**
-	 * Ensure that the supplied string's length is not shorter than the minimum required length
+	 * Set validation parameters to the default if they are not 
+	 * already provided the proceed with normal validation
 	 */
 	@Override
-	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		if (validation.getMin() == null) {
-			validation.setMin("36");
+			validation.setMin(UUID_LENGTH);
 		}
-		super.validateMin(validation, errors);
-	}
-
-	/**
-	 * Ensure that the supplied string's length is not larger than the maximum required length
-	 */
-	@Override
-	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (validation.getMax() == null) {
-			validation.setMax("36");
+			validation.setMax(UUID_LENGTH);
 		}
-		super.validateMax(validation, errors);
-	}
-
-	/**
-	 * Ensure that the supplied string matches the supplied regex pattern
-	 */
-	@Override
-	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (validation.getRegex() == null) {
-			validation.setRegex("[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*");
+			validation.setRegex(UUID_REGEX);
 		}
-		super.validateRegex(validation, errors);
+		return super.validate(validation);
 	}
 
 }

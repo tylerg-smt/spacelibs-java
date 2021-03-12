@@ -35,7 +35,7 @@ public class ValidationUtil {
 		if (fields == null) return errors;
 		
 		for (ValidationDTO field : fields) {
-			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());
+			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());;
 			errors.addAll(validator.validate(field));
 		}
 		

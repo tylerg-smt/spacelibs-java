@@ -2,12 +2,9 @@ package com.siliconmtn.io.api.validation.validator;
 
 // JDK 11.x
 import java.util.List;
-import java.util.regex.Pattern;
 
 // Spacelibs
-import com.siliconmtn.data.text.StringUtil;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
-import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 // Lombok 1.18.x
 import lombok.NoArgsConstructor;
@@ -28,19 +25,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmailValidator extends StringValidator {
 	
-	public static String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
-	
+	public static String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 
 
 	/**
 	 * If a regex has not been provided use the default EMAIL_REGEX and then treat as a normal string
 	 */
 	@Override
-	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		if (validation.getRegex() == null) {
 			validation.setRegex(EMAIL_REGEX);
 		}
-		super.validateRegex(validation, errors);
+		return super.validate(validation);
 	}
 
 }

@@ -46,7 +46,7 @@ public class StringValidator extends AbstractValidator {
 	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (StringUtil.defaultString(validation.getValue()).length() > Integer.parseInt(validation.getMax())) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
-					.errorMessage("Value is over the required maximum length of " + validation.getMin()).validationError(ValidationError.RANGE).build());
+					.errorMessage("Value is over the required maximum length of " + validation.getMax()).validationError(ValidationError.RANGE).build());
 		}
 	}
 
@@ -55,12 +55,11 @@ public class StringValidator extends AbstractValidator {
 	 */
 	@Override
 	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) {
-
 	    Pattern pattern = Pattern.compile(validation.getRegex());
 	    
 		if (!pattern.matcher(StringUtil.defaultString(validation.getValue())).find()) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue())
-					.errorMessage("Value does not match the required pattern of " + validation.getMin()).validationError(ValidationError.REGEX).build());
+					.errorMessage("Value does not match the required pattern of " + validation.getRegex()).validationError(ValidationError.REGEX).build());
 		}
 	}
 

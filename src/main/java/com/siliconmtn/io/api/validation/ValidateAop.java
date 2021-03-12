@@ -2,7 +2,6 @@ package com.siliconmtn.io.api.validation;
 
 // JDK 11.x
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,9 +24,6 @@ import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
-// Lombok 1.18.x
-import lombok.extern.log4j.Log4j2;
-
 /****************************************************************************
  * <b>Title</b>: ValidateAop.java
  * <b>Project</b>: Spacelibs-java
@@ -42,7 +38,6 @@ import lombok.extern.log4j.Log4j2;
  ****************************************************************************/
 @Aspect
 @Component
-@Log4j2
 public class ValidateAop {
 	
 	@Autowired

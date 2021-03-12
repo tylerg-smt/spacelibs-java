@@ -41,7 +41,7 @@ public class ValidationFactory {
 			return (ValidatorIntfc) constructor.newInstance();
 
 		} catch (Exception e) {
-			log.error("Can not load validator class " + e);
+			log.error("Can not load validator class " + validator, e);
 		}
 
 		return new ErrorValidator();

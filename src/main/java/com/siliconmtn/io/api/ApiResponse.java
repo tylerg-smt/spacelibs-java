@@ -121,7 +121,7 @@ public class ApiResponse {
      * @param failedValidation
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
-    	failedValidations.add(failedValidation);
+    	this.failedValidations.add(failedValidation);
     }
     
     /**
@@ -129,6 +129,6 @@ public class ApiResponse {
      * @param failedValidation
      */
     public void addFailedValidations(List<ValidationErrorDTO> failedValidations) {
-    	failedValidations.addAll(failedValidations);
+    	this.failedValidations.addAll(failedValidations);
     }
 }

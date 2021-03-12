@@ -89,7 +89,7 @@ public class ApiRequestException extends RuntimeException {
      * @param failedValidation
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
-    	failedValidations.add(failedValidation);
+    	this.failedValidations.add(failedValidation);
     }
 
     
@@ -98,11 +98,11 @@ public class ApiRequestException extends RuntimeException {
      * @param failedValidations
      */
     public void addAllFailedValidation(List<ValidationErrorDTO> failedValidations) {
-    	failedValidations.addAll(failedValidations);
+    	this.failedValidations.addAll(failedValidations);
     }
 
     public List<ValidationErrorDTO> getFailedValidations() {
-    	return failedValidations;
+    	return this.failedValidations;
     }
     
 }
