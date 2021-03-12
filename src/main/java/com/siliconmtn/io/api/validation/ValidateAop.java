@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,8 @@ import com.siliconmtn.io.api.security.XSSRequestWrapper;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
+
+import lombok.extern.log4j.Log4j2;
 
 /****************************************************************************
  * <b>Title</b>: ValidateAop.java
@@ -38,6 +41,7 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  ****************************************************************************/
 @Aspect
 @Component
+@Log4j2
 public class ValidateAop {
 	
 	@Autowired
@@ -51,25 +55,19 @@ public class ValidateAop {
 	    * before a selected method execution.
 	 * @throws Throwable 
 	    */
-	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate)")
-	   public Object beforeAdvice(JoinPoint pjp) throws Throwable {
+	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate) && args(.., @RequestBody body)")
+	   public void beforeAdvice(JoinPoint pjp, Object body) throws Throwable {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
-		   
-		   
-	        XSSRequestWrapper wrappedRequest = new XSSRequestWrapper(request);
-	        
-	        wrappedRequest.processStripXSS();
-			
+			log.info("(*&^^^^^&(*&^(*^(*&^(*&^(*&(*&(*^(*&^(*&");
 		   if (validate != null) {
-			   List<ValidationErrorDTO> errors = validateReponse(wrappedRequest.getBody(),  m.getDeclaringClass().getName() + "." + m.getName());
+			   List<ValidationErrorDTO> errors = validateReponse(body,  m.getDeclaringClass().getName() + "." + m.getName());
 			   if (errors.size() > 0) {
 				   ApiRequestException ex = new ApiRequestException("Failed to validate request");
 				   ex.addAllFailedValidation(errors);
 				   throw ex;
 			   }
 		   }
-		return null;
 		   
 	   } 
 	   
@@ -81,7 +79,7 @@ public class ValidateAop {
 	    * @param key The key that identifies the packager that needs to be created.
 	    * @throws ApiRequestException ParserDispatcher failed to create a parser or parse the supplied data in some way.
 	    */
-	   private List<ValidationErrorDTO> validateReponse(String body, String key) throws ApiRequestException {
+	   private List<ValidationErrorDTO> validateReponse(Object body, String key) throws ApiRequestException {
 		   
 		   List<ValidationDTO> fields;
 			try {
@@ -89,7 +87,7 @@ public class ValidateAop {
 				
 				if (parser == null) return Collections.emptyList();
 				
-				fields = parser.requestParser(body.getBytes());
+				fields = parser.requestParser(body.toString().getBytes());
 			} catch (Exception e) {
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 
