@@ -27,15 +27,16 @@ import com.siliconmtn.io.api.ApiRequestException;
 @PropertySource("classpath:application.properties")
 public class ParserFactory {
 	
-	@Value("#{${users}}") 
+	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
 	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
+		
 		String parserClassName=builderMapper.get(controllerName);
 		if (StringUtil.isEmpty(parserClassName)) return null;
 		
 		try {
 			Class<?> c = Class.forName(parserClassName);
-			return (ParserIntfc) c.newInstance(); 
+			return (ParserIntfc) c.getConstructor().newInstance(); 
 		} catch (Exception e) {
 			throw new ApiRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

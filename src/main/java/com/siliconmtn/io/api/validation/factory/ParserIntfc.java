@@ -1,12 +1,12 @@
 package com.siliconmtn.io.api.validation.factory;
+import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 /****************************************************************************
  * <b>Title</b>: RequestBodyParser.java
  * <b>Project</b>: spacelibs-java
- * <b>Description: </b> CHANGE ME!!
+ * <b>Description: </b> Interface for parsing request body to list of validation dtos
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -17,6 +17,6 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  ****************************************************************************/
 public interface ParserIntfc {
 	
-	List<ValidationDTO> requestParser(byte[] ba) throws JsonProcessingException;
+	List<ValidationDTO> requestParser(Object ba)  throws ClassNotFoundException, IOException;
 
 }
