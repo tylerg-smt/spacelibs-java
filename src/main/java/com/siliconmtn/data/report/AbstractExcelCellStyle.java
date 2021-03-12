@@ -15,16 +15,16 @@ import com.siliconmtn.data.format.BooleanUtil;
 import com.siliconmtn.data.format.NumberUtil;
 
 /****************************************************************************
- * <b>Title</b>: AbstractExcelCellStyle.java <p/>
- * <b>Project</b>: SpaceLibs-Java <p/>
+ * <b>Title</b>: AbstractExcelCellStyle.java 
+ * <b>Project</b>: SpaceLibs-Java 
  * <b>Description: </b> controls taking the maps made in the concrete classes
  * and turning them into true cell styles
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2016<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2016
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
- * @since Feb 14, 2021<p/>
+ * @since Feb 14, 2021
  * @updates:
  ****************************************************************************/
 public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {

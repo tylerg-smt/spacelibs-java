@@ -5,15 +5,15 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /****************************************************************************
- * <b>Title</b>: ExcelStyleInterface.java <p/>
- * <b>Project</b>: WebCrescendo <p/>
+ * <b>Title</b>: ExcelStyleInterface.java 
+ * <b>Project</b>: WebCrescendo 
  * <b>Description: </b> Style interface to be inherited by concrete styles
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2016<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2016
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author Ryan Riker
  * @version 2.0
- * @since Sep 9, 2016<p/>
+ * @since Sep 9, 2016
  * @updates:
  ****************************************************************************/
 public interface ExcelStyleInterface {

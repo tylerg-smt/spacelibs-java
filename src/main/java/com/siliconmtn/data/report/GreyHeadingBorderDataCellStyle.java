@@ -10,13 +10,13 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
 /****************************************************************************
- * <b>Title</b>: StandardCellStyle.java <p/>
- * <b>Project</b>: SpaceLibs-Java <p/>
+ * <b>Title</b>: StandardCellStyle.java 
+ * <b>Project</b>: SpaceLibs-Java 
  * <b>Description: </b> This class builds the maps they a used to control the style
  * on the work sheet 
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2021<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2021
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
  * @since Feb 14, 2021
