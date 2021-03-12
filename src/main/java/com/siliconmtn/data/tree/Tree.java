@@ -11,17 +11,17 @@ import com.siliconmtn.core.HashCodeUtil;
 import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
- * <b>Title</b>: Tree.java<p/>
+ * <b>Title</b>: Tree.java
  * <b>Description: Builds a Tree structure that can take data input with a parent id
  * and store in a branch and node configuration.  Will export data in a preorder list
  * format for display or other uses
  * </b>  
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2005<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2005
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
- * @since Jan 14, 2021<p/>
+ * @since Jan 14, 2021
  * <b>Changes: </b>
  ****************************************************************************/
 public class Tree implements Serializable {

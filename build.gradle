@@ -12,13 +12,13 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version '2.4.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "io.freefair.lombok" version '5.3.0'
-	id 'maven-publish'
+	id 'io.freefair.lombok' version '5.3.0'
 	id 'signing'
+	id 'maven-publish'
 }
 
 group = 'com.siliconmtn'
-version = '1.0.0'
+version = '1.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 archivesBaseName = "spacelibs-java"
 
@@ -84,55 +84,73 @@ jacocoTestReport {
 	dependsOn test
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+javadoc {
+	options.tags = ["updates", "updates:"]
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-// This section is necessary to make Gradle produce a Maven-style pom file when we build and publish
 publishing {
-  publications {
-    spaceLibsJava(MavenPublication) {
-      from components.java
-      pom {
-        name = "spacelibs-java"
-        description = "A libary of useful tools and helper objects."
-        url = "https://github.com/smtadmin/spacelibs-java"
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://opensource.org/licenses/mit-license.php"
-          }
+	publications {
+		spaceLibsJava(MavenPublication) {
+			artifactId = 'spacelibs-java'
+      		from components.java
+      		versionMapping {
+      			usage('java-api') {
+      				fromResolutionOf('runtimeClasspath')
+		        }
+		        usage('java-runtime') {
+		        	fromResolutionResult()
+		        }
+		    }
+			pom {
+				name = "spacelibs-java"
+			    description = "A libary of useful tools and helper objects."
+			    url = "https://github.com/smtadmin/spacelibs-java"
+			    licenses {
+			    	license {
+			        	name = "MIT License"
+			            url = "https://opensource.org/licenses/mit-license.php"
+			        }
+			    }
+			    developers {
+			    	developer {
+			        	id = "etewa"
+			        	name = "James Camire"
+			        	email = "james@siliconmtn.com"
+			        	organization = "Silicon Mountain Technologies, Inc."
+			        	organizationUrl = "https://www.siliconmtn.com"
+			        }
+			    }
+			    scm {
+			    	connection = "scm:git:git://github.com/smtadmin/spacelibs-java.git"
+			    	developerConnection = "scm:git:ssh://github.com:smtadmin/spacelibs-java.git"
+			    	url = "https://github.com/smtadmin/spacelibs-java/tree/main"
+			    }
+			}
+		}
+	}
+	repositories {
+		if (project.version.endsWith("-SNAPSHOT")){
+			maven {
+				credentials {
+					username project.ossrhUsername
+					password project.ossrhPassword
+				}
+            	url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            }
         }
-        developers {
-          developer {
-            id = "etewa"
-            name = "James Camire"
-            email = "james@siliconmtn.com"
-            organization = "Silicon Mountain Technologies, Inc."
-            organizationUrl = "https://www.siliconmtn.com"
-          }
+        else {
+        	maven {
+        		url = "$buildDir/repos/releases"
+        	}
         }
-        scm {
-          connection = "scm:git:git://github.com/smtadmin/spacelibs-java.git"
-          developerConnection = "scm:git:ssh://github.com:smtadmin/spacelibs-java.git"
-          url = "https://github.com/smtadmin/spacelibs-java/tree/main"
-        }
-      }
     }
-  }
-  repositories {
-      maven {
-        url = "$buildDir"
-      }
-  }
+}
+
+signing {
+    sign publishing.publications.spaceLibsJava
 }

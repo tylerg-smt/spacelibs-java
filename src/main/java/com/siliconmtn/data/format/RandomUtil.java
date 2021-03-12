@@ -4,13 +4,13 @@ import java.util.Random;
 
 /****************************************************************************
  * <b>Title</b>RandomUtil.java
- * <p/>
+ * 
  * <b>Description: Generate random string from generic character &amp; extended character set </b>
- * <p/>
+ * 
  * <b>Copyright:</b> Copyright (c) 2021
- * <p/>
+ * 
  * <b>Company:</b> Silicon Mountain Technologies
- * <p/>
+ * 
  * 
  * @author Bala Gayatri Bugatha
  * @version 1.0
