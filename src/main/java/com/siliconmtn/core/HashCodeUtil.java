@@ -5,7 +5,7 @@ package com.siliconmtn.core;
  * <b>Project</b>: SpaceLibs-Java
  * <b>Description: </b> * Collected methods which allow easy implementation of <code>hashCode</code>.
  * Example use case:
- * <p/>
+ * 
  * <pre>
  * public int hashCode() {
  * 	int result = HashCodeUtil.SEED;

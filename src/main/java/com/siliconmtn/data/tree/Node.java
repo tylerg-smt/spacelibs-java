@@ -9,14 +9,14 @@ import com.siliconmtn.core.HashCodeUtil;
 import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
- * <b>Title</b>: Node.java<p/>
+ * <b>Title</b>: Node.java
  * <b>Description: Manages the node object for a tree structure</b>  
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2005<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2005
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
- * @since Aug 31, 2011<p/>
+ * @since Aug 31, 2011
  * <b>Changes: </b>
  * JC 11-08-12 fixed hashCode, equals, and clone methods to be properly implemented
  ****************************************************************************/

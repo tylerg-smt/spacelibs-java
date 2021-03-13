@@ -21,7 +21,7 @@ import com.siliconmtn.data.text.StringUtil;
 import lombok.extern.log4j.Log4j2;
 
 /*********************************************************************************************************
- * <b>Title</b>: Convert<p/> Utilities for Date parsing, formatting and conversions
+ * <b>Title</b>: Convert Utilities for Date parsing, formatting and conversions
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
