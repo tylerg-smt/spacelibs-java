@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 // Spacelibs
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
+import com.siliconmtn.io.api.validation.validator.ErrorValidator;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 
@@ -174,6 +175,19 @@ public class ValidationUtilTest {
 		assert(errors.size() == 1);
 		assert(errors.get(0).getValidationError().equals(ValidationError.CATASTROPHE));
 		
+	}
+
+
+	/**
+	 * Test the date validator, testing it's ability to fail based on min, max, isRequired, 
+	 * and the inability to parse any supplied date to be tested, either by the user or by the system
+	 */
+	@Test
+	public void checkDefaultValidatorUnusedMethods() {
+		ErrorValidator e = new ErrorValidator();
+		// Neither of these should do anything
+		e.validateMin(null, null);
+		e.validateMax(null, null);
 	}
 
 
