@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test;
 /****************************************************************************
  * <b>Title</b>: XSSFilterTest.java
  * <b>Project</b>: spacelibs-java
- * <b>Description: </b> Test class that handles the validation utility and all associated
- * validators, DTO's, and factories.
+ * <b>Description: </b> Test that the XSS filter functions properly as a filter
+ * actual strippig of the XSS is handled by its own test class.
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
