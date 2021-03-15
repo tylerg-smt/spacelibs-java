@@ -120,7 +120,7 @@ public class ValidationUtilTest {
 				.elementId("id")
 				.value("Pineapple")
 				.optionId("6")
-				.alternateValidationId("6")
+				.alternateValidationId(true)
 				.validOptions(options)
 				.type(ValidatorType.STRING).build());
 		

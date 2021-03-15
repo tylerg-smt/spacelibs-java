@@ -36,7 +36,7 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		
 		if (validation.isRequired()) validateRequired(validation, errors);
 		
-		if (validation.getValidOptions() != null && validation.getAlternateValidationId() != validation.getElementId()) {
+		if (validation.getValidOptions() != null && !validation.isAlternateValidationId()) {
 			validateOptions(validation, errors);
 			
 			// If we are validating against options this is all that needs to be done for validation
@@ -61,9 +61,6 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		for (Entry<String, String> e : validation.getValidOptions().entrySet()) {
 			// Value is in map, validation complete and successful.
 			if (e.getValue() == null || e.getValue().equals(validation.getValue())) return true;
-			
-			// Option id is the alternate validation id, will require more validation.
-			if (validation.getAlternateValidationId() != null && validation.getAlternateValidationId().equals(e.getKey())) return false;
 		}
 		
 		errors.add(ValidationErrorDTO.builder()
