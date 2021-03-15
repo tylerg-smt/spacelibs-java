@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 // Lombok 1.18.x
 import lombok.Data;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 /****************************************************************************

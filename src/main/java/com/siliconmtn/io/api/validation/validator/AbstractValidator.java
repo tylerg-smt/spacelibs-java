@@ -3,6 +3,7 @@ package com.siliconmtn.io.api.validation.validator;
 // JDK 11.x
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 // Spacelibs
 import com.siliconmtn.data.text.StringUtil;
@@ -32,13 +33,45 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	@Override
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
-
+		
+		if (validation.getValidOptions() != null && validation.getAlternateValidationId() != validation.getElementId()) {
+			validateOptions(validation, errors);
+			
+			// If we are validating against options this is all that needs to be done for validation
+			return errors;
+		}
+		
 		if (validation.getMin() != null) validateMin(validation, errors);
 		if (validation.getMax() != null) validateMax(validation, errors);
 		if (validation.getRegex() != null) validateRegex(validation, errors);
 		if (validation.isRequired()) validateRequired(validation, errors);
 		
 		return errors;
+	}
+	
+	/**
+	 * Determine whether the value is in the list of accepted values.
+	 * @param validation
+	 * @param errors
+	 * @return true to show that validation is complete and nothing else needs done, false to show that further validation is needed.
+	 */
+	public boolean validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+		
+		for (Entry<String, String> e : validation.getValidOptions().entrySet()) {
+			// Value is in map, validation complete and successful.
+			if (validation.getValue().equals(e.getValue())) return true;
+			// Option id is the alternate validation id, will require more validation.
+			if (validation.getAlternateValidationId().equals(e.getKey())) return false;
+		}
+		
+		errors.add(ValidationErrorDTO.builder()
+				.elementId(validation.getElementId())
+				.value(validation.getValue())
+				.errorMessage("Value is not in the supplied list of accepted values")
+				.validationError(ValidationError.OPTION)
+				.build());
+		
+		return true;
 	}
 
 
@@ -53,12 +86,8 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	}
 
 	/**
-	 * Empty validation checks to be overridden by the extending validators as needed.
-	 * When the child does not extend them they are used to ensure that the checks are
-	 * able to run without causing issues
+	 * Empty validation checks for regex as both numbers and dates do not use it, allowing them to not have to implement them.
 	 */
-	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
-	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
 	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
 	
 	

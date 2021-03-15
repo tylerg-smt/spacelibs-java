@@ -14,9 +14,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+// Spacelibs
 import com.siliconmtn.data.text.StringUtil;
-
-import lombok.extern.log4j.Log4j2;
 
 /****************************************************************************
  * <b>Title</b>: XSSFilter.java
@@ -31,7 +30,6 @@ import lombok.extern.log4j.Log4j2;
  * @updates:
  ****************************************************************************/
 @Component
-@Log4j2
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class XSSFilter implements Filter {
 
@@ -41,7 +39,6 @@ public class XSSFilter implements Filter {
 
         XSSRequestWrapper wrappedRequest = new XSSRequestWrapper((HttpServletRequest) request);
 
-		log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         String body = IOUtils.toString(wrappedRequest.getReader());
         if (!StringUtil.isEmpty(body)) {
             body = XSSRequestWrapper.stripXSS(body);

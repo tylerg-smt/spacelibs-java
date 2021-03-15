@@ -36,4 +36,14 @@ public class ErrorValidator extends AbstractValidator {
 		
 		return errors;
 	}
+
+	@Override
+	public void validateMin(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+		// required method that is does not get used here.
+	}
+
+	@Override
+	public void validateMax(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+		// required method that is does not get used here.
+	}
 }
