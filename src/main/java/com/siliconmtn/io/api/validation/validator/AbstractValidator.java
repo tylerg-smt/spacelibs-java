@@ -3,6 +3,7 @@ package com.siliconmtn.io.api.validation.validator;
 // JDK 11.x
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 // Spacelibs
 import com.siliconmtn.data.text.StringUtil;
@@ -48,16 +49,29 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		return errors;
 	}
 	
-	
-	public void validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+	/**
+	 * Determine whether the value is in the list of accepted values.
+	 * @param validation
+	 * @param errors
+	 * @return true to show that validation is complete and nothing else needs done, false to show that further validation is needed.
+	 */
+	public boolean validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		
-		if (validation.getValidOptions().contains(validation.getValue()))
-			errors.add(ValidationErrorDTO.builder()
-					.elementId(validation.getElementId())
-					.value(validation.getValue())
-					.errorMessage("Value is not in the supplied list of accpted values")
-					.validationError(ValidationError.OPTION)
-					.build());
+		for (Entry<String, String> e : validation.getValidOptions().entrySet()) {
+			// Value is in map, validation complete and successful.
+			if (validation.getValue().equals(e.getValue())) return true;
+			// Option id is the alternate validation id, will require more validation.
+			if (validation.getAlternateValidationId().equals(e.getKey())) return false;
+		}
+		
+		errors.add(ValidationErrorDTO.builder()
+				.elementId(validation.getElementId())
+				.value(validation.getValue())
+				.errorMessage("Value is not in the supplied list of accepted values")
+				.validationError(ValidationError.OPTION)
+				.build());
+		
+		return true;
 	}
 
 

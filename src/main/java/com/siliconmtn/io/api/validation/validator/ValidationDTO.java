@@ -2,6 +2,7 @@ package com.siliconmtn.io.api.validation.validator;
 
 // JDK 11.x
 import java.util.List;
+import java.util.Map;
 
 // Spacelibs
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
@@ -34,11 +35,14 @@ public class ValidationDTO {
 	private String min;
 	private String max;
 	private String regex;
-	// Map of options a value can be, mapped to the option id and it's actual value
-	private List<String> validOptions;
-	// Value that indicates an alternative option is allowed
-	private String alternateValidationId;
 	private boolean isRequired;
 	private ValidatorType type;
+	
+	// Id of the selected option. Used primarily when we need to deal with special options
+	private String optionId;
+	// Map of options a value can be, mapped to the option id and it's actual value
+	private Map<String, String> validOptions;
+	// Value that indicates an alternative option is allowed
+	private String alternateValidationId;
 
 }
