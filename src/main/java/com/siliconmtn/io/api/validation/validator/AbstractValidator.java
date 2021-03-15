@@ -32,13 +32,32 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	@Override
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
-
+		
+		if (validation.getValidOptions() != null && validation.getAlternateValidationId() != validation.getElementId()) {
+			validateOptions(validation, errors);
+			
+			// If we are validating against options this is all that needs to be done for validation
+			return errors;
+		}
+		
 		if (validation.getMin() != null) validateMin(validation, errors);
 		if (validation.getMax() != null) validateMax(validation, errors);
 		if (validation.getRegex() != null) validateRegex(validation, errors);
 		if (validation.isRequired()) validateRequired(validation, errors);
 		
 		return errors;
+	}
+	
+	
+	public void validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+		
+		if (validation.getValidOptions().contains(validation.getValue()))
+			errors.add(ValidationErrorDTO.builder()
+					.elementId(validation.getElementId())
+					.value(validation.getValue())
+					.errorMessage("Value is not in the supplied list of accpted values")
+					.validationError(ValidationError.OPTION)
+					.build());
 	}
 
 
