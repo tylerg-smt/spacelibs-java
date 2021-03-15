@@ -2,7 +2,9 @@ package com.siliconmtn.io.api.validation;
 
 // JDK 11.x
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Junit 5
 import org.junit.jupiter.api.Test;
@@ -38,19 +40,47 @@ public class ValidationUtilTest {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Successful min, max, regex, and required test
-		fields.add(new ValidationDTO("id", "value", "1", "100", "va", true, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("value")
+				.min("1")
+				.max("100")
+				.regex("va")
+				.isRequired(true)
+				.type(ValidatorType.STRING).build());
 		// Fails due to minimum
-		fields.add(new ValidationDTO("id", "value", "8", null, null, false, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("value")
+				.min("8")
+				.type(ValidatorType.STRING).build());
 		// Fails due to maximum
-		fields.add(new ValidationDTO("id", "value", null, "2", null, false, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("value")
+				.max("2")
+				.type(ValidatorType.STRING).build());
 		// Fails due to regex
-		fields.add(new ValidationDTO("id", "value", null, null, "pie", false, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("value")
+				.regex("pie")
+				.type(ValidatorType.STRING).build());
 		// Fails due to required
-		fields.add(new ValidationDTO("id", null, null, null, null, true, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.isRequired(true)
+				.type(ValidatorType.STRING).build());
 		// Fails due to required
-		fields.add(new ValidationDTO("id", "", null, null, null, true, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("")
+				.isRequired(true)
+				.type(ValidatorType.STRING).build());
 		// Successful validation
-		fields.add(new ValidationDTO("id", null, null, null, null, false, ValidatorType.STRING));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.type(ValidatorType.STRING).build());
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
@@ -60,6 +90,83 @@ public class ValidationUtilTest {
 		assert(errors.get(2).getValidationError().equals(ValidationError.REGEX));
 		assert(errors.get(3).getValidationError().equals(ValidationError.REQUIRED));
 		assert(errors.get(4).getValidationError().equals(ValidationError.REQUIRED));
+		
+	}
+
+	/**
+	 * Test the options aspect of the validator
+	 */
+	@Test
+	public void testOptionsValidation() {
+		List<ValidationDTO> fields = new ArrayList<>(7);
+		Map<String, String> options = new HashMap<>(6);
+		options.put("1", "Apple");
+		options.put("2", "Orange");
+		options.put("3", "Grape");
+		options.put("4", "Lime");
+		options.put("5", "Canteloupe");
+		options.put("6", "Banana");
+		
+		// Successful test
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Apple")
+				.isRequired(true)
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+		// Successful test with alternate validation id
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Pineapple")
+				.optionId("6")
+				.alternateValidationId(true)
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+		// Successful test with alternate validation id but not using it
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Orange")
+				.optionId("6")
+				.isRequired(true)
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+		// Successful test with nothing there
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.type(ValidatorType.STRING).build());
+		
+		// Failed test to due slight difference
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("apple")
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+		// Failed test due to is required
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.isRequired(true)
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+		// Failed test very different value
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Crested Gecko")
+				.validOptions(options)
+				.type(ValidatorType.STRING).build());
+		
+
+		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
+		
+		assert(errors.size() == 4);
+		assert(errors.get(0).getValidationError().equals(ValidationError.OPTION));
+		assert(errors.get(1).getValidationError().equals(ValidationError.REQUIRED));
+		assert(errors.get(2).getValidationError().equals(ValidationError.OPTION));
+		assert(errors.get(3).getValidationError().equals(ValidationError.OPTION));
 		
 	}
 	
@@ -131,19 +238,59 @@ public class ValidationUtilTest {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Successful min, max, and required test, ignoring the regex despite one being passed
-		fields.add(new ValidationDTO("id", "10/10/2020", "10/9/2020", "10/11/2020", "[A-Z]", true, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("10/10/2020")
+				.min("10/9/2020")
+				.max("10/11/2020")
+				.regex("[A-Z]")
+				.isRequired(true)
+				.type(ValidatorType.DATE).build());
 		//Fail due to parse min and parse max
-		fields.add(new ValidationDTO("id", "9-8-2020", "December 12, 2020", "Octember 12, 2020", null, false, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("9-8-2020")
+				.min("December 12, 2020")
+				.max("Octember 12, 2020")
+				.type(ValidatorType.DATE).build());
 		// Fails due to parse value
-		fields.add(new ValidationDTO("id", "Jul 17, 2021", "12/20/2020", "12/20/2020", null, false, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Jul 17, 2021")
+				.min("12/20/2020")
+				.max("12/20/2020")
+				.type(ValidatorType.DATE).build());
 		// Fail due to not meeting min
-		fields.add(new ValidationDTO("id", "9-8-2020", "12/20/2020", null, null, false, ValidatorType.DATE));
-		// Fail due to not meeting min
-		fields.add(new ValidationDTO("id", "6/1/2030", null, "1/13/1920", null, false, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("9-8-2020")
+				.min("12/20/2020")
+				.type(ValidatorType.DATE).build());
+		// Succeed despite not meeting min due to not having a value
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.min("12/20/2020")
+				.type(ValidatorType.DATE).build());
+		// Fail due to not meeting max
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("6/1/2030")
+				.max("1/13/1920")
+				.type(ValidatorType.DATE).build());
+		// Succeed despite not meeting max due to not having a value
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.max("1/13/1920")
+				.type(ValidatorType.DATE).build());
 		// Fail due to required
-		fields.add(new ValidationDTO("id", null, null, null, null, true, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.isRequired(true)
+				.type(ValidatorType.DATE).build());
 		// Successful Test
-		fields.add(new ValidationDTO("id", null, "12/20/2020", "12/20/2020", null, false, ValidatorType.DATE));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.type(ValidatorType.DATE).build());
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
@@ -167,7 +314,10 @@ public class ValidationUtilTest {
 		List<ValidationDTO> fields = new ArrayList<>(1);
 
 		// Fails due to lack of type
-		fields.add(new ValidationDTO("id", "Test", null, null, null, false, null));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("Test")
+				.type(null).build());
 
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
@@ -200,19 +350,50 @@ public class ValidationUtilTest {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Succeeds min, max and requierd test, ignoring the regex despite one being passed
-		fields.add(new ValidationDTO("id", "5", "1", "7", "pointless", true, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("5")
+				.min("1")
+				.max("7")
+				.regex("pointless")
+				.isRequired(true)
+				.type(ValidatorType.NUMBER).build());
 		// Fails due to not providing a proper number
-		fields.add(new ValidationDTO("id", "1234Five", "1", "7", null, false, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("1234Five")
+				.min("1")
+				.max("7")
+				.type(ValidatorType.NUMBER).build());
 		// Succeeds with decimal number
-		fields.add(new ValidationDTO("id", "5.0", "1", "7", null, true, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("5.0")
+				.min("1")
+				.max("7")
+				.isRequired(true)
+				.type(ValidatorType.NUMBER).build());
 		// Fails due to min
-		fields.add(new ValidationDTO("id", "8", "20", null, null, false, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("8")
+				.min("20")
+				.type(ValidatorType.NUMBER).build());
 		// Fails due to max
-		fields.add(new ValidationDTO("id", "4", null, "2", null, false, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.value("4")
+				.max("2")
+				.type(ValidatorType.NUMBER).build());
 		//Fails due to required
-		fields.add(new ValidationDTO("id", null, null, null, null, true, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.isRequired(true)
+				.type(ValidatorType.NUMBER).build());
 		// Succeeds null value
-		fields.add(new ValidationDTO("id", null, null, null, null, false, ValidatorType.NUMBER));
+		fields.add(ValidationDTO.builder()
+				.elementId("id")
+				.type(ValidatorType.NUMBER).build());
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		

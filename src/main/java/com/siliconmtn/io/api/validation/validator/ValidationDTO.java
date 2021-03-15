@@ -1,7 +1,6 @@
 package com.siliconmtn.io.api.validation.validator;
 
 // JDK 11.x
-import java.util.List;
 import java.util.Map;
 
 // Spacelibs
@@ -43,6 +42,6 @@ public class ValidationDTO {
 	// Map of options a value can be, mapped to the option id and it's actual value
 	private Map<String, String> validOptions;
 	// Value that indicates an alternative option is allowed
-	private String alternateValidationId;
+	private boolean alternateValidationId;
 
 }
