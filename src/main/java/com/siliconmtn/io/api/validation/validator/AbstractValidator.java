@@ -34,6 +34,8 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		
+		if (validation.isRequired()) validateRequired(validation, errors);
+		
 		if (validation.getValidOptions() != null && validation.getAlternateValidationId() != validation.getElementId()) {
 			validateOptions(validation, errors);
 			
@@ -44,7 +46,6 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		if (validation.getMin() != null) validateMin(validation, errors);
 		if (validation.getMax() != null) validateMax(validation, errors);
 		if (validation.getRegex() != null) validateRegex(validation, errors);
-		if (validation.isRequired()) validateRequired(validation, errors);
 		
 		return errors;
 	}
@@ -59,9 +60,10 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		
 		for (Entry<String, String> e : validation.getValidOptions().entrySet()) {
 			// Value is in map, validation complete and successful.
-			if (validation.getValue().equals(e.getValue())) return true;
+			if (e.getValue() == null || e.getValue().equals(validation.getValue())) return true;
+			
 			// Option id is the alternate validation id, will require more validation.
-			if (validation.getAlternateValidationId().equals(e.getKey())) return false;
+			if (validation.getAlternateValidationId() != null && validation.getAlternateValidationId().equals(e.getKey())) return false;
 		}
 		
 		errors.add(ValidationErrorDTO.builder()

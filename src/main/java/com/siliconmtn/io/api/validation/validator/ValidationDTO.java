@@ -1,7 +1,6 @@
 package com.siliconmtn.io.api.validation.validator;
 
 // JDK 11.x
-import java.util.List;
 import java.util.Map;
 
 // Spacelibs
