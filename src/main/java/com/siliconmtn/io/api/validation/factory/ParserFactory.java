@@ -42,7 +42,7 @@ public class ParserFactory {
 	 * the passed classname.methodname key.
 	 * @param controllerName the classname.methodname combo key for the parser we are looking for
 	 * @return ParserIntfc that will be used to parse the request body into ValidationDTOs
-	 * @throws ApiRequestException
+	 * @throws ApiRequestException When unable to create an instance of the controller name
 	 */
 	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
 		String parserClassName=builderMapper.get(controllerName);

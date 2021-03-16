@@ -44,9 +44,9 @@ public class SunTimeVO extends BeanDataVO {
 	}
 
 	/**
-	 * 
-	 * @param sunSetDate
-	 * @param sunRiseDate
+	 * Constructor with sunrise and sunset defined
+	 * @param sunSetDate Date for the sunset
+	 * @param sunRiseDate Date for the sunrise
 	 */
 	public SunTimeVO(Date sunSetDate, Date sunRiseDate ) {
 		super();
@@ -54,8 +54,8 @@ public class SunTimeVO extends BeanDataVO {
 		setSunsetDate(sunSetDate);
 	}
 	/**
-	 * 
-	 * @param req
+	 * Constructor that assigns values form the request object
+	 * @param req Http Request object to map params
 	 */
 	public SunTimeVO(HttpServletRequest req) {
 		super(req);

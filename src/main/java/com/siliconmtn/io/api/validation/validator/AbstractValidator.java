@@ -26,9 +26,9 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 public abstract class AbstractValidator implements ValidatorIntfc {
 
 
-	/**
-	 * Default validation list that runs through all validation paths 
-	 * for the validation DTO and returns all errors
+	/*
+	 * (non-javadoc)
+	 * @see com.siliconmtn.io.api.validation.validator.ValidatorIntfc#validate(com.siliconmtn.io.api.validation.validator.ValidationDTO)
 	 */
 	@Override
 	public List<ValidationErrorDTO> validate(ValidationDTO validation) {
@@ -52,8 +52,8 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	
 	/**
 	 * Determine whether the value is in the list of accepted values.
-	 * @param validation
-	 * @param errors
+	 * @param validation validation meta data
+	 * @param errors List of validation errors
 	 * @return true to show that validation is complete and nothing else needs done, false to show that further validation is needed.
 	 */
 	public boolean validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
@@ -73,20 +73,22 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 		return true;
 	}
 
-
-	/**
-	 * Default isRequired validation. Covers the standard checks that there is some value present
-	 * when the validation is set as being required.
+	/*
+	 * (non-javadoc)
+	 * @see com.siliconmtn.io.api.validation.validator.ValidatorIntfc#validateRequired(com.siliconmtn.io.api.validation.validator.ValidationDTO, java.util.List)
 	 */
+	@Override
 	public void validateRequired(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		if (validation.isRequired() && StringUtil.isEmpty(validation.getValue())) {
 			errors.add(ValidationErrorDTO.builder().elementId(validation.getElementId()).value(validation.getValue()).errorMessage("Value is required and nothing was set").validationError(ValidationError.REQUIRED).build());
 		}
 	}
 
-	/**
-	 * Empty validation checks for regex as both numbers and dates do not use it, allowing them to not have to implement them.
+	/*
+	 * (non-javadoc)
+	 * @see com.siliconmtn.io.api.validation.validator.ValidatorIntfc#validateRegex(com.siliconmtn.io.api.validation.validator.ValidationDTO, java.util.List)
 	 */
+	@Override
 	public void validateRegex(ValidationDTO validation, List<ValidationErrorDTO> errors) { /* Empty default method */ }
 	
 	

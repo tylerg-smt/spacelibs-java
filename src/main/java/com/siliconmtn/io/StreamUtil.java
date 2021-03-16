@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 
 // JEEE 8.x
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 // SpaceLibs 1.x
@@ -39,7 +38,7 @@ public class StreamUtil {
 	 * This is basically a helper method for getting reports off the server in a generic way.
 	 * @param report The report to stream back to the user
 	 * @param response Standard HttpServletResponse object
-	 * @throws IOException
+	 * @throws IOException Error thrown trying to Stream the report
 	 */
 	public final void streamReport(AbstractReport report, HttpServletResponse response) throws IOException {
 

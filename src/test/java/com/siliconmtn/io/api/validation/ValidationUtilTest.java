@@ -421,8 +421,6 @@ public class ValidationUtilTest {
 	 */
 	@Test
 	public void testInstantiation() {
-		ValidationUtil util = new ValidationUtil();
-		assert(util != null && util.getClass() == ValidationUtil.class);
 		
 		ValidationFactory factory = new ValidationFactory();
 		assert(factory != null && factory.getClass() == ValidationFactory.class);
