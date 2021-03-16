@@ -30,14 +30,14 @@ import com.siliconmtn.data.report.ExcelStyleFactory.Styles;
 import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
- * <b>Title</b>: ExcelReport.java<p/>
- * <b>Project</b>: SpaceLibs-Java<p/>
+ * <b>Title</b>: ExcelReport.java
+ * <b>Project</b>: SpaceLibs-Java
  * <b>Description: takes a passed map of data and builds an Excel file dynamically.
  * The constructor takes the headerMap, which is used for column headings and 
  * to align the rows (responses).</b> 
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2021<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2021
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
  * @since Feb 14, 2021

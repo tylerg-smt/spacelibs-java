@@ -10,13 +10,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /****************************************************************************
- * <b>Title</b>: AbstractReport.java<p/>
+ * <b>Title</b>: AbstractReport.java
  * <b>Project</b> SpaceLibs-java
  * <b>Description: Abstract and commonality across any downloadable report we
  *  might generate.</b> 
- * <p/>
- * <b>Copyright:</b> Copyright (c) 2021<p/>
- * <b>Company:</b> Silicon Mountain Technologies<p/>
+ * 
+ * <b>Copyright:</b> Copyright (c) 2021
+ * <b>Company:</b> Silicon Mountain Technologies
  * @author James Camire
  * @version 1.0
  * @since Feb 14, 2021

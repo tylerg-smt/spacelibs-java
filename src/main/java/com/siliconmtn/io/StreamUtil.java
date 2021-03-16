@@ -39,7 +39,7 @@ public class StreamUtil {
 	 * This is basically a helper method for getting reports off the server in a generic way.
 	 * @param report The report to stream back to the user
 	 * @param response Standard HttpServletResponse object
-	 * @throws ServletException
+	 * @throws IOException
 	 */
 	public final void streamReport(AbstractReport report, HttpServletResponse response) throws IOException {
 
