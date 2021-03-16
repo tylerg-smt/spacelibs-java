@@ -7,8 +7,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.siliconmtn.io.api.validation.validator.UUIDValidator;
-
 @Documented
 @Retention(RUNTIME)
 @Target(METHOD)
@@ -26,27 +24,5 @@ import com.siliconmtn.io.api.validation.validator.UUIDValidator;
  * @updates:
  ****************************************************************************/
 public @interface Validate {
-	/**
-	 * Types of data validations
-	 */
-	public enum ValidationType {
-		NONE(null), 
-		UUID(UUIDValidator.class), 
-		FIELD(UUIDValidator.class), 
-		FIELD_COLLECTION(UUIDValidator.class),
-		CUSTOM(null);
-		
-		Class<?> validator;
-		ValidationType(Class<?> validator) {
-			this.validator = validator;
-		}
-		
-		public Class<?> getValidator() { return this.validator; }
-	}
 	
-	/**
-	 * The validation type of the validate request
-	 * @return The validation type
-	 */
-	public ValidationType validationType() default ValidationType.NONE;
 }

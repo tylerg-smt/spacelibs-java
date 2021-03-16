@@ -33,7 +33,7 @@ public class BeanDataVO implements Serializable, AutoPopulateIntfc {
 
 	/**
 	 * 
-	 * @param req
+	 * @param req Request object to map params into the object
 	 */
 	public BeanDataVO(HttpServletRequest req) {
 		this();

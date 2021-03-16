@@ -37,7 +37,11 @@ public class JWTTokenManager {
 
 	/**
 	 * Retrieves a valid token to be utilized for test purposes
-	 * @return
+	 * @param issuer Name of the issuing authority
+	 * @param id User's unique ID
+	 * @param email User's Email Address for the token
+	 * @param name User's Name
+	 * @return Valid JWT token encoded with provided values
 	 */
 	public static String getTestToken(String issuer, String id, String email, String name) {
 		String token = null;
@@ -62,9 +66,9 @@ public class JWTTokenManager {
 	
 	/**
 	 * Validates that the provided token is from the specified issuer
-	 * @param token
-	 * @param issuer
-	 * @return
+	 * @param token Token to validate
+	 * @param issuer Name of the issuing authority
+	 * @return True if the token and issuer match.  False otherwise
 	 */
 	public static boolean isTokenValid(String token, String issuer) {
 		boolean isSuccess = false;
@@ -84,8 +88,9 @@ public class JWTTokenManager {
 	
 	/**
 	 * Validates the token first and then decodes the provided token
-	 * @param token
-	 * @return
+	 * @param token JWT token to unpack
+	 * @param issuer Name of the issuing authority
+	 * @return Decoded JWT Token with all valida information unpacked
 	 */
 	public static DecodedJWT getToken(String token, String issuer) throws JWTDecodeException {
 		if (! isTokenValid(token, issuer)) throw new JWTDecodeException("Invalid Token");

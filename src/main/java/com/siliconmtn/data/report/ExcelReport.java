@@ -326,6 +326,7 @@ public class ExcelReport extends AbstractReport {
 	 * This is public because it's static; 3rd party classes can use it to serialize custom-build Workbooks.
 	 * @param wb Excel workbook
 	 * @return byte array of the workbook
+	 * @throws IOException is thrown converting form the workbook toa  byte array
 	 */
 	public byte[] getBytes(Workbook wb) throws IOException {
 		if (wb == null) return new byte[0];

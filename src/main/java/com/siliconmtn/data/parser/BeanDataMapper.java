@@ -56,6 +56,7 @@ public final class BeanDataMapper {
 	 * fields into the bean's member variables
 	 * @param o Java Bean
 	 * @param data Data to be mapped into the bean
+	 * @param suffix Suffix added in the UI for parsing purposes
 	 */
 	public static void parseBean(Object o, Map<String, String[]> data, String suffix) {
 		

@@ -36,6 +36,7 @@ public abstract class AbstractReport implements Serializable {
 	 * must be overwritten by all implementing classes.
 	 * must always return a byte array
 	 * @return byte array of the generated report
+	 * @throws IOException Error creating the report object
 	 */
 	public abstract byte[] generateReport() throws IOException;
 	
