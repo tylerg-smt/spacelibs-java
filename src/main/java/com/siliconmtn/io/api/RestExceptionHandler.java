@@ -131,6 +131,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiResponse apiErrorResponse = new ApiResponse(NOT_FOUND);
         apiErrorResponse.setMessage(ex.getMessage());
         apiErrorResponse.setStatus(ex.getStatus());
+        apiErrorResponse.addFailedValidations(ex.getFailedValidations());
         return buildResponseEntity(apiErrorResponse);
     }
 

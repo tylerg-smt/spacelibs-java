@@ -1,7 +1,14 @@
 package com.siliconmtn.io.api;
 
+// JDK 11.x
+import java.util.ArrayList;
+import java.util.List;
+
 // Spring 5.5.x
 import org.springframework.http.HttpStatus;
+
+// SPacelibs
+import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 
 /****************************************************************************
  * <b>Title</b>: ValidationException.java
@@ -28,6 +35,8 @@ public class ApiRequestException extends RuntimeException {
 	 */
 	private final HttpStatus status;
 
+    protected List<ValidationErrorDTO> failedValidations = new ArrayList<>();
+
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
 	 * @param message
@@ -35,6 +44,15 @@ public class ApiRequestException extends RuntimeException {
 	public ApiRequestException(String message) {
 		super(message);
 		this.status = HttpStatus.BAD_REQUEST;
+	}
+	
+	/**
+	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
+	 * @param message
+	 */
+	public ApiRequestException(String message, List<ValidationErrorDTO> errors) {
+		this(message);
+		this.failedValidations = errors;
 	}
 
 	/**
@@ -45,6 +63,16 @@ public class ApiRequestException extends RuntimeException {
 	public ApiRequestException(String message, HttpStatus status) {
 		super(message);
 		this.status = status;
+	}
+
+	/**
+	 * Error message and status constructor
+	 * @param message Error message to display
+	 * @param status HttpStatus to send
+	 */
+	public ApiRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
+		this(message, status);
+		this.failedValidations = errors;
 	}
 
 	/**
@@ -74,5 +102,26 @@ public class ApiRequestException extends RuntimeException {
 	public HttpStatus getStatus() {
 		return status;
 	}
+    
+    /**
+     * Adds a single failed validation to the collection
+     * @param failedValidation
+     */
+    public void addFailedValidation(ValidationErrorDTO failedValidation) {
+    	this.failedValidations.add(failedValidation);
+    }
 
+    
+    /**
+     * Adds a all failed validation to the collection
+     * @param failedValidations
+     */
+    public void addAllFailedValidation(List<ValidationErrorDTO> failedValidations) {
+    	this.failedValidations.addAll(failedValidations);
+    }
+
+    public List<ValidationErrorDTO> getFailedValidations() {
+    	return this.failedValidations;
+    }
+    
 }

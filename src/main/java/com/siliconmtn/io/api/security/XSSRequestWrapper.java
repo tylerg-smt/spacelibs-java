@@ -48,6 +48,8 @@ import com.siliconmtn.data.text.StringUtil;
  ****************************************************************************/
 public class XSSRequestWrapper extends HttpServletRequestWrapper{
 	
+	
+	
 	private byte[] rawData;
     private HttpServletRequest request;
     protected ResettableServletInputStream servletStream;
