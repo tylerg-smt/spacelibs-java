@@ -46,7 +46,7 @@ public @interface Validate {
 	
 	/**
 	 * The validation type of the validate request
-	 * @return
+	 * @return The validation type
 	 */
 	public ValidationType validationType() default ValidationType.NONE;
 }

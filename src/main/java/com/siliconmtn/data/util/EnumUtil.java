@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /********************************************************************
- * <b>Title: </b>EnumUtil.java<br/>
- * <b>Description: </b>Utility Class Housing Enum Utilities and time savers<br/>
- * <b>Copyright: </b>Copyright (c) 2017<br/>
+ * <b>Title: </b>EnumUtil.java
+ * <b>Description: </b>Utility Class Housing Enum Utilities and time savers
+ * <b>Copyright: </b>Copyright (c) 2017
  * <b>Company: </b>Silicon Mountain Technologies
  * @author James Camire
  * @version 3.x
@@ -28,6 +28,7 @@ public class EnumUtil {
 	 * SomeVal sv = SomeVal.val_two;
 	 * SomeVal myVal = et.safeValueOf(SomeVal.class, "val_two");
 	 * (SomeVal.equals(myVal)) // Evaluates to true
+	 * @param <E> Type of the Enum
 	 * @param enumType Enum class to pass.  For Example: MyEnum.class
 	 * @param val String value to assign to the enum
 	 * @return Typed Enum.  Null if val can't be converted.
@@ -42,6 +43,7 @@ public class EnumUtil {
 	 * SomeVal sv = SomeVal.val_two;
 	 * SomeVal myVal = et.safeValueOf("SomeVal", "val_two");
 	 * (SomeVal.equals(myVal)) // Evaluates to true
+	 * @param <E> Type of the Enum
 	 * @param enumStringType String class of the enum to pass.  For Example: MyEnum.class
 	 * @param val String value to assign to the enum
 	 * @return Typed Enum.  Null if val can't be converted.
@@ -63,6 +65,7 @@ public class EnumUtil {
 	 * SomeVal sv = SomeVal.val_two;
 	 * SomeVal myVal = et.safeValueOf(SomeVal.class, "val_two");
 	 * (SomeVal.equals(myVal)) // Evaluates to true
+	 * @param <E> Type of the Enum
 	 * @param enumType Enum class to pass.  For Example: MyEnum.class
 	 * @param val String value to assign to the enum
 	 * @param defaultVal Default value if no match
@@ -83,9 +86,10 @@ public class EnumUtil {
 	/**
 	 * Takes an array of string an converts each one using the single safeValueOf
 	 * method and returns the collection
+	 * @param <E> Type of the Enum
 	 * @param enumType numType Enum class to pass.  For Example: MyEnum.class
 	 * @param vals Array of strings to be converted.  Null if string doesn't match
-	 * @return
+	 * @return Typed Enum List.  Matches each item in the provided collection
 	 */
 	public static <E extends Enum<E>>  List<E> safeValuesOf(Class<E> enumType, String[] vals) {
 		List<E> enums = new ArrayList<>();

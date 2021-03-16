@@ -28,7 +28,8 @@ import lombok.extern.log4j.Log4j2;
  * @author Bala Gayatri Bugatha
  * @version 3.0
  * @since Feb 3, 2021
- * @updates:2/10/2020 - James Camire - Autowiring the Entity Manager
+ * <b>updates:</b> 
+ * 2/10/2020 - James Camire - Autowiring the Entity Manager
  ****************************************************************************/
 @Component
 @Log4j2
@@ -79,7 +80,7 @@ public class EntityUtil {
 	
 	/**
 	 * Converts a List of DTO objects into a list of their corresponding entity
-	 * @param <T>
+	 * @param <T> Type of Entity object being returned
 	 * @param dtos List of DTO objects
 	 * @param entity Entity to convert the DTOs
 	 * @return Collection of entities

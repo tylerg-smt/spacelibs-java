@@ -98,10 +98,10 @@ public class SolarEventCalculator {
 
     /**
      * <code>Zenith</code> enum corresponding to the type of sunset to compute.
-     * @param solarZenith
+     * @param solarZenith  Defines the solar declination used in computing the sunrise/sunset.
      * @param date Date to calculate
      * @param isSunrise is sunrise or sunset
-     * @return
+     * @return The solar event time
      */
     protected BigDecimal computeSolarEventTime(Zenith solarZenith, Calendar date, boolean isSunrise) {
         date.setTimeZone(this.timeZone);
@@ -345,6 +345,7 @@ public class SolarEventCalculator {
     /**
      * Returns the local rise/set time in the form HH:MM.
      * @param localTimeParam <code>BigDecimal</code> representation of the local rise/set time.
+     * @param date Date to assign the local time
      * @return <code>Calendar</code> representation of the local time as a calendar, or null for none.
      */
     protected Calendar getLocalTimeAsCalendar(BigDecimal localTimeParam, Calendar date) {

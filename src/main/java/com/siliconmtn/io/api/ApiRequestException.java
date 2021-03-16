@@ -30,7 +30,7 @@ public class ApiRequestException extends RuntimeException {
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
-	 * @param message
+	 * @param message Error Message to capture
 	 */
 	public ApiRequestException(String message) {
 		super(message);

@@ -84,7 +84,7 @@ public class ApiResponse {
 
     /**
      * Assigns the HTTP status and the the time
-     * @param status
+     * @param status HttpStatus to return
      */
     public ApiResponse(HttpStatus status) {
         this();
@@ -93,8 +93,8 @@ public class ApiResponse {
     
     /**
      * Assigns the status, time and exception stuff
-     * @param status
-     * @param ex
+     * @param status HttpStatus to return
+     * @param ex Exception that was thrown
      */
     public ApiResponse(HttpStatus status, Throwable ex) {
         this();
@@ -105,9 +105,9 @@ public class ApiResponse {
 
     /**
      * Assigns all parameters with this constructor
-     * @param status
-     * @param message
-     * @param ex
+     * @param status HttpStatus to return
+     * @param message Error message to display
+     * @param ex Exception that was thrown
      */
     public ApiResponse(HttpStatus status, String message, Throwable ex) {
         this();
@@ -118,7 +118,7 @@ public class ApiResponse {
     
     /**
      * Adds a single failed validation to the collection
-     * @param failedValidation
+     * @param failedValidation Adds a failed validation to the exception
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
     	failedValidations.add(failedValidation);
