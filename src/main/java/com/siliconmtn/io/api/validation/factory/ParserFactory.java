@@ -41,6 +41,7 @@ public class ParserFactory {
 	 * @throws ApiRequestException
 	 */
 	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
+		String parserClassName=builderMapper.get(controllerName);
 		if (StringUtil.isEmpty(parserClassName)) return null;
 		
 		try {
