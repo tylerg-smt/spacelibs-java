@@ -30,6 +30,10 @@ import com.siliconmtn.io.api.ApiRequestException;
 @PropertySource("classpath:application.properties")
 public class ParserFactory {
 	
+	/**
+	 * Calls back to the application.properties file of the app to get
+	 * the list of classname.methodname/parserclassname pairs.
+	 */
 	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
 	
