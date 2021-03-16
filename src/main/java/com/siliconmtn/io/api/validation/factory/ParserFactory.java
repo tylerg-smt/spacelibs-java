@@ -1,12 +1,15 @@
 package com.siliconmtn.io.api.validation.factory;
 
+// JDK 11.x
 import java.util.Map;
 
+// Spring 5.3.x
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 
+// Spacelibs
 import com.siliconmtn.data.text.StringUtil;
 import com.siliconmtn.io.api.ApiRequestException;
 
@@ -29,8 +32,15 @@ public class ParserFactory {
 	
 	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
+	
+	/**
+	 * Checks the parserMapper property in the application's config file for the parser associated with
+	 * the passed classname.methodname key.
+	 * @param controllerName the classname.methodname combo key for the parser we are looking for
+	 * @return ParserIntfc that will be used to parse the request body into ValidationDTOs
+	 * @throws ApiRequestException
+	 */
 	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
-		String parserClassName=builderMapper.get(controllerName);
 		if (StringUtil.isEmpty(parserClassName)) return null;
 		
 		try {
