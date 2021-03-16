@@ -19,8 +19,9 @@ import com.siliconmtn.data.text.StringUtil;
 
 /****************************************************************************
  * <b>Title</b>: XSSFilter.java
- * <b>Project</b>: ezform-api
- * <b>Description: </b> CHANGE ME!!
+ * <b>Project</b>: spacelibs-java
+ * <b>Description: </b> Load the body from the request object and remove any
+ * potential XSS vectors from it before passing it on to the rest of the app.
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -33,6 +34,9 @@ import com.siliconmtn.data.text.StringUtil;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class XSSFilter implements Filter {
 
+	/**
+	 * Sanitize the request object by removing any potential XSS attack vectors
+	 */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
