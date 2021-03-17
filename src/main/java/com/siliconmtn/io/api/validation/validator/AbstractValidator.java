@@ -54,7 +54,6 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	 * Determine whether the value is in the list of accepted values.
 	 * @param validation validation meta data
 	 * @param errors List of validation errors
-	 * @return true to show that validation is complete and nothing else needs done, false to show that further validation is needed.
 	 */
 	public void validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		
