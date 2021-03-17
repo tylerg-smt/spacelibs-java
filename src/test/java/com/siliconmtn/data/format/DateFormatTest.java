@@ -76,7 +76,6 @@ class DateFormatTest {
 	@Test 
 	void parseUnknownPatternTestForNotNull() {
 		Date date = new GregorianCalendar(2021, Calendar.FEBRUARY, 16).getTime();
-		System.out.println(DateFormat.parseUnknownPattern("2021-02-16").toString());
 		assertEquals(date,DateFormat.parseUnknownPattern("2021-02-16"));
 	}
     
