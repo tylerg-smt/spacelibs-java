@@ -27,6 +27,13 @@ public class ValidationUtil {
 	private ValidationUtil() {/*Hides public constructor*/}
 	
 	/**
+	 * Provate due to all methods being static
+	 */
+	private ValidationUtil() {
+		super();
+	}
+	
+	/**
 	 * Loop through the supplied list ValidationDTOs and run them through the proper validation procedures.
 	 * @param fields List of ValidationDTOs to be run through the validation process.
 	 * @return List of ValidationErrorDTOs that list what failed and why.

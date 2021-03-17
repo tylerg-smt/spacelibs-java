@@ -42,8 +42,8 @@ public class ExcelStyleFactory {
 	
 	/**
 	 * Gets the style of the enum type passed into the factory
-	 * @param style
-	 * @return
+	 * @param style Loads the style class
+	 * @return Style class fo rthis report
 	 */
 	public static ExcelStyleInterface getExcelStyle(Styles style) {
 		try {

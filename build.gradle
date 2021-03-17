@@ -85,6 +85,7 @@ jacocoTestReport {
 }
 
 javadoc {
+	javadoc.options.addStringOption('Xdoclint:all', '-quiet')
 	options.tags = ["updates", "updates:"]
 }
 

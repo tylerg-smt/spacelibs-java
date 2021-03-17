@@ -50,10 +50,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle MissingServletRequestParameterException. Triggered when a 'required' request parameter is missing.
      *
-     * @param ex      MissingServletRequestParameterException
-     * @param headers HttpHeaders
-     * @param status  HttpStatus
-     * @param request WebRequest
+     * @param ex      MissingServletRequestParameterException Exception to be processed
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus to be returned
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @Override
@@ -69,10 +69,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle HttpMediaTypeNotSupportedException. This one triggers when JSON is invalid as well.
      *
-     * @param ex      HttpMediaTypeNotSupportedException
-     * @param headers HttpHeaders
-     * @param status  HttpStatus
-     * @param request WebRequest
+     * @param ex      HttpMediaTypeNotSupportedException  Exception to be processed
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus Status to be returned
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @Override
@@ -90,9 +90,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Handle MethodArgumentNotValidException. Triggered when an object fails @Valid validation.
      *
      * @param ex      the MethodArgumentNotValidException that is thrown when @Valid validation fails
-     * @param headers HttpHeaders
-     * @param status  HttpStatus
-     * @param request WebRequest
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus to be returned
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @Override
@@ -138,10 +138,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
      *
-     * @param ex      HttpMessageNotReadableException
-     * @param headers HttpHeaders
-     * @param status  HttpStatus
-     * @param request WebRequest
+     * @param ex      HttpMessageNotReadableException Not readable exception
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus to be returned
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @Override
@@ -153,10 +153,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle HttpMessageNotWritableException.
      *
-     * @param ex      HttpMessageNotWritableException
-     * @param headers HttpHeaders
-     * @param status  HttpStatus
-     * @param request WebRequest
+     * @param ex      HttpMessageNotWritableException Not writable exception
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus to be returned
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @Override
@@ -168,11 +168,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handle NoHandlerFoundException.
      *
-     * @param ex
-     * @param headers
-     * @param status
-     * @param request
-     * @return
+     * @param ex NoHandlerFoundException Unable to find a suitable endpoint
+     * @param headers HttpHeaders Response headers
+     * @param status  HttpStatus to be returned
+     * @param request WebRequest Request Metadata
+     * @return the ApiErrorResponse object
      */
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(
@@ -184,7 +184,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handle javax.persistence.EntityNotFoundException
+     * Handle EntityNotFound Exception
+     * 
+     * @param ex EntityNotFound Exception.
+     * @return The ApiErrorResponse object
      */
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
@@ -195,6 +198,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Handle DataIntegrityViolationException, inspects the cause for different DB causes.
      *
      * @param ex the DataIntegrityViolationException
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -209,6 +213,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Handle Exception, handle generic Exception.class
      *
      * @param ex the Exception
+     * @param request WebRequest Request Metadata
      * @return the ApiErrorResponse object
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

@@ -58,7 +58,7 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Constructor that accepts a string phone number and phone type
-	 * @param phoneNumber
+	 * @param phoneNumber Number to be formatted
 	 */
 	public PhoneNumberFormat(String phoneNumber) {
 		this(phoneNumber, "US", FormatType.NATIONAL_FORMAT);
@@ -66,8 +66,8 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Constructor that accepts a string phone number and phone type
-	 * @param phoneNumber
-	 * @param type
+	 * @param phoneNumber Number to be formatted
+	 * @param type Formatting type
 	 */
 	public PhoneNumberFormat(String phoneNumber, FormatType type) {
 		this(phoneNumber, "US", type);
@@ -88,7 +88,7 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Return the phone number with the country dialing code
-	 * @return
+	 * @return Full phone number with country code
 	 */
 	public String getFullNumber() {
 		String countryDialingCode = PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryCode) + "";
@@ -103,7 +103,6 @@ public class PhoneNumberFormat implements Serializable {
 	 * Formats the phone number based upon the type of formatting requested
 	 * Automatically converts formatting to "INTERNATIONAL" or "NATIONAL" if the
 	 * Address is a non-US address 
-	 * @return
 	 */
 	void assignFormattedNumber() {
 		if (StringUtil.isEmpty(phoneNumber)) return;
@@ -130,8 +129,8 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Dot or dash notation for US phones
-	 * @param startDelim
-	 * @return
+	 * @param startDelim Delimiter to be applied
+	 * @return Country formatted string
 	 */
 	String assignUSFormatting(char startDelim, char endDelim) {
 		if (StringUtil.isEmpty(formattedNumber) || formattedNumber.length() < 7) return formattedNumber; 
@@ -145,7 +144,7 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Converts the string phone number to a java phonenumber
-	 * @return
+	 * @return Parses the string phone number into a phone object
 	 */
 	PhoneNumber assignPhoneNumber() {
 		PhoneNumber phone = null;
@@ -159,7 +158,7 @@ public class PhoneNumberFormat implements Serializable {
 	
 	/**
 	 * Returns the formatted number
-	 * @return
+	 * @return Formatted number
 	 */
 	public String getFormattedNumber() {
 		return formattedNumber;
@@ -167,7 +166,7 @@ public class PhoneNumberFormat implements Serializable {
 
 	/**
 	 * Gets the phone number
-	 * @return
+	 * @return Phone number member variable
 	 */
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -175,7 +174,7 @@ public class PhoneNumberFormat implements Serializable {
 
 	/**
 	 * Sets the phone number
-	 * @param phoneNumber
+	 * @param phoneNumber Sets the phone number
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
@@ -184,7 +183,7 @@ public class PhoneNumberFormat implements Serializable {
 
 	/**
 	 * Sets the format type for the phone number
-	 * @return
+	 * @return Returns the formatting type
 	 */
 	public FormatType getFormatType() {
 		return formatType;
@@ -192,20 +191,21 @@ public class PhoneNumberFormat implements Serializable {
 
 	/**
 	 * Type of format
-	 * @param formatType
+	 * @param formatType Sets the type of formatting for the phone number
 	 */
 	public void setFormatType(FormatType formatType) {
 		this.formatType = formatType;
 	}
 
 	/**
-	 * @return the countryCode
+	 * @return the countryCode in ISO format
 	 */
 	public String getCountryCode() {
 		return countryCode;
 	}
 
 	/**
+	 * Sets the country code (ISO Format)
 	 * @param countryCode the countryCode to set
 	 */
 	public void setCountryCode(String countryCode) {

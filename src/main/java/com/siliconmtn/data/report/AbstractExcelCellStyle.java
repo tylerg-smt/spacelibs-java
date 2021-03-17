@@ -52,8 +52,8 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	
 	/**
 	 * controls building the cell style
-	 * @param wb 
-	 * @param styleMap2
+	 * @param innerStyleMap Styling for the workbook
+	 * @param wb Excel workbook
 	 */
 	private CellStyle buildStyle(Map<String, Object> innerStyleMap, Workbook wb) {
 
@@ -87,8 +87,8 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 
 	/**
 	 * sets cell border styles
-	 * @param style
-	 * @param headerMap
+	 * @param style Cell style for the border
+	 * @param headerMap Style map for the workbook
 	 */
 	private void setBorder(CellStyle style, Map<String, Object> innerStyleMap) {
 
@@ -116,9 +116,9 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 
 	/**
 	 * sets font styles
-	 * @param style
-	 * @param innerStyleMap
-	 * @param wb 
+	 * @param style Cell style for the border
+	 * @param innerStyleMap Style map for the workbook
+	 * @param wb excel workbook
 	 */
 	protected void setFont(CellStyle style, Map<String, Object> innerStyleMap, Workbook wb) {
 
@@ -198,6 +198,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	}
 
 	/**
+	 * Sets the style map
 	 * @param styleMap the styleMap to set
 	 */
 	public void setStyleMap(Map<String, Map<String, Object>> styleMap) {
@@ -231,7 +232,7 @@ public abstract class AbstractExcelCellStyle implements ExcelStyleInterface {
 	}
 	
 	/**
-	 * 
+	 * Abstract method that builds the styles
 	 */
 	public abstract void buildStyleMap();
 

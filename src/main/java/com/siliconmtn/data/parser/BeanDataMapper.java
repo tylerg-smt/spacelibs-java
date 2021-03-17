@@ -22,10 +22,10 @@ import org.apache.logging.log4j.Logger;
 import com.siliconmtn.data.util.EnumUtil;
 
 /********************************************************************
- * <b>Title: </b>BeanDataMapper.java<br/>
+ * <b>Title: </b>BeanDataMapper.java
  * <b>Description: </b>Parses out the bean setters and assigns the values based upon
- * the data map passed into the class <br/>
- * <b>Copyright: </b>Copyright (c) 2016<br/>
+ * the data map passed into the class 
+ * <b>Copyright: </b>Copyright (c) 2016
  * <b>Company: </b>Silicon Mountain Technologies
  * @author james
  * @version 3.x
@@ -56,6 +56,7 @@ public final class BeanDataMapper {
 	 * fields into the bean's member variables
 	 * @param o Java Bean
 	 * @param data Data to be mapped into the bean
+	 * @param suffix Suffix added in the UI for parsing purposes
 	 */
 	public static void parseBean(Object o, Map<String, String[]> data, String suffix) {
 		
@@ -94,9 +95,9 @@ public final class BeanDataMapper {
 	
 	/**
 	 * Checks for an enum and assigns it
-	 * @param fieldValue
-	 * @param m
-	 * @return
+	 * @param fieldValue Value to be converted to an enum
+	 * @param m Method to assign the enum
+	 * @return fieldValue as an enum.  Original value otherwise
 	 */
 	protected static Object checkEnum(Object fieldValue, Method m) {
 		
@@ -113,10 +114,9 @@ public final class BeanDataMapper {
 
 	/**
 	 * Gets the field value when the setter is an array
-	 * @param fieldValue
-	 * @param m
-	 * @param dtConverter 
-	 * @return
+	 * @param fieldValue value of the field
+	 * @param m Method to assign the value
+	 * @return List of values in the field value
 	 */
 	static Object getBeanArrayValue(Object fieldValue, Method m) {
 
@@ -137,7 +137,7 @@ public final class BeanDataMapper {
 	 * @param cls Generic type of the list.  Used to convert the data from a String / Object
 	 * to the appropriate type.
 	 * @param data Data to add to the List
-	 * @return
+	 * @return Collection of objects formt he array of values
 	 */
 	protected static List<Object> createList(Class<?> cls, Object[] data) {
 		// Create the converter and register the date converter

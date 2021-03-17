@@ -101,7 +101,7 @@ public class Tree implements Serializable {
 
 	/**
 	 * for JSTL's "I need a getter" inflexability
-	 * @return
+	 * @return List of nodeds in the preorder format
 	 */
 	public List<Node> getPreorderList() {
 		return preorderList(false);
@@ -138,8 +138,8 @@ public class Tree implements Serializable {
 	/**
 	 * Recursive method that orders the elements in the appropriate order
 	 * This method is stateless; changed to public/static to be usable as a utility.  -JM 05/14/13
-	 * @param nodes
-	 * @param hldr
+	 * @param nodes List of nodes in this tree
+	 * @param hldr List of nodes in preorder form
 	 */
 	public void createPreorder(List<Node> nodes, List<Node> hldr) {
 		if (!nodes.isEmpty()) {
@@ -153,8 +153,8 @@ public class Tree implements Serializable {
 	/**
 	 * Iterate from the given node through all it's children and set their total
 	 * number of children to be inclusive of 
-	 * @param node
-	 * @return
+	 * @param node Node of this tree
+	 * @return Total children (includes grandchildren)
 	 */
 	public static int calculateTotalChildren(Node node) {
 		if (node == null) return 0;
@@ -163,6 +163,7 @@ public class Tree implements Serializable {
 			total += calculateTotalChildren(n);
 			total++;
 		}
+		
 		node.setTotalChildren(total);
 
 		return total;
@@ -214,19 +215,23 @@ public class Tree implements Serializable {
 
 	/**
 	 * Returns the total depth of the tree
-	 * @return
+	 * @return Depth level of the tree
 	 */
 	public int getDepth() { return depth; }
 	
 	/**
 	 * Assigns the root node to the tree
-	 * @param rootNode
+	 * @param rootNode Node to set as the root of the tree
 	 */
 	public void setRootNode(Node rootNode) { this.rootNode = rootNode; }
+	
+	/**
+	 * 
+	 * @return Gets the root node
+	 */
 	public Node getRootNode() {
 		return rootNode;
 	}
-
 
 	/**
 	 * Set the fullPath variable of all nodes in the tree
@@ -240,7 +245,7 @@ public class Tree implements Serializable {
 	/**
 	 * Set the fullPath variable of all nodes in the tree
 	 * using a custom external delimiter
-	 * @param delimiter
+	 * @param delimiter delimiter/character to use in the path
 	 */
 	public void buildNodePaths(String delimiter) {
 		buildNodePaths(rootNode, delimiter, false);
@@ -249,7 +254,7 @@ public class Tree implements Serializable {
 	/**
 	 * Set the fullPath variable of all nodes in the tree
 	 * using a custom external delimiter
-	 * @param delimiter
+	 * @param delimiter delimiter/character to use in the path
 	 * @param useName determines if the name or id of the node is used for the path
 	 */
 	public void buildNodePaths(String delimiter, boolean useName) {
@@ -262,9 +267,9 @@ public class Tree implements Serializable {
 	 * variable for each Node in the Tree, starting from the supplied Node and
 	 * moving downwards.  Pass a boolean usage value if the hierarchy should be
 	 * based off names or nodeIds.
-	 * @param parentNode
-	 * @param delimiter
-	 * @param useName
+	 * @param parentNode Node representing the parent node
+	 * @param delimiter delimiter/character to use in the path
+	 * @param useName Deternmines whether to use the name or id in the path
 	 */
 	public void buildNodePaths(Node parentNode, String delimiter, boolean useName) {
 		if (StringUtil.isEmpty(parentNode.getFullPath())) parentNode.setFullPath(delimiter);

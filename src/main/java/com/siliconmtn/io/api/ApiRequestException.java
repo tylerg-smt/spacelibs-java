@@ -35,11 +35,14 @@ public class ApiRequestException extends RuntimeException {
 	 */
 	private final HttpStatus status;
 
+	/**
+	 * Collection of failed validations
+	 */
     protected List<ValidationErrorDTO> failedValidations = new ArrayList<>();
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
-	 * @param message
+	 * @param message Error Message to capture
 	 */
 	public ApiRequestException(String message) {
 		super(message);
@@ -48,7 +51,8 @@ public class ApiRequestException extends RuntimeException {
 	
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
-	 * @param message
+	 * @param message Error Message to use
+	 * @param errors Validation errors encountered
 	 */
 	public ApiRequestException(String message, List<ValidationErrorDTO> errors) {
 		this(message);
@@ -69,6 +73,7 @@ public class ApiRequestException extends RuntimeException {
 	 * Error message and status constructor
 	 * @param message Error message to display
 	 * @param status HttpStatus to send
+	 * @param errors Validation errors encountered
 	 */
 	public ApiRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
 		this(message, status);
@@ -105,7 +110,7 @@ public class ApiRequestException extends RuntimeException {
     
     /**
      * Adds a single failed validation to the collection
-     * @param failedValidation
+     * @param failedValidation Failed validation object with failed validation meta data
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
     	this.failedValidations.add(failedValidation);
@@ -114,12 +119,16 @@ public class ApiRequestException extends RuntimeException {
     
     /**
      * Adds a all failed validation to the collection
-     * @param failedValidations
+     * @param failedValidations Adds the collection of failed validations
      */
     public void addAllFailedValidation(List<ValidationErrorDTO> failedValidations) {
     	this.failedValidations.addAll(failedValidations);
     }
 
+    /**
+     * Getter for the validation errors
+     * @return Collection of the assigned validation errors
+     */
     public List<ValidationErrorDTO> getFailedValidations() {
     	return this.failedValidations;
     }
