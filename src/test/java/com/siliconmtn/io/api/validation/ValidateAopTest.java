@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 // Spacelibs
-import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.EndpointRequestException;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
@@ -52,7 +52,7 @@ class ValidateAopTest {
 	}
 	
 	/**
-	 * Check to see if a failing set of validators returns a proper ApiResponse
+	 * Check to see if a failing set of validators returns a proper EndpointResponse
 	 * @throws Throwable
 	 */
 	@Test
@@ -130,7 +130,7 @@ class ValidateAopTest {
         validate.pFact = pFact;
         
         if (throwError || (!pass && !nullParser && !"dontValidateTestMethod".equals(methodName))) {
-            assertThrows(ApiRequestException.class, () -> validate.beforeAdvice(joinPoint, "Test"));
+            assertThrows(EndpointRequestException.class, () -> validate.beforeAdvice(joinPoint, "Test"));
         } else {
         	assertDoesNotThrow(() -> validate.beforeAdvice(joinPoint, "Test"));
         }
