@@ -2,6 +2,7 @@ package com.siliconmtn.io.api.validation.factory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.siliconmtn.io.api.ApiRequestException;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
 
@@ -59,12 +61,7 @@ class ParserFactoryTest {
 		assertEquals("Test", fields.get(0).getValue());
 		assertEquals("id", fields.get(0).getElementId());
 		assertTrue(fields.get(0).isRequired());
-		
-		try {
-			fact.parserDispatcher("com.fake.class.fakeMethod");
-		} catch(Exception e) {
-			assert(e.getMessage().equals("Failed to create data parser"));
-		}
+		assertThrows(ApiRequestException.class,	() -> fact.parserDispatcher("com.fake.class.fakeMethod"));
 		
 	}
 

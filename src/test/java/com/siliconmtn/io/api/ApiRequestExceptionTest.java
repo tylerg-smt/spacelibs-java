@@ -1,10 +1,12 @@
 package com.siliconmtn.io.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -25,25 +27,35 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  ****************************************************************************/
 
 class ApiRequestExceptionTest {
-
+	
+	// Members
+	private List<ValidationErrorDTO> errors;
+	
 	/**
-	 * Test the constructor that accepts a list of validation errors
-	 * @throws Exception
+	 * Initializes the validation errors
 	 */
-	@Test
-	void testApiRequestExceptionErrorConsturctor() throws Exception {
-		List<ValidationErrorDTO> errors = new ArrayList<>();
+	@BeforeEach
+	void initMethod() {
+		errors = new ArrayList<>();
 		errors.add(ValidationErrorDTO.builder()
 				.elementId("Id")
 				.value("42")
 				.validationError(ValidationError.RANGE)
 				.build());
+		
 		errors.add(ValidationErrorDTO.builder()
 				.elementId("name")
 				.value("Douglas Adams")
 				.validationError(ValidationError.REGEX)
 				.build());
-		
+	}
+	
+	/**
+	 * Test the constructor that accepts a list of validation errors
+	 * @throws Exception
+	 */
+	@Test
+	void testApiRequestExceptionErrorConstructor() throws Exception {
 		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
 		
 		assertEquals("Failure", ex.getMessage());
@@ -59,40 +71,88 @@ class ApiRequestExceptionTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testApiRequestExceptionCuaseStatusConsturctor() throws Exception {
+	void testApiRequestExceptionCuaseStatusConstructor() throws Exception {
 
 		ApiRequestException ex = new ApiRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
 		
 		assertEquals("Failed to do the thing", ex.getCause().getMessage());
 		assertEquals(HttpStatus.CONFLICT, ex.getStatus());
 		assertEquals(0, ex.getFailedValidations().size());
-		
-		ex.addFailedValidation(ValidationErrorDTO.builder()
-				.elementId("book")
-				.value("Vogon Poetry")
-				.validationError(ValidationError.CATASTROPHE)
-				.build());
-
-		assertEquals(1, ex.getFailedValidations().size());
-		assertEquals(ValidationError.CATASTROPHE, ex.getFailedValidations().get(0).getValidationError());
-		
-		List<ValidationErrorDTO> errors = new ArrayList<>();
-		errors.add(ValidationErrorDTO.builder()
-				.elementId("Id")
-				.value("42")
-				.validationError(ValidationError.RANGE)
-				.build());
-		errors.add(ValidationErrorDTO.builder()
-				.elementId("name")
-				.value("Douglas Adams")
-				.validationError(ValidationError.REGEX)
-				.build());
-
-		ex.addAllFailedValidation(errors);
-		
-		assertEquals(3, ex.getFailedValidations().size());
-		assertEquals("42", ex.getFailedValidations().get(1).getValue());
-		assertEquals("name", ex.getFailedValidations().get(2).getElementId());
 	}
 
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionString() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure");
+		assertNotNull(ex);
+		assertEquals(0, ex.getFailedValidations().size());
+		assertEquals("Failure", ex.getMessage());
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionStringStatus() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.METHOD_NOT_ALLOWED);
+		assertNotNull(ex);
+		assertEquals(0, ex.getFailedValidations().size());
+		assertEquals("Failure", ex.getMessage());
+		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, ex.getStatus());
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionStringExStatus() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure", new Throwable("Failed to do the thing"), HttpStatus.METHOD_NOT_ALLOWED);
+		assertNotNull(ex);
+		assertEquals(0, ex.getFailedValidations().size());
+		assertEquals("Failure", ex.getMessage());
+		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, ex.getStatus());
+	}
+
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionStringErrors() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		assertNotNull(ex);
+		assertEquals(2, ex.getFailedValidations().size());
+		assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+		assertEquals("Failure", ex.getMessage());
+		assertEquals("Douglas Adams", ex.getFailedValidations().get(1).getValue());
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionAddErrors() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		ex.addAllFailedValidation(errors);
+		assertNotNull(ex);
+		assertEquals(4, ex.getFailedValidations().size());
+		assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+		assertEquals("Failure", ex.getMessage());
+		assertEquals("Douglas Adams", ex.getFailedValidations().get(1).getValue());
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.ApiRequestException#ApiRequestException(java.lang.String)}.
+	 */
+	@Test
+	void testApiRequestExceptionAddSingleError() throws Exception {
+		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		ex.addFailedValidation(errors.get(0));
+		assertNotNull(ex);
+		assertEquals(3, ex.getFailedValidations().size());
+		assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+		assertEquals("Failure", ex.getMessage());
+		assertEquals("Douglas Adams", ex.getFailedValidations().get(1).getValue());
+	}
 }
