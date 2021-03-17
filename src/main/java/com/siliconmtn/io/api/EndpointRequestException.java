@@ -23,7 +23,7 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO;
  * @since Mar 4, 2021
  * @updates:
  ****************************************************************************/
-public class ApiRequestException extends RuntimeException {
+public class EndpointRequestException extends RuntimeException {
 
 	/**
 	 * Serial Version UID
@@ -38,15 +38,15 @@ public class ApiRequestException extends RuntimeException {
 	/**
 	 * Collection of failed validations
 	 */
-    protected final List<ValidationErrorDTO> failedValidations;
+    protected List<ValidationErrorDTO> failedValidations = new ArrayList<>();
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
 	 * @param message Error Message to capture
 	 */
-	public ApiRequestException(String message) {
-		this(message, HttpStatus.BAD_REQUEST, new ArrayList<>());
-
+	public EndpointRequestException(String message) {
+		super(message);
+		this.status = HttpStatus.BAD_REQUEST;
 	}
 	
 	/**
@@ -54,8 +54,9 @@ public class ApiRequestException extends RuntimeException {
 	 * @param message Error Message to use
 	 * @param errors Validation errors encountered
 	 */
-	public ApiRequestException(String message, final List<ValidationErrorDTO> errors) {
-		this(message, HttpStatus.BAD_REQUEST, errors);
+	public EndpointRequestException(String message, List<ValidationErrorDTO> errors) {
+		this(message);
+		this.failedValidations = errors;
 	}
 
 	/**
@@ -63,9 +64,9 @@ public class ApiRequestException extends RuntimeException {
 	 * @param message Error message to display
 	 * @param status HttpStatus to send
 	 */
-	public ApiRequestException(String message, HttpStatus status) {
-		this(message, status, new ArrayList<>());
-		
+	public EndpointRequestException(String message, HttpStatus status) {
+		super(message);
+		this.status = status;
 	}
 
 	/**
@@ -74,10 +75,9 @@ public class ApiRequestException extends RuntimeException {
 	 * @param status HttpStatus to send
 	 * @param errors Validation errors encountered
 	 */
-	public ApiRequestException(String message, HttpStatus status, final List<ValidationErrorDTO> errors) {
-		super(message);
-		this.status = status;
-		failedValidations = errors;
+	public EndpointRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
+		this(message, status);
+		this.failedValidations = errors;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ApiRequestException extends RuntimeException {
 	 * @param cause Exception that was thrown
 	 * @param status HttpStatus to be applied
 	 */
-	public ApiRequestException(Throwable cause, HttpStatus status) {
+	public EndpointRequestException(Throwable cause, HttpStatus status) {
 		super(cause);
 		this.status = status;
 		failedValidations = new ArrayList<>();
@@ -97,7 +97,7 @@ public class ApiRequestException extends RuntimeException {
 	 * @param cause Exception that was thrown
 	 * @param status HttpStatus to be applied
 	 */
-	public ApiRequestException(String message, Throwable cause, HttpStatus status) {
+	public EndpointRequestException(String message, Throwable cause, HttpStatus status) {
 		super(message, cause);
 		this.status = status;
 		failedValidations = new ArrayList<>();

@@ -14,7 +14,7 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 /****************************************************************************
- * <b>Title</b>: ApiRequestExceptionTest.java
+ * <b>Title</b>: EndpointRequestExceptionTest.java
  * <b>Project</b>: spacelibs-java
  * <b>Description: </b> Test the 
  * <b>Copyright:</b> Copyright (c) 2021
@@ -26,11 +26,8 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  * @updates:
  ****************************************************************************/
 
-class ApiRequestExceptionTest {
-	
-	// Members
-	private List<ValidationErrorDTO> errors;
-	
+class EndpointRequestExceptionTest {
+
 	/**
 	 * Initializes the validation errors
 	 */
@@ -71,9 +68,9 @@ class ApiRequestExceptionTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testApiRequestExceptionCuaseStatusConstructor() throws Exception {
+	void testEndpointRequestExceptionCuaseStatusConsturctor() throws Exception {
 
-		ApiRequestException ex = new ApiRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
+		EndpointRequestException ex = new EndpointRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
 		
 		assertEquals("Failed to do the thing", ex.getCause().getMessage());
 		assertEquals(HttpStatus.CONFLICT, ex.getStatus());

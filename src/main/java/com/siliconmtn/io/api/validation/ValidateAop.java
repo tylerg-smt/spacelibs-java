@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import org.aspectj.lang.JoinPoint;
 
 // Spacelibs 1.0
-import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.EndpointRequestException;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
@@ -50,17 +50,17 @@ public class ValidateAop {
 	    * before a selected method execution.
 	    * @param pjp Join Point class which connects this Aspect to the annotation method
 	    * @param body The information that is going to be validated
-	    * @throws ApiRequestException Thrown when data validation fails 
+	    * @throws EndpointRequestException Thrown when data validation fails 
 	    */
 	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate) && args(.., @RequestBody body)")
-	   public void beforeAdvice(JoinPoint pjp, Object body) throws ApiRequestException {
+	   public void beforeAdvice(JoinPoint pjp, Object body) throws EndpointRequestException {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
 		   if (validate != null) {
 			   List<ValidationErrorDTO> errors = validateReponse(body,  m.getDeclaringClass().getName() + "." + m.getName());
 			   if (! errors.isEmpty()) {
-				   throw new ApiRequestException("Failed to validate request", errors);
+				   throw new EndpointRequestException("Failed to validate request", errors);
 			   }
 		   }
 		   
@@ -71,9 +71,9 @@ public class ValidateAop {
 	    * into ValidationDTOs and validate them to ensure that there are no issues with the data.
 	    * @param body The information that is going to be validated
 	    * @param key The key that identifies the packager that needs to be created.
-	    * @throws ApiRequestException ParserDispatcher failed to create a parser or parse the supplied data in some way.
+	    * @throws EndpointRequestException ParserDispatcher failed to create a parser or parse the supplied data in some way.
 	    */
-	   private List<ValidationErrorDTO> validateReponse(Object body, String key) throws ApiRequestException {
+	   private List<ValidationErrorDTO> validateReponse(Object body, String key) throws EndpointRequestException {
 		   
 		   List<ValidationDTO> fields;
 			try {
@@ -83,7 +83,7 @@ public class ValidateAop {
 				
 				fields = parser.requestParser(body);
 			} catch (Exception e) {
-				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+				throw new EndpointRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 
 			
 		   return ValidationUtil.validateData(fields);
