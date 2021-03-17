@@ -38,15 +38,14 @@ public class EndpointRequestException extends RuntimeException {
 	/**
 	 * Collection of failed validations
 	 */
-    protected List<ValidationErrorDTO> failedValidations = new ArrayList<>();
+    protected final List<ValidationErrorDTO> failedValidations;
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
 	 * @param message Error Message to capture
 	 */
 	public EndpointRequestException(String message) {
-		super(message);
-		this.status = HttpStatus.BAD_REQUEST;
+		this(message, HttpStatus.BAD_REQUEST, new ArrayList<>());
 	}
 	
 	/**
@@ -55,8 +54,7 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param errors Validation errors encountered
 	 */
 	public EndpointRequestException(String message, List<ValidationErrorDTO> errors) {
-		this(message);
-		this.failedValidations = errors;
+		this(message, HttpStatus.BAD_REQUEST, errors);
 	}
 
 	/**
@@ -65,8 +63,7 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param status HttpStatus to send
 	 */
 	public EndpointRequestException(String message, HttpStatus status) {
-		super(message);
-		this.status = status;
+		this(message, status, new ArrayList<>());
 	}
 
 	/**
@@ -76,7 +73,8 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param errors Validation errors encountered
 	 */
 	public EndpointRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
-		this(message, status);
+		super(message);
+		this.status = status;
 		this.failedValidations = errors;
 	}
 
@@ -86,9 +84,7 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param status HttpStatus to be applied
 	 */
 	public EndpointRequestException(Throwable cause, HttpStatus status) {
-		super(cause);
-		this.status = status;
-		failedValidations = new ArrayList<>();
+		this("", cause, status);
 	}
 
 	/**

@@ -1,22 +1,24 @@
 package com.siliconmtn.io.api;
 
+// Junit 5
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+// JDK 11.x
+import java.util.ArrayList;
+import java.util.List;
+
+// Spacelibs 1.x
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 /****************************************************************************
  * <b>Title</b>: EndpointRequestExceptionTest.java
  * <b>Project</b>: spacelibs-java
- * <b>Description: </b> Test the 
+ * <b>Description: </b> Test the EndPointRequestException class
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
@@ -27,6 +29,9 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  ****************************************************************************/
 
 class EndpointRequestExceptionTest {
+	
+	// Members
+	List<ValidationErrorDTO> errors;
 
 	/**
 	 * Initializes the validation errors
@@ -53,7 +58,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionErrorConstructor() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
+		EndpointRequestException ex = new EndpointRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
 		
 		assertEquals("Failure", ex.getMessage());
 		assertEquals(HttpStatus.ALREADY_REPORTED, ex.getStatus());
@@ -82,7 +87,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionString() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure");
+		EndpointRequestException ex = new EndpointRequestException("Failure");
 		assertNotNull(ex);
 		assertEquals(0, ex.getFailedValidations().size());
 		assertEquals("Failure", ex.getMessage());
@@ -93,7 +98,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionStringStatus() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.METHOD_NOT_ALLOWED);
+		EndpointRequestException ex = new EndpointRequestException("Failure", HttpStatus.METHOD_NOT_ALLOWED);
 		assertNotNull(ex);
 		assertEquals(0, ex.getFailedValidations().size());
 		assertEquals("Failure", ex.getMessage());
@@ -105,7 +110,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionStringExStatus() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", new Throwable("Failed to do the thing"), HttpStatus.METHOD_NOT_ALLOWED);
+		EndpointRequestException ex = new EndpointRequestException("Failure", new Throwable("Failed to do the thing"), HttpStatus.METHOD_NOT_ALLOWED);
 		assertNotNull(ex);
 		assertEquals(0, ex.getFailedValidations().size());
 		assertEquals("Failure", ex.getMessage());
@@ -117,7 +122,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionStringErrors() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		EndpointRequestException ex = new EndpointRequestException("Failure", errors);
 		assertNotNull(ex);
 		assertEquals(2, ex.getFailedValidations().size());
 		assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
@@ -130,7 +135,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionAddErrors() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		EndpointRequestException ex = new EndpointRequestException("Failure", errors);
 		ex.addAllFailedValidation(errors);
 		assertNotNull(ex);
 		assertEquals(4, ex.getFailedValidations().size());
@@ -144,7 +149,7 @@ class EndpointRequestExceptionTest {
 	 */
 	@Test
 	void testApiRequestExceptionAddSingleError() throws Exception {
-		ApiRequestException ex = new ApiRequestException("Failure", errors);
+		EndpointRequestException ex = new EndpointRequestException("Failure", errors);
 		ex.addFailedValidation(errors.get(0));
 		assertNotNull(ex);
 		assertEquals(3, ex.getFailedValidations().size());
