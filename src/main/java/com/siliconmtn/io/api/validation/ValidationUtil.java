@@ -24,8 +24,6 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc;
 
 public class ValidationUtil {
 	
-	private ValidationUtil() {/*Hides public constructor*/}
-	
 	/**
 	 * Provate due to all methods being static
 	 */
