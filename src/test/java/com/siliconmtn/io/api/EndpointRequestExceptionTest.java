@@ -12,7 +12,7 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
 /****************************************************************************
- * <b>Title</b>: ApiRequestExceptionTest.java
+ * <b>Title</b>: EndpointRequestExceptionTest.java
  * <b>Project</b>: spacelibs-java
  * <b>Description: </b> Test the 
  * <b>Copyright:</b> Copyright (c) 2021
@@ -24,14 +24,14 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  * @updates:
  ****************************************************************************/
 
-class ApiRequestExceptionTest {
+class EndpointRequestExceptionTest {
 
 	/**
 	 * Test the constructor that accepts a list of validation errors
 	 * @throws Exception
 	 */
 	@Test
-	void testApiRequestExceptionErrorConsturctor() throws Exception {
+	void testEndpointRequestExceptionErrorConsturctor() throws Exception {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		errors.add(ValidationErrorDTO.builder()
 				.elementId("Id")
@@ -44,7 +44,7 @@ class ApiRequestExceptionTest {
 				.validationError(ValidationError.REGEX)
 				.build());
 		
-		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
+		EndpointRequestException ex = new EndpointRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
 		
 		assertEquals("Failure", ex.getMessage());
 		assertEquals(HttpStatus.ALREADY_REPORTED, ex.getStatus());
@@ -59,9 +59,9 @@ class ApiRequestExceptionTest {
 	 * @throws Exception
 	 */
 	@Test
-	void testApiRequestExceptionCuaseStatusConsturctor() throws Exception {
+	void testEndpointRequestExceptionCuaseStatusConsturctor() throws Exception {
 
-		ApiRequestException ex = new ApiRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
+		EndpointRequestException ex = new EndpointRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
 		
 		assertEquals("Failed to do the thing", ex.getCause().getMessage());
 		assertEquals(HttpStatus.CONFLICT, ex.getStatus());

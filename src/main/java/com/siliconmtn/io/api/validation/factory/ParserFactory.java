@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 
 // Spacelibs
 import com.siliconmtn.data.text.StringUtil;
-import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.EndpointRequestException;
 
 /****************************************************************************
  * <b>Title</b>: ParserFactory.java
@@ -42,9 +42,9 @@ public class ParserFactory {
 	 * the passed classname.methodname key.
 	 * @param controllerName the classname.methodname combo key for the parser we are looking for
 	 * @return ParserIntfc that will be used to parse the request body into ValidationDTOs
-	 * @throws ApiRequestException When unable to create an instance of the controller name
+	 * @throws EndpointRequestException When unable to create an instance of the controller name
 	 */
-	public ParserIntfc parserDispatcher(String controllerName) throws ApiRequestException {
+	public ParserIntfc parserDispatcher(String controllerName) throws EndpointRequestException {
 		String parserClassName=builderMapper.get(controllerName);
 		if (StringUtil.isEmpty(parserClassName)) return null;
 		
@@ -52,7 +52,7 @@ public class ParserFactory {
 			Class<?> c = Class.forName(parserClassName);
 			return (ParserIntfc) c.getDeclaredConstructor().newInstance(); 
 		} catch (Exception e) {
-			throw new ApiRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new EndpointRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

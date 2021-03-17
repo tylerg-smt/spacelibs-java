@@ -54,7 +54,7 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param message Error Message to use
 	 * @param errors Validation errors encountered
 	 */
-	public ApiRequestException(String message, List<ValidationErrorDTO> errors) {
+	public EndpointRequestException(String message, List<ValidationErrorDTO> errors) {
 		this(message);
 		this.failedValidations = errors;
 	}
@@ -75,7 +75,7 @@ public class EndpointRequestException extends RuntimeException {
 	 * @param status HttpStatus to send
 	 * @param errors Validation errors encountered
 	 */
-	public ApiRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
+	public EndpointRequestException(String message, HttpStatus status, List<ValidationErrorDTO> errors) {
 		this(message, status);
 		this.failedValidations = errors;
 	}
