@@ -80,7 +80,9 @@ jacocoTestReport {
 	dependsOn test
 }
 
+// Set the source path to the delombok source so the javadocs will be built properly
 javadoc {
+	source = delombok.sourcepath
 	javadoc.options.addStringOption('Xdoclint:all', '-quiet')
 	options.tags = ["updates", "updates:"]
 }
