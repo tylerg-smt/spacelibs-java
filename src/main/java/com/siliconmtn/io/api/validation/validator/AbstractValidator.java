@@ -56,11 +56,11 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 	 * @param errors List of validation errors
 	 * @return true to show that validation is complete and nothing else needs done, false to show that further validation is needed.
 	 */
-	public boolean validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
+	public void validateOptions(ValidationDTO validation, List<ValidationErrorDTO> errors) {
 		
 		for (Entry<String, String> e : validation.getValidOptions().entrySet()) {
 			// Value is in map, validation complete and successful.
-			if (e.getValue() == null || e.getValue().equals(validation.getValue())) return true;
+			if (e.getValue() == null || e.getValue().equals(validation.getValue())) return;
 		}
 		
 		errors.add(ValidationErrorDTO.builder()
@@ -69,8 +69,6 @@ public abstract class AbstractValidator implements ValidatorIntfc {
 				.errorMessage("Value is not in the supplied list of accepted values")
 				.validationError(ValidationError.OPTION)
 				.build());
-		
-		return true;
 	}
 
 	/*

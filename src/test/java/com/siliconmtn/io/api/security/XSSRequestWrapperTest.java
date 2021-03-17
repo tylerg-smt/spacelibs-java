@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -37,7 +36,6 @@ import java.util.List;
  ****************************************************************************/
 class XSSRequestWrapperTest {
 
-	@Mock
 	HttpServletRequest request;
 	
 	// Members

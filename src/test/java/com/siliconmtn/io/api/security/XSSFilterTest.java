@@ -1,5 +1,6 @@
 package com.siliconmtn.io.api.security;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,14 +29,14 @@ import org.junit.jupiter.api.Test;
  * @updates:
  ****************************************************************************/
 
-public class XSSFilterTest {
+class XSSFilterTest {
 
 	/**
 	 * Ensure that the filter can run without throwing any errors when provided with data
 	 * @throws Exception
 	 */
 	@Test
-	public void testXSSFilter() throws Exception {
+	void testXSSFilter() throws Exception {
 		
 		XSSFilter xss = new XSSFilter();
 
@@ -51,8 +52,8 @@ public class XSSFilterTest {
         
         when(request.getReader()).thenReturn(reader);
         when(wrappedRequest.getReader()).thenReturn(reader);
-
-        xss.doFilter(request, response, chain);
+        
+        assertDoesNotThrow(()-> xss.doFilter(request, response, chain));
         
 	}
 
@@ -61,7 +62,7 @@ public class XSSFilterTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testEmptyXSSFilter() throws Exception {
+	void testEmptyXSSFilter() throws Exception {
 		
 		XSSFilter xss = new XSSFilter();
 
@@ -77,8 +78,8 @@ public class XSSFilterTest {
         
         when(request.getReader()).thenReturn(reader);
         when(wrappedRequest.getReader()).thenReturn(reader);
-
-        xss.doFilter(request, response, chain);
+        
+        assertDoesNotThrow(()-> xss.doFilter(request, response, chain));
         
 	}
 	
