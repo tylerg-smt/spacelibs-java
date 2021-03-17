@@ -148,7 +148,8 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Specifies if the cookie handler should be utilized
-	 * @param useCookieHandler
+	 * @param useCookieHandler Boolean to indicate whther or not to use the provided
+	 * cookie manager
 	 */
 	public SMTHttpConnectionManager(boolean useCookieHandler) {
 		this();
@@ -160,7 +161,7 @@ public class SMTHttpConnectionManager {
 	 * connection object (HttpsURLConnection) when the connection object is 
 	 * created, provided that the requested url's protocol is https.  Otherwise the 
 	 * SSLSocketFactory object is not used.
-	 * @param sslSocketFactory
+	 * @param sslSocketFactory Socket factory to utilize for SSL connections
 	 */
 	public SMTHttpConnectionManager(SSLSocketFactory sslSocketFactory) {
 		this();
@@ -174,7 +175,7 @@ public class SMTHttpConnectionManager {
 	 * @return binary data containing information retrieved from the site
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * Defaults to POST if type is null
-	 * @throws IOException
+	 * @throws IOException When data can't be retrieved, this exception is thrown
 	 */
 	public byte[] getRequestData(String url, Map<String, Object> parameters, HttpConnectionType type) 
 	throws IOException {
@@ -189,7 +190,7 @@ public class SMTHttpConnectionManager {
 	 * @return binary data containing information retrieved from the site
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * Defaults to POST if type is null
-	 * @throws IOException
+	 * @throws IOException When data can't be retrieved, this exception is thrown
 	 */
 	public byte[] getRequestData(URL url, Map<String, Object> parameters, HttpConnectionType type) 
 	throws IOException {
@@ -202,7 +203,7 @@ public class SMTHttpConnectionManager {
 	 * @param actionUrl
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * @return data for the request
-	 * @throws IOException
+	 * @throws IOException When data can't be retrieved, this exception is thrown
 	 */
 	private byte[] connect(URL actionUrl, byte[] postDataBytes, HttpConnectionType type) throws IOException {
 		int nRead;
@@ -225,7 +226,7 @@ public class SMTHttpConnectionManager {
 	 * @param params Post data to pass as a Map key, value pairs
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
 	 * @return Connection stream to the data
-	 * @throws IOException
+	 * @throws IOException When data can't be retrieved, this exception is thrown
 	 */
 	public InputStream getConnectionStream(URL url, Map<String, Object> params, HttpConnectionType type) throws IOException {
 		return connectStream(url, convertPostData(params), 0, type);
@@ -236,8 +237,8 @@ public class SMTHttpConnectionManager {
 	 * @param actionUrl URL for the connection
 	 * @param postData Post data to pass
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
-	 * @return Connection
-	 * @throws IOException
+	 * @return Stream of the connection
+	 * @throws IOException When data can't be retrieved, this exception is thrown
 	 */
 	private InputStream connectStream(URL actionUrl, byte[] postDataBytes, int redirectAttempt, HttpConnectionType type) 
 	throws IOException {
@@ -262,9 +263,9 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Validates and creates a URL using actionUrl.  Default prototcal is http://
-	 * @param actionUrl
-	 * @return
-	 * @throws IOException
+	 * @param actionUrl Creates a URL object form the string url
+	 * @return URL object representing the string url
+	 * @throws IOException  When data can't be retrieved, this exception is thrown
 	 */
 	URL createURL(String actionUrl) throws IOException {
 		if (StringUtil.isEmpty(actionUrl)) throw new IOException("Invalid URL");
@@ -277,9 +278,9 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Returns a connection type based on the URL protocol
-	 * @param url
-	 * @return
-	 * @throws IOException
+	 * @param url Pointer to the end server
+	 * @return Http URL Connection to the end server
+	 * @throws IOException  When data can't be retrieved, this exception is thrown
 	 */
 	private HttpURLConnection createConnection(URL url) throws IOException {
 		// Set the cookie handler. Since this is and accessed 
@@ -302,10 +303,10 @@ public class SMTHttpConnectionManager {
 
 	/**
 	 * Initializes and executes the connection
-	 * @param conn
-	 * @param postData
+	 * @param conn COnnection to the end server
+	 * @param postData data to send to the server
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
-	 * @throws IOException
+	 * @throws IOException  When data can't be retrieved, this exception is thrown
 	 */
 	private void executeConnection(HttpURLConnection conn, byte[] postDataBytes, HttpConnectionType type) throws IOException {
 		// Setup the connection parameters
@@ -321,13 +322,10 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Initializes the Connection parameters
-	 * @param sUrl URL object to use in the connection
-	 * @param postData The data to use in the post method.  If post data is
-	 * 				 null or empty, the connection defaults to a "GET" request
-	 * @param conn
-	 * @param postData
+	 * @param conn Connecton to the server to be initialized
+	 * @param postData Data to post to the end server
 	 * @param type Request Type.  One of GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE.
-	 * @throws IOException
+	 * @throws IOException  When data can't be retrieved, this exception is thrown
 	 */
 	private void initConnection(HttpURLConnection conn, byte[] postDataBytes, HttpConnectionType type) 
 	throws IOException {
@@ -364,7 +362,7 @@ public class SMTHttpConnectionManager {
 	/**
 	 * Parses the returned Set-Cookie parameter in the header into name value
 	 * pairs and stores them in a hash map to be used during future connections.
-	 * @param conn
+	 * @param conn Connection to the server to retrieve / assign cookies
 	 */
 	void storeCookies(HttpURLConnection conn) {
 		//Loop all of the HTTP header info
@@ -400,8 +398,8 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Converts the map data into a url encoded string and converts to a byte[]
-	 * @param postData
-	 * @return
+	 * @param postData Converts map of data elements into a delimited string
+	 * @return URL encoded data parameters
 	 */
 	public byte[] convertPostData(Map<String, Object> postData) {
 		if (postData == null || postData.isEmpty()) return new byte[0];
@@ -425,8 +423,8 @@ public class SMTHttpConnectionManager {
 	/**
 	 * Helper method ensures that multiple values for a given key get added
 	 * correctly.
-	 * @param sb
-	 * @param entry
+	 * @param sb assigns key values into the string builder
+	 * @param entry items to assign
 	 */
 	private void listParams(StringBuilder sb, Entry<String, Object> entry) {
 		Object raw = entry.getValue();
@@ -442,6 +440,7 @@ public class SMTHttpConnectionManager {
 	}
 	
 	/**
+	 * Sets the factory for the SSL connection
 	 * @param sslSocketFactory the sslSocketFactory to set
 	 */
 	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
@@ -450,13 +449,14 @@ public class SMTHttpConnectionManager {
 
 	/**
 	 * Returns the socket factory
-	 * @return sslSocketFactory
+	 * @return sslSocketFactory assigned
 	 */
 	public SSLSocketFactory getSslSocketFactory() {
 		return this.sslSocketFactory;
 	}
 
 	/**
+	 * Gets the connection timeout
 	 * @return the connectionTimeout
 	 */
 	public int getConnectionTimeout() {
@@ -464,6 +464,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Determines if this class will follow redirects
 	 * @return the followRedirects
 	 */
 	public boolean isFollowRedirects() {
@@ -471,6 +472,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Gets the request headers
 	 * @return the requestHeaders
 	 */
 	public Map<String, String> getRequestHeaders() {
@@ -478,6 +480,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Gets the onnection response code
 	 * @return the responseCode
 	 */
 	public int getResponseCode() {
@@ -485,6 +488,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Gets the cookies
 	 * @return the cookies
 	 */
 	public Map<String, String> getCookies() {
@@ -492,6 +496,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Gets the header maps
 	 * @return the headerMap
 	 */
 	public Map<String, String> getHeaderMap() {
@@ -499,6 +504,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Number of redirects to foloow
 	 * @return the redirectLimit
 	 */
 	public int getRedirectLimit() {
@@ -506,6 +512,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Determines if cookie handler is in use
 	 * @return the useCookieHandler
 	 */
 	public boolean isUseCookieHandler() {
@@ -513,6 +520,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Sets the connection timeout
 	 * @param connectionTimeout the connectionTimeout to set
 	 */
 	public void setConnectionTimeout(int connectionTimeout) {
@@ -520,6 +528,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Sets whether redirects should be followed
 	 * @param followRedirects the followRedirects to set
 	 */
 	public void setFollowRedirects(boolean followRedirects) {
@@ -527,6 +536,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Sets request headers for the connection
 	 * @param requestHeaders the requestHeaders to set
 	 */
 	public void setRequestHeaders(Map<String, String> requestHeaders) {
@@ -536,7 +546,7 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Adds any request headers assigned to the request connection
-	 * @param conn
+	 * @param conn Connection to the end server
 	 */
 	protected void setRequestHeaders(HttpURLConnection conn) {
 		if (requestHeaders.isEmpty()) return;
@@ -546,14 +556,15 @@ public class SMTHttpConnectionManager {
 	
 	/**
 	 * Adds a header map value for the HTTP connection
-	 * @param key
-	 * @param value
+	 * @param key Cookie unique identifier
+	 * @param value Cookie value
 	 */
 	public void addCookie(String key, String value) {
 		cookies.put(key, value);
 	}
 
 	/**
+	 * Map containing multiple cookies to add
 	 * @param cookies the cookies to set
 	 */
 	public void setCookies(Map<String, String> cookies) {
@@ -566,7 +577,7 @@ public class SMTHttpConnectionManager {
 	 * the data into: Cookie: name=value; name=value;
 	 * Do not use this to initially add cookies to the cookie map on this object, rather
 	 * use the addCookie(key,value) method.
-	 * @param conn
+	 * @param conn Connection to the end server
 	 */
 	void assignCookies(HttpURLConnection conn) {
 		if (cookies.isEmpty() || conn == null) return;
@@ -579,6 +590,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Adds parameters to the header map
 	 * @param headerMap the headerMap to set
 	 */
 	public void setHeaderMap(Map<String, String> headerMap) {
@@ -587,6 +599,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Number of redirects to follow before quitting
 	 * @param redirectLimit the redirectLimit to set
 	 */
 	public void setRedirectLimit(int redirectLimit) {
@@ -594,6 +607,7 @@ public class SMTHttpConnectionManager {
 	}
 
 	/**
+	 * Sets whether the cookie handler should be used
 	 * @param useCookieHandler the useCookieHandler to set
 	 */
 	public void setUseCookieHandler(boolean useCookieHandler) {

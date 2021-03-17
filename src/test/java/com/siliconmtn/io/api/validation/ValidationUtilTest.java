@@ -1,5 +1,8 @@
 package com.siliconmtn.io.api.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 // JDK 11.x
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,14 +32,14 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
  * @updates:
  ****************************************************************************/
 
-public class ValidationUtilTest {
+class ValidationUtilTest {
 
 
 	/**
 	 * Test the String validator, testing it's ability to fail based on min, max, isRequired, and regex.
 	 */
 	@Test
-	public void testStringValidators() {
+	void testStringValidators() {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Successful min, max, regex, and required test
@@ -84,12 +87,12 @@ public class ValidationUtilTest {
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 5);
-		assert(errors.get(0).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(1).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(2).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(3).getValidationError().equals(ValidationError.REQUIRED));
-		assert(errors.get(4).getValidationError().equals(ValidationError.REQUIRED));
+		assertEquals(5, errors.size());
+		assertEquals(ValidationError.RANGE, errors.get(0).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(1).getValidationError());
+		assertEquals(ValidationError.REGEX, errors.get(2).getValidationError());
+		assertEquals(ValidationError.REQUIRED, errors.get(3).getValidationError());
+		assertEquals(ValidationError.REQUIRED, errors.get(4).getValidationError());
 		
 	}
 
@@ -97,7 +100,7 @@ public class ValidationUtilTest {
 	 * Test the options aspect of the validator
 	 */
 	@Test
-	public void testOptionsValidation() {
+	void testOptionsValidation() {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 		Map<String, String> options = new HashMap<>(6);
 		options.put("1", "Apple");
@@ -162,11 +165,11 @@ public class ValidationUtilTest {
 
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 4);
-		assert(errors.get(0).getValidationError().equals(ValidationError.OPTION));
-		assert(errors.get(1).getValidationError().equals(ValidationError.REQUIRED));
-		assert(errors.get(2).getValidationError().equals(ValidationError.OPTION));
-		assert(errors.get(3).getValidationError().equals(ValidationError.OPTION));
+		assertEquals(4, errors.size());
+		assertEquals(ValidationError.OPTION, errors.get(0).getValidationError());
+		assertEquals(ValidationError.REQUIRED, errors.get(1).getValidationError());
+		assertEquals(ValidationError.OPTION, errors.get(2).getValidationError());
+		assertEquals(ValidationError.OPTION, errors.get(3).getValidationError());
 		
 	}
 	
@@ -176,7 +179,7 @@ public class ValidationUtilTest {
 	 * as the other methods are handled by its parent calss of StringValidator.
 	 */
 	@Test
-	public void testEmailValidators() {
+	void testEmailValidators() {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Successful regex test
@@ -190,11 +193,11 @@ public class ValidationUtilTest {
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 4);
-		assert(errors.get(0).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(1).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(2).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(3).getValidationError().equals(ValidationError.REGEX));
+		assertEquals(4, errors.size());
+		assertEquals(ValidationError.REGEX, errors.get(0).getValidationError());
+		assertEquals(ValidationError.REGEX, errors.get(1).getValidationError());
+		assertEquals(ValidationError.REGEX, errors.get(2).getValidationError());
+		assertEquals(ValidationError.REGEX, errors.get(3).getValidationError());
 		
 	}
 	
@@ -204,7 +207,7 @@ public class ValidationUtilTest {
 	 * as the other methods are handled by its parent calss of StringValidator.
 	 */
 	@Test
-	public void testUUIDValidators() {
+	void testUUIDValidators() {
 		List<ValidationDTO> fields = new ArrayList<>(6);
 
 		// Successful regex test
@@ -219,12 +222,12 @@ public class ValidationUtilTest {
 		fields.add(ValidationDTO.builder().elementId("id").value("FD98aiA-Sf3shef-AN5d6adsf43UF-hfads3shdf-adfafad3J26").type(ValidatorType.UUID).build());
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
-		for (ValidationErrorDTO e : errors) System.out.println(e);
-		assert(errors.size() == 4);
-		assert(errors.get(0).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(1).getValidationError().equals(ValidationError.REGEX));
-		assert(errors.get(2).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(3).getValidationError().equals(ValidationError.RANGE));
+		
+		assertEquals(4, errors.size());
+		assertEquals(ValidationError.REGEX, errors.get(0).getValidationError());
+		assertEquals(ValidationError.REGEX, errors.get(1).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(2).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(3).getValidationError());
 		
 	}
 
@@ -234,7 +237,7 @@ public class ValidationUtilTest {
 	 * and the inability to parse any supplied date to be tested, either by the user or by the system
 	 */
 	@Test
-	public void testDateValidators() {
+	void testDateValidators() {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Successful min, max, and required test, ignoring the regex despite one being passed
@@ -294,13 +297,13 @@ public class ValidationUtilTest {
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 6);
-		assert(errors.get(0).getValidationError().equals(ValidationError.PARSE));
-		assert(errors.get(1).getValidationError().equals(ValidationError.PARSE));
-		assert(errors.get(2).getValidationError().equals(ValidationError.PARSE));
-		assert(errors.get(3).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(4).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(5).getValidationError().equals(ValidationError.REQUIRED));
+		assertEquals(6, errors.size());
+		assertEquals(ValidationError.PARSE, errors.get(0).getValidationError());
+		assertEquals(ValidationError.PARSE, errors.get(1).getValidationError());
+		assertEquals(ValidationError.PARSE, errors.get(2).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(3).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(4).getValidationError());
+		assertEquals(ValidationError.REQUIRED, errors.get(5).getValidationError());
 		
 	}
 
@@ -310,7 +313,7 @@ public class ValidationUtilTest {
 	 * and the inability to parse any supplied date to be tested, either by the user or by the system
 	 */
 	@Test
-	public void testDefaultValidator() {
+	void testDefaultValidator() {
 		List<ValidationDTO> fields = new ArrayList<>(1);
 
 		// Fails due to lack of type
@@ -322,8 +325,8 @@ public class ValidationUtilTest {
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 1);
-		assert(errors.get(0).getValidationError().equals(ValidationError.CATASTROPHE));
+		assertEquals(1, errors.size());
+		assertEquals(ValidationError.CATASTROPHE, errors.get(0).getValidationError());
 		
 	}
 
@@ -333,7 +336,7 @@ public class ValidationUtilTest {
 	 * and the inability to parse any supplied date to be tested, either by the user or by the system
 	 */
 	@Test
-	public void checkDefaultValidatorUnusedMethods() {
+	void checkDefaultValidatorUnusedMethods() {
 		ErrorValidator e = new ErrorValidator();
 		// Neither of these should do anything
 		e.validateMin(null, null);
@@ -346,7 +349,7 @@ public class ValidationUtilTest {
 	 * and the inability to parse any supplied date to be tested, either by the user or by the system
 	 */
 	@Test
-	public void testNumberValidator() {
+	void testNumberValidator() {
 		List<ValidationDTO> fields = new ArrayList<>(7);
 
 		// Succeeds min, max and requierd test, ignoring the regex despite one being passed
@@ -397,11 +400,11 @@ public class ValidationUtilTest {
 		
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(fields);
 		
-		assert(errors.size() == 4);
-		assert(errors.get(0).getValidationError().equals(ValidationError.PARSE));
-		assert(errors.get(1).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(2).getValidationError().equals(ValidationError.RANGE));
-		assert(errors.get(3).getValidationError().equals(ValidationError.REQUIRED));
+		assertEquals(4, errors.size());
+		assertEquals(ValidationError.PARSE, errors.get(0).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(1).getValidationError());
+		assertEquals(ValidationError.RANGE, errors.get(2).getValidationError());
+		assertEquals(ValidationError.REQUIRED, errors.get(3).getValidationError());
 		
 	}
 	
@@ -409,22 +412,9 @@ public class ValidationUtilTest {
 	 * Checks to ensure that an empty list of validatables returns properly.
 	 */
 	@Test
-	public void testNoValidation() {
+	void testNoValidation() {
 		List<ValidationErrorDTO> errors = ValidationUtil.validateData(null);
 		
-		assert(errors.size() == 0);
-	}
-	
-	/**
-	 * Checks that objects can be properly instantiated, even when all they have
-	 * is a single static method.
-	 */
-	@Test
-	public void testInstantiation() {
-		ValidationUtil util = new ValidationUtil();
-		assert(util != null && util.getClass() == ValidationUtil.class);
-		
-		ValidationFactory factory = new ValidationFactory();
-		assert(factory != null && factory.getClass() == ValidationFactory.class);
+		assertTrue(errors.isEmpty());
 	}
 }

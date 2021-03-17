@@ -188,7 +188,7 @@ public class DateFormat {
 	 * @param d Date to be adjusted
 	 * @param field What to adjust (day, month ...)
 	 * @param amount Amount of adjustment
-	 * @return
+	 * @return the adjusted date value
 	 */
 	public static Date adjustDate(Date d, int field, int amount) {
 		if(d==null)
@@ -200,8 +200,8 @@ public class DateFormat {
 	}
 	/**
 	 * Checks the submitted string and if it is a date returns true.  
-	 * @param sDate
-	 * @return
+	 * @param sDate Date in a string format
+	 * @return True if the string is a date.  False otherwise
 	 */
 	public static boolean isDate(String sDate) {
 		Date parsedDate = parseUnknownPattern(sDate);
@@ -210,7 +210,7 @@ public class DateFormat {
 	/**
 	 * Overloaded to take an object and checks to see if it is a date.
 	 * @param oDate Date to check
-	 * @return
+	 * @return True if the object is a date.  False otherwise
 	 */
 	public static boolean isDate(Object oDate) {
 		if (oDate == null) return isDate("");
@@ -218,7 +218,7 @@ public class DateFormat {
 	}
 	/**
 	 * Converts a java.util.Date to a java.sql.Date
-	 * @param val
+	 * @param val Date to be converted
 	 * @return java.sql.Date Object. Null if the value param is null
 	 */
 	public static java.sql.Date formatSQLDate(java.util.Date val) {
@@ -226,7 +226,7 @@ public class DateFormat {
 	}
 	/**
 	 * Converts a java.util.Date to a java.sql.Date
-	 * @param val
+	 * @param val Date to be converted to a sql date
 	 * @param defaultNow Uses current date and time if true
 	 * @return java.sql.Date Object. Null if the value param is null and defaultNow
 	 * is false.  Otherwise, on null, current date and time will be returned
@@ -262,9 +262,9 @@ public class DateFormat {
 	}
 	/**
 	 * Creates a SQL Timestamp out of a String date that matches the supplied pattern
-	 * @param datePattern PatternName
+	 * @param datePattern PatternName Type of pwattern
 	 * @param dateText text to be converted
-	 * @return Timestamp
+	 * @return Timestamp from the provided date as a string
 	 */ 
 	public static Timestamp formatTimestamp(DatePattern datePattern, String dateText) {
 		Date d = formatDate(datePattern,dateText);
@@ -275,7 +275,7 @@ public class DateFormat {
 	 * takes a java.util.Date object and if it's not null converts it to a 
 	 * java.sql.Timestamp, for insertion into DBs.
 	 * @param  dt Date to convert to a timestamp
-	 * @return Timestamp 
+	 * @return Timestamp Converted form a date
 	 */
 	public static Timestamp formatTimestamp(Date dt) {
 		if (dt == null) return null;
@@ -283,7 +283,7 @@ public class DateFormat {
 	}
 	/**
 	 * Returns the current month as an integer,Example: 1 for January, 2 for February....
-	 * @return
+	 * @return The current month
 	 */
 	public static int getCurrentMonth() {
 		return Calendar.getInstance().get(Calendar.MONTH) + 1;
@@ -291,28 +291,28 @@ public class DateFormat {
 
 	/**
 	 * Returns the current year as an integer, Example: 2021,..
-	 * @return
+	 * @return The current year
 	 */
 	public static int getCurrentYear() {
 		return Calendar.getInstance().get(Calendar.YEAR);
 	}
 	/**
 	 * Returns the current day of Week as an integer; example: 1 for Sunday, 2 for Monday......
-	 * @return
+	 * @return Current day of week as an integer
 	 */
 	public static int getCurrentDayOfWeek() {
 		return Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 	}
 	/**
 	 * Returns the current day of a month as an integer, dates in the range of 1-30, 1-31, 1-28, leap year, 1-29
-	 * @return
+	 * @return Current day of month as an integer
 	 */
 	public static int getCurrentDayOfMonth() {
 		return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 	}
 	/**
 	 * Returns the current date as an integer , dates in the range of 1-30, 1-31, 1-28, leap year, 1-29
-	 * @return
+	 * @return The day of the month as an int
 	 */
 	public static int getCurrentDate() {
 		return Calendar.getInstance().get(Calendar.DATE);
@@ -369,6 +369,7 @@ public class DateFormat {
 	/**
 	 * Converts date to UTC as ZonedDateTime object.
 	 * @param date as String and fromZone string in the format
+	 * @param fromZone is the timezone to convert from
 	 * @return returns UTC ZonedDateTime
 	 */
 	public static ZonedDateTime anyZoneToUTC(String date, String fromZone) {
@@ -379,6 +380,7 @@ public class DateFormat {
 	/**
 	 * Converts date to UTC as ZonedDateTime object.
 	 * @param date as Date and fromZone string in the format
+	 * @param fromZone is the timezone to convert from
 	 * @return returns UTC ZonedDateTime
 	 */
 	public static ZonedDateTime anyZoneToUTC(Date date, String fromZone) {	    

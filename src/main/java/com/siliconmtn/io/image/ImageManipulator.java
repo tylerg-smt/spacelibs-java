@@ -28,7 +28,8 @@ public class ImageManipulator {
 	
 	/**
 	 * Constructor requires the path to the image to be manipulated
-	 * @param filePath
+	 * @param filePath Path to the file to be manipulated
+	 * @throws IOException Error thrown trying to manipulate the image
 	 */
 	public ImageManipulator(String filePath) throws IOException {
 		super();
@@ -39,6 +40,7 @@ public class ImageManipulator {
 	/**
 	 * Constructor requires the path to the image to be manipulated
 	 * @param image Java file object with the path to the image
+	 * @throws IOException Error thrown trying to rotate the image
 	 */
 	public ImageManipulator(File image) throws IOException {
 		super();
@@ -52,7 +54,7 @@ public class ImageManipulator {
 	 * Rotates the image
 	 * @param degrees number of degrees to rotate in a clockwise direction
 	 * @return rotated image in a byte array
-	 * @throws IOException 
+	 * @throws IOException Error thrown trying to rotate the image
 	 */
 	public byte[] rotateImage(int degrees) throws IOException {
 		Rotator ir = new Rotator(image);

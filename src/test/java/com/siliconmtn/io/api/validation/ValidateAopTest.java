@@ -1,5 +1,7 @@
 package com.siliconmtn.io.api.validation;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 // Spacelibs
-import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.EndpointRequestException;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
@@ -38,31 +40,24 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
  * @updates:
  ****************************************************************************/
 
-public class ValidateAopTest {
+class ValidateAopTest {
 
 	/**
 	 * Check to see if a succeeding set of validators does nothing
 	 * @throws Throwable
 	 */
 	@Test
-	@Validate
-	public void testValidateAOPPassValidation() throws Throwable {
-		getResults("testValidateAOPPassValidation", true, false, false);
+	void testValidateAOPPassValidation() throws Throwable {
+		getResults("validateTestMethod", true, false, false);
 	}
 	
 	/**
-	 * Check to see if a failing set of validators returns a proper ApiResponse
+	 * Check to see if a failing set of validators returns a proper EndpointResponse
 	 * @throws Throwable
 	 */
 	@Test
-	@Validate
-	public void testValidateAOPFailValidation() throws Throwable {
-		try {
-		getResults("testValidateAOPPassValidation", false, false, false);
-		} catch (ApiRequestException a) {
-			System.out.println(a.getFailedValidations());
-			assert(a.getFailedValidations().size() == 4);
-		}
+	void testValidateAOPFailValidation() throws Throwable {
+		getResults("validateTestMethod", false, false, false);
 	}
 
 	
@@ -71,8 +66,8 @@ public class ValidateAopTest {
 	 * @throws Throwable
 	 */
 	@Test
-	public void testNoValidation() throws Throwable {
-		getResults("testNoValidation", false, false, false);
+	void testNoValidation() throws Throwable {
+		getResults("dontValidateTestMethod", false, false, false);
 	}
 	
 
@@ -82,13 +77,8 @@ public class ValidateAopTest {
 	 * @throws Throwable
 	 */
 	@Test
-	@Validate
-	public void testThrowException() throws Throwable {
-		try {
-			getResults("testThrowException", false, true, false);
-		} catch (Throwable t) {
-			assert(t.getMessage().equals("Data validation preperation failed."));
-		}
+	void testThrowException() throws Throwable {
+		getResults("validateTestMethod", false, true, false);
 	}
 	
 	
@@ -97,9 +87,8 @@ public class ValidateAopTest {
 	 * @throws Throwable
 	 */
 	@Test
-	@Validate
-	public void testNoParser() throws Throwable {
-		getResults("testNoParser", false, false, true);
+	void testNoParser() throws Throwable {
+		getResults("validateTestMethod", false, false, true);
 	}
 	
 	
@@ -111,8 +100,7 @@ public class ValidateAopTest {
 	 * @return
 	 * @throws Throwable
 	 */
-	@Test
-	private void getResults(String methodName, boolean pass, boolean throwError, boolean nullParser) throws Throwable {
+	void getResults(String methodName, boolean pass, boolean throwError, boolean nullParser) throws Throwable {
 
 		ValidateAop validate = new ValidateAop();
 
@@ -122,7 +110,7 @@ public class ValidateAopTest {
         ParserFactory pFact = mock(ParserFactory.class);
         ParserIntfc parser = mock(ParserIntfc.class);
         
-        Method m = this.getClass().getMethod(methodName);
+        Method m = this.getClass().getDeclaredMethod(methodName);
 
         when(joinPoint.getSignature()).thenReturn(signature);
         when(signature.getMethod()).thenReturn(m);
@@ -141,7 +129,26 @@ public class ValidateAopTest {
         validate.request = request;
         validate.pFact = pFact;
         
-        validate.beforeAdvice(joinPoint, "Test");
+        if (throwError || (!pass && !nullParser && !"dontValidateTestMethod".equals(methodName))) {
+            assertThrows(EndpointRequestException.class, () -> validate.beforeAdvice(joinPoint, "Test"));
+        } else {
+        	assertDoesNotThrow(() -> validate.beforeAdvice(joinPoint, "Test"));
+        }
+	}
+	
+	/**
+	 * Blank method used to allow the ValidateAOP to properly get a validate annotation
+	 */
+	@Validate
+	public void validateTestMethod() {
+		// Not Needed
+	}
+	
+	/**
+	 * Blank method used to allow the ValidateAOP to test not getting a validate annotation
+	 */
+	public void dontValidateTestMethod() {
+		// Not Needed
 	}
 	
 	/**

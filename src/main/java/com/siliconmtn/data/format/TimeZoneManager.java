@@ -38,8 +38,8 @@ public class TimeZoneManager {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Retrieves the current list of supported time zones
+	 * @return The current list of supported time zones
 	 */
 	public static List<GenericVO> getTimeZoneList() {
 		List<GenericVO> zones = new ArrayList<>();
@@ -52,8 +52,8 @@ public class TimeZoneManager {
 	
 	/**
 	 * Retrieves the extended data for a given time zone id
-	 * @param timeZoneId
-	 * @return
+	 * @param timeZoneId ID of the timezone to retrieve
+	 * @return Timezone object
 	 */
 	public static TimeZoneVO getTimeZone(String timeZoneId) {
 		return TIME_ZONES.get(timeZoneId);
@@ -61,8 +61,8 @@ public class TimeZoneManager {
 
 	/**
 	 * Returns all of the TimeZone VOs that match the given iso code
-	 * @param isoCode
-	 * @return
+	 * @param isoCode ISO identifier
+	 * @return Collection of timezones that match the code (there is some overlap)
 	 */
 	public static List<TimeZoneVO> getTimeZoneByIsoCode(String isoCode) {
 		List<TimeZoneVO> zones = new ArrayList<>();

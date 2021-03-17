@@ -35,7 +35,7 @@ import lombok.Data;
 @Data
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class ApiResponse {
+public class EndpointResponse {
 
 	// Members
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
@@ -51,7 +51,7 @@ public class ApiResponse {
     /**
      * Sets the current time when initializing
      */
-    private ApiResponse() {
+    private EndpointResponse() {
     	super();
         timestamp = LocalDateTime.now();
         
@@ -61,7 +61,7 @@ public class ApiResponse {
      * Success response with the data and count
      * @param data Object data for the payload to the endpoint
      */
-    public ApiResponse(Object data) {
+    public EndpointResponse(Object data) {
     	this();
     	this.data = data;
     	this.count = 0;
@@ -74,7 +74,7 @@ public class ApiResponse {
      * @param data Object data for the payload to the endpoint
      * @param count Number of items.  Useful with server side pagination
      */
-    public ApiResponse(Object data, int count) {
+    public EndpointResponse(Object data, int count) {
     	this();
     	this.data = data;
     	this.count = count;
@@ -84,19 +84,19 @@ public class ApiResponse {
 
     /**
      * Assigns the HTTP status and the the time
-     * @param status
+     * @param status HttpStatus to return
      */
-    public ApiResponse(HttpStatus status) {
+    public EndpointResponse(HttpStatus status) {
         this();
         this.status = status;
     }
     
     /**
      * Assigns the status, time and exception stuff
-     * @param status
-     * @param ex
+     * @param status HttpStatus to return
+     * @param ex Exception that was thrown
      */
-    public ApiResponse(HttpStatus status, Throwable ex) {
+    public EndpointResponse(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
         this.message = "Unexpected error";
@@ -105,11 +105,11 @@ public class ApiResponse {
 
     /**
      * Assigns all parameters with this constructor
-     * @param status
-     * @param message
-     * @param ex
+     * @param status HttpStatus to return
+     * @param message Error message to display
+     * @param ex Exception that was thrown
      */
-    public ApiResponse(HttpStatus status, String message, Throwable ex) {
+    public EndpointResponse(HttpStatus status, String message, Throwable ex) {
         this();
         this.status = status;
         this.message = message;
@@ -118,7 +118,7 @@ public class ApiResponse {
     
     /**
      * Adds a single failed validation to the collection
-     * @param failedValidation
+     * @param failedValidation Adds a failed validation to the exception
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
     	this.failedValidations.add(failedValidation);
@@ -126,7 +126,7 @@ public class ApiResponse {
     
     /**
      * Adds a all failed validations to the collection
-     * @param failedValidation
+     * @param failedValidations Collection of the failed validations
      */
     public void addFailedValidations(List<ValidationErrorDTO> failedValidations) {
     	this.failedValidations.addAll(failedValidations);

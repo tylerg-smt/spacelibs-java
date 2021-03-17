@@ -21,7 +21,7 @@ import java.util.UUID;
 public class StringUtil {
 
 	/**
-	 * 
+	 * Assign private constructor as all are static
 	 */
 	private StringUtil() {
 		super();
@@ -130,9 +130,9 @@ public class StringUtil {
 	
 	/**
 	 * Returns an array of the index for each of the matching 
-	 * @param str
-	 * @param searchStr
-	 * @return
+	 * @param str String to be indexed
+	 * @param searchStr Value to find inthe provided string
+	 * @return Arrays of indexes for the matches
 	 */
 	public static int[] everyIndexOf(String str, String searchStr) {
 		if (isEmpty(str) || isEmpty(searchStr)) return new int[0];
@@ -151,7 +151,7 @@ public class StringUtil {
 	
 	/**
 	 * Deletes all of the non-alpha (Aa-Zz) and NoN-Numeric (0-9) characters in the data
-	 * @param data 
+	 * @param data String to be parsed
 	 * @return parsed data.
 	 */
 	public static String removeNonAlphaNumeric(String data) {
@@ -181,8 +181,8 @@ public class StringUtil {
 	/**
 	 * returns an obfuscated version of the provided email address.
 	 * e.g.: j*****n@siliconmtn.com
-	 * @param email
-	 * @return
+	 * @param email Email address to be obfuscated
+	 * @return Obfuscated email address
 	 */
 	public static String obfuscateEmail(String email) {
 		if (isEmpty(email)) return email;
@@ -196,7 +196,7 @@ public class StringUtil {
 	
 	/**
 	 * Deletes all of the non-numeric (0-9) characters in the data
-	 * @param data 
+	 * @param data String to be parsed
 	 * @return parsed data.
 	 */
 	public static String removeNonNumeric(String data) {
@@ -296,7 +296,7 @@ public class StringUtil {
 	/**
 	 * Pads the supplied character to fill in the empty spaces.  For example, 
 	 * to create a string with a length of 5, and fill blanks with 0 ... to the 
-	 * left or right<br/>
+	 * left or right
 	 * <p>padLeft("d", "0", 5); </p>
 	 * <p>This will return "0000d"</p>
 	 * <p> If the length of the src String is greater than the length, the
@@ -305,7 +305,7 @@ public class StringUtil {
 	 * @param fill Character to use to pad the string
 	 * @param length final length of the string.  All characters less than the length 
 	 * will be padded with the fill character
-	 * @return
+	 * @return Left padded string
 	 */
 	public static String padLeft(String src, char fill, int length) {
 		return  pad(src, fill, length, false);
@@ -313,14 +313,14 @@ public class StringUtil {
 	
 	/**
 	 * Pads the supplied character to fill in the empty spaces.  For example, 
-	 * to create a string with a length of 5, and fill blanks with 0 ...<br/>
+	 * to create a string with a length of 5, and fill blanks with 0 ...
 	 * This is a function that performs either padding
 	 * @param src Source String to pad
 	 * @param fill Character to use to pad the string
 	 * @param length final length of the string.  All characters less than the length 
 	 * will be padded with the fill character
 	 * @param isPadRight Boolean to determine if the padding is left or right
-	 * @return
+	 * @return Padded String (left or right)
 	 */
 	private static String pad(String src, char fill, int length, boolean isPadRight) {
 		if (src == null) src = ""; 
@@ -341,15 +341,15 @@ public class StringUtil {
 
 	/**
 	 * Pads the supplied character to fill in the empty spaces.  For example, 
-	 * to create a string with a length of 5, and fill blanks with 0 ...<br/>
+	 * to create a string with a length of 5, and fill blanks with 0 ...
 	 * <p>padLeft("d", "0", 5); </p>
 	 * <p>This will return "d0000"</p>
 	 * <p> If the length of the src String is greater than the length, the
 	 * returned string will be truncated</p>
-	 * @param src
-	 * @param fill
-	 * @param length
-	 * @return
+	 * @param src String to be padded
+	 * @param fill Characters to fill the padding
+	 * @param length length of the returned string
+	 * @return Right padded string
 	 */
 	public static String padRight(String src, char fill, int length) {
 		return pad(src, fill, length, true);

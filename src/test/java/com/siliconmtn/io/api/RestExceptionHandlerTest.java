@@ -5,6 +5,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
 //Junit 5
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
@@ -28,18 +29,18 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestExceptionHandlerTest {
+class RestExceptionHandlerTest {
 	
 	/**
 	 * Test handleMissingServletRequestParameter exception
 	 * @throws Exception
 	 */
 	@Test
-	public void testHandleMissingServletRequestParameter() throws Exception {
+	void testHandleMissingServletRequestParameter() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleMissingServletRequestParameter(new MissingServletRequestParameterException("emailAddress", "String"), null, null, null);
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("emailAddress parameter is missing"));
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("emailAddress parameter is missing", ((EndpointResponse)resp.getBody()).getMessage());
 	}
 	
 	/**
@@ -47,7 +48,7 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleHttpMediaTypeNotSupported() throws Exception {
+    void testHandleHttpMediaTypeNotSupported() throws Exception {
 		List<MediaType> approved = new ArrayList<>();
 
 		approved.add(MediaType.APPLICATION_PDF);
@@ -55,9 +56,9 @@ public class RestExceptionHandlerTest {
 		
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleHttpMediaTypeNotSupported(new HttpMediaTypeNotSupportedException(MediaType.IMAGE_PNG, approved), null, null, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.UNSUPPORTED_MEDIA_TYPE));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("image/png media type is not supported. Supported media types are application/pdf, application/json"));
+
+		assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, resp.getStatusCode());
+		assertEquals("image/png media type is not supported. Supported media types are application/pdf, application/json", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -65,15 +66,15 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleMethodArgumentNotValid() throws Exception {
+    void testHandleMethodArgumentNotValid() throws Exception {
 		MethodParameter p = mock(MethodParameter.class);
 		BindingResult b = mock(BindingResult.class);
 		
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleMethodArgumentNotValid(new MethodArgumentNotValidException(p, b), null, null, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Validation error"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("Validation error", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -81,12 +82,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleConstraintViolation() throws Exception {
+    void testHandleConstraintViolation() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleConstraintViolation(new ConstraintViolationException(null));
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Validation error"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("Validation error", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -94,12 +95,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleApiEntityNotFound() throws Exception {
+    void testHandleApiEntityNotFound() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
-		ResponseEntity<Object> resp = rest.handleEntityNotFound(new ApiRequestException("Entity not found", HttpStatus.NOT_FOUND));
-		
-		assert(resp.getStatusCode().equals(HttpStatus.NOT_FOUND));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Entity not found"));
+		ResponseEntity<Object> resp = rest.handleEntityNotFound(new EndpointRequestException("Entity not found", HttpStatus.NOT_FOUND));
+
+		assertEquals(HttpStatus.NOT_FOUND, resp.getStatusCode());
+		assertEquals("Entity not found", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -108,12 +109,12 @@ public class RestExceptionHandlerTest {
 	 */
 	@Test
 	@SuppressWarnings("deprecation")
-    public void testHandleHttpMessageNotReadable() throws Exception {
+    void testHandleHttpMessageNotReadable() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleHttpMessageNotReadable(new HttpMessageNotReadableException("Entity not found"), null, null, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Malformed JSON request"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("Malformed JSON request", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -121,12 +122,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleHttpMessageNotWritable() throws Exception {
+    void testHandleHttpMessageNotWritable() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleHttpMessageNotWritable(new HttpMessageNotWritableException("Cannot write"), null, null, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Error writing JSON output"));
+
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, resp.getStatusCode());
+		assertEquals("Error writing JSON output", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -134,12 +135,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleNoHandlerFoundException() throws Exception {
+    void testHandleNoHandlerFoundException() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleNoHandlerFoundException(new NoHandlerFoundException("POST", "/api/users", null), null, null, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Could not find the POST method for URL /api/users"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("Could not find the POST method for URL /api/users", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -147,12 +148,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleEntityNotFound() throws Exception {
+    void testHandleEntityNotFound() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleEntityNotFound(new EntityNotFoundException("Could not fnd requested entity"));
-		
-		assert(resp.getStatusCode().equals(HttpStatus.NOT_FOUND));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Unexpected error"));
+
+		assertEquals(HttpStatus.NOT_FOUND, resp.getStatusCode());
+		assertEquals("Unexpected error", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -160,12 +161,12 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleDataIntegrityViolation() throws Exception {
+    void testHandleDataIntegrityViolation() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleDataIntegrityViolation(new DataIntegrityViolationException("Data error"), null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Unexpected error"));
+
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, resp.getStatusCode());
+		assertEquals("Unexpected error", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	/**
@@ -173,13 +174,13 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleDataIntegrityConstraintViolation() throws Exception {
+    void testHandleDataIntegrityConstraintViolation() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleDataIntegrityViolation(new DataIntegrityViolationException("Data error", 
 				new ConstraintViolationException(null)) {private static final long serialVersionUID = 1L;}, null);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.CONFLICT));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("Database error"));
+
+		assertEquals(HttpStatus.CONFLICT, resp.getStatusCode());
+		assertEquals("Database error", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	
@@ -188,15 +189,15 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleMethodArgumentTypeMismatch() throws Exception {
+    void testHandleMethodArgumentTypeMismatch() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		MethodParameter m = mock(MethodParameter.class);
 		WebRequest w = mock(WebRequest.class);
 		ResponseEntity<Object> resp = rest.handleMethodArgumentTypeMismatch(new MethodArgumentTypeMismatchException("pie", Integer.class
 				, "emailAddress", m, new Throwable()), w);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("The parameter 'emailAddress' of value 'pie' could not be converted to type 'Integer'"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("The parameter 'emailAddress' of value 'pie' could not be converted to type 'Integer'", ((EndpointResponse)resp.getBody()).getMessage());
     }
 	
 	
@@ -205,15 +206,15 @@ public class RestExceptionHandlerTest {
 	 * @throws Exception
 	 */
 	@Test
-    public void testHandleMethodArgumentTypeMismatchNoType() throws Exception {
+    void testHandleMethodArgumentTypeMismatchNoType() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		MethodParameter m = mock(MethodParameter.class);
 		WebRequest w = mock(WebRequest.class);
 		ResponseEntity<Object> resp = rest.handleMethodArgumentTypeMismatch(new MethodArgumentTypeMismatchException("pie", null
 				, "emailAddress", m, new Throwable()), w);
-		
-		assert(resp.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-		assert(((ApiResponse)resp.getBody()).getMessage().equals("The parameter 'emailAddress' of value 'pie' could not be converted to type ''"));
+
+		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+		assertEquals("The parameter 'emailAddress' of value 'pie' could not be converted to type ''", ((EndpointResponse)resp.getBody()).getMessage());
     }
 
 }
