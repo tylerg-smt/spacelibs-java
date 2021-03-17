@@ -53,7 +53,7 @@ public class ValidateAop {
 	    * @throws ApiRequestException Thrown when data validation fails 
 	    */
 	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate) && args(.., @RequestBody body)")
-	   public void beforeAdvice(JoinPoint pjp, Object body) throws Throwable {
+	   public void beforeAdvice(JoinPoint pjp, Object body) throws ApiRequestException {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
