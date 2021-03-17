@@ -4,30 +4,31 @@ package com.siliconmtn.io.api.validation;
 import java.io.Serializable;
 
 // Lombok 1.18.x
-import lombok.Builder;
 import lombok.Data;
+import lombok.Builder;
 
 /****************************************************************************
  * <b>Title</b>: ValidationErrorDTO.java
- * <b>Project</b>: planit-api
- * <b>Description: </b> DTO to hold the error response for any fields that 
- * failed validation
+ * <b>Project</b>: spacelibs-java
+ * <b>Description: </b> DTO for returning pertinent information as to how a particular
+ * peice of submitted data failed validation.
  * <b>Copyright:</b> Copyright (c) 2021
  * <b>Company:</b> Silicon Mountain Technologies
  * 
- * @author James Camire
+ * @author Eric Damschroder
  * @version 3.0
- * @since Mar 4, 2021
+ * @since Mar 9, 2021
  * @updates:
  ****************************************************************************/
+
 @Data
 @Builder
 public class ValidationErrorDTO implements Serializable {
 	/**
 	 * Enum containing the type of validation failed on the field
 	 */
-	public enum ValidationType {
-		REQUIRED, REGEX, RANGE, OPTION
+	public enum ValidationError {
+		REQUIRED, REGEX, RANGE, OPTION, CATASTROPHE, PARSE
 	}
 
 	/**
@@ -53,6 +54,6 @@ public class ValidationErrorDTO implements Serializable {
 	/**
 	 * The type of validation that failed
 	 */
-	private ValidationType validationType;
+	private ValidationError validationError;
 
 }

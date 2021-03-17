@@ -1,7 +1,7 @@
 package com.siliconmtn.core;
 
 // Junit 5
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 // JDK 11.x
@@ -27,6 +27,7 @@ class HashCodeUtilTest {
 	 */
 	@Test
 	void testHashBoolean() {
+		
 		assertEquals(852, HashCodeUtil.hash(true));
 		assertEquals(851, HashCodeUtil.hash(false));
 	}

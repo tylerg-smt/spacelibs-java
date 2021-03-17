@@ -48,6 +48,8 @@ import com.siliconmtn.data.text.StringUtil;
  ****************************************************************************/
 public class XSSRequestWrapper extends HttpServletRequestWrapper{
 	
+	
+	
 	private byte[] rawData;
     private HttpServletRequest request;
     protected ResettableServletInputStream servletStream;
@@ -55,7 +57,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper{
     /**
      * Constructor that assigns the request object and sets the servlet stream to
      * a resettable input stream defined below
-     * @param request
+     * @param request Http request object to validate/parse
      */
     public XSSRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -65,8 +67,8 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper{
     
     /**
      * Strips the Unwanted tags from the request parameter value
-     * @param value
-     * @return
+     * @param value Body of the message to strip
+     * @return Stripped data elements
      */
     public static String stripXSS(String value) {
         if (StringUtil.isEmpty(value)) return value;
@@ -77,7 +79,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper{
     
     /**
      * Resets the request object utilizing the provided byte array
-     * @param newRawData
+     * @param newRawData Raw request obejct data
      */
     public void resetInputStream(byte[] newRawData) {
         rawData = newRawData;

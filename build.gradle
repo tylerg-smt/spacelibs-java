@@ -30,13 +30,8 @@ repositories {
 
 dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    // implementation 'com.google.guava:guava:28.0-jre'
-    //implementation 'org.apache.commons:commons-lang3:3.11'
-    // implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'commons-beanutils:commons-beanutils-core:1.8.3'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.16'
-	implementation 'org.mockito:mockito-core:3.7.0'
-	implementation 'org.mockito:mockito-inline:3.7.0'
 	implementation 'org.apache.logging.log4j:log4j-api:2.14.0'
 	implementation 'org.apache.logging.log4j:log4j-core:2.14.0'
 	implementation 'org.apache.poi:poi:5.0.0'
@@ -55,11 +50,12 @@ dependencies {
 	implementation 'com.auth0:java-jwt:3.14.0'
 	
     // Testing
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.mockito:mockito-core:3.7.0'
+	implementation 'org.mockito:mockito-inline:3.7.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test'){
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	testImplementation 'org.springframework.security:spring-security-test'
-
 }
 
 // Prevent Spring Boot from looking for a main()
@@ -84,7 +80,10 @@ jacocoTestReport {
 	dependsOn test
 }
 
+// Set the source path to the delombok source so the javadocs will be built properly
 javadoc {
+	source = delombok.sourcepath
+	javadoc.options.addStringOption('Xdoclint:all', '-quiet')
 	options.tags = ["updates", "updates:"]
 }
 

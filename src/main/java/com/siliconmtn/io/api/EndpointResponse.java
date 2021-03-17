@@ -84,7 +84,7 @@ public class EndpointResponse {
 
     /**
      * Assigns the HTTP status and the the time
-     * @param status
+     * @param status HttpStatus to return
      */
     public EndpointResponse(HttpStatus status) {
         this();
@@ -93,8 +93,8 @@ public class EndpointResponse {
     
     /**
      * Assigns the status, time and exception stuff
-     * @param status
-     * @param ex
+     * @param status HttpStatus to return
+     * @param ex Exception that was thrown
      */
     public EndpointResponse(HttpStatus status, Throwable ex) {
         this();
@@ -105,9 +105,9 @@ public class EndpointResponse {
 
     /**
      * Assigns all parameters with this constructor
-     * @param status
-     * @param message
-     * @param ex
+     * @param status HttpStatus to return
+     * @param message Error message to display
+     * @param ex Exception that was thrown
      */
     public EndpointResponse(HttpStatus status, String message, Throwable ex) {
         this();
@@ -118,9 +118,17 @@ public class EndpointResponse {
     
     /**
      * Adds a single failed validation to the collection
-     * @param failedValidation
+     * @param failedValidation Adds a failed validation to the exception
      */
     public void addFailedValidation(ValidationErrorDTO failedValidation) {
-    	failedValidations.add(failedValidation);
+    	this.failedValidations.add(failedValidation);
+    }
+    
+    /**
+     * Adds a all failed validations to the collection
+     * @param failedValidations Collection of the failed validations
+     */
+    public void addFailedValidations(List<ValidationErrorDTO> failedValidations) {
+    	this.failedValidations.addAll(failedValidations);
     }
 }

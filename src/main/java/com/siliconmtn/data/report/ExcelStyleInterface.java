@@ -20,25 +20,28 @@ public interface ExcelStyleInterface {
 
 	/**
 	 * Returns the styles for the excel header row
-	 * @return
+	 * @param wb Workbook to get the styles from
+	 * @return Cellstyle for the provided workbook
 	 */
 	public CellStyle getHeadingStyle(Workbook wb);
 	
 	/**
 	 * Returns the styles for the excel title
-	 * @return
+	 * @param wb Workbook to get the styles from
+	 * @return Cellstyle for the provided workbook
 	 */
 	public CellStyle getTitleStyle(Workbook wb);
 	
 	/**
 	 * Returns the styles for the body title
-	 * @return
+	 * @param wb Workbook to get the styles from
+	 * @return Cellstyle for the provided workbook
 	 */
 	public CellStyle getBodyStyle(Workbook wb);
 	
 	/**
 	 * Defines whether the columns should be expanded by default
-	 * @return
+	 * @return boolean of whether the columns should be expanded
 	 */
 	public boolean getExpandColumnFlag();
 	
@@ -51,19 +54,20 @@ public interface ExcelStyleInterface {
 	
 	/**
 	 * Defines whether the date should be displayed under the title row 
-	 * @return
+	 * @return Whether the date is displayed
 	 */
 	public boolean displayDate();
 	
 	/**
 	 * Sets the flag to display the date on the report header
-	 * @param displayDate
+	 * @param displayDate Sets the display date
 	 */
 	public void setDisplayDate(boolean displayDate);
 
 	/**
-	 * @param wb
-	 * @return
+	 * Style of the date
+	 * @param wb Workbook to get the styles from
+	 * @return Cellstyle for the provided workbook
 	 */
 	public CellStyle getDateStyle(Workbook wb);
 
