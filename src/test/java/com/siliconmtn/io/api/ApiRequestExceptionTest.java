@@ -1,5 +1,7 @@
 package com.siliconmtn.io.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +11,27 @@ import org.springframework.http.HttpStatus;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO;
 import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
 
-public class ApiRequestExceptionTest {
+/****************************************************************************
+ * <b>Title</b>: ApiRequestExceptionTest.java
+ * <b>Project</b>: spacelibs-java
+ * <b>Description: </b> Test the 
+ * <b>Copyright:</b> Copyright (c) 2021
+ * <b>Company:</b> Silicon Mountain Technologies
+ * 
+ * @author Eric Damschroder
+ * @version 3.0
+ * @since Mar 9, 2021
+ * @updates:
+ ****************************************************************************/
+
+class ApiRequestExceptionTest {
 
 	/**
 	 * Test the constructor that accepts a list of validation errors
 	 * @throws Exception
 	 */
 	@Test
-	public void testApiRequestExceptionErrorConsturctor() throws Exception {
+	void testApiRequestExceptionErrorConsturctor() throws Exception {
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		errors.add(ValidationErrorDTO.builder()
 				.elementId("Id")
@@ -31,11 +46,11 @@ public class ApiRequestExceptionTest {
 		
 		ApiRequestException ex = new ApiRequestException("Failure", HttpStatus.ALREADY_REPORTED, errors);
 		
-		assert(ex.getMessage().equals("Failure"));
-		assert(ex.getStatus().equals(HttpStatus.ALREADY_REPORTED));
-		assert(ex.getFailedValidations().size() == 2);
-		assert(ex.getFailedValidations().get(1).getValue().equals("Douglas Adams"));
-		assert(ex.getFailedValidations().get(0).getValidationError().equals(ValidationError.RANGE));
+		assertEquals("Failure", ex.getMessage());
+		assertEquals(HttpStatus.ALREADY_REPORTED, ex.getStatus());
+		assertEquals(2, ex.getFailedValidations().size());
+		assertEquals("Douglas Adams", ex.getFailedValidations().get(1).getValue());
+		assertEquals(ValidationError.RANGE, ex.getFailedValidations().get(0).getValidationError());
 		
 	}
 
@@ -44,13 +59,13 @@ public class ApiRequestExceptionTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testApiRequestExceptionCuaseStatusConsturctor() throws Exception {
+	void testApiRequestExceptionCuaseStatusConsturctor() throws Exception {
 
 		ApiRequestException ex = new ApiRequestException(new Throwable("Failed to do the thing"), HttpStatus.CONFLICT);
 		
-		assert(ex.getCause().getMessage().equals("Failed to do the thing"));
-		assert(ex.getStatus().equals(HttpStatus.CONFLICT));
-		assert(ex.getFailedValidations().size() == 0);
+		assertEquals("Failed to do the thing", ex.getCause().getMessage());
+		assertEquals(HttpStatus.CONFLICT, ex.getStatus());
+		assertEquals(0, ex.getFailedValidations().size());
 		
 		ex.addFailedValidation(ValidationErrorDTO.builder()
 				.elementId("book")
@@ -58,8 +73,8 @@ public class ApiRequestExceptionTest {
 				.validationError(ValidationError.CATASTROPHE)
 				.build());
 
-		assert(ex.getFailedValidations().size() == 1);
-		assert(ex.getFailedValidations().get(0).getValidationError().equals(ValidationError.CATASTROPHE));
+		assertEquals(1, ex.getFailedValidations().size());
+		assertEquals(ValidationError.CATASTROPHE, ex.getFailedValidations().get(0).getValidationError());
 		
 		List<ValidationErrorDTO> errors = new ArrayList<>();
 		errors.add(ValidationErrorDTO.builder()
@@ -75,9 +90,9 @@ public class ApiRequestExceptionTest {
 
 		ex.addAllFailedValidation(errors);
 		
-		assert(ex.getFailedValidations().size() == 3);
-		assert(ex.getFailedValidations().get(1).getValue().equals("42"));
-		assert(ex.getFailedValidations().get(2).getElementId().equals("name"));
+		assertEquals(3, ex.getFailedValidations().size());
+		assertEquals("42", ex.getFailedValidations().get(1).getValue());
+		assertEquals("name", ex.getFailedValidations().get(2).getElementId());
 	}
 
 }

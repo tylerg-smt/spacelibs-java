@@ -1,5 +1,8 @@
 package com.siliconmtn.io.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -20,7 +23,7 @@ import com.siliconmtn.io.api.validation.ValidationErrorDTO.ValidationError;
  * @updates:
  ****************************************************************************/
 
-public class ApiResponseTest {
+class ApiResponseTest {
 	
 	
 	/**
@@ -28,10 +31,10 @@ public class ApiResponseTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testApiReponseDataConstructor() throws Exception {
+	void testApiReponseDataConstructor() throws Exception {
 		ApiResponse dataConstructor = new ApiResponse("Test");
 		
-		assert(dataConstructor.getFailedValidations().size() == 0);
+		assertTrue(dataConstructor.getFailedValidations().isEmpty());
 		
 		dataConstructor.addFailedValidation(ValidationErrorDTO.builder()
 				.elementId("Id")
@@ -39,12 +42,12 @@ public class ApiResponseTest {
 				.validationError(ValidationError.REGEX)
 				.build());
 		
-		assert(dataConstructor.data.equals("Test"));
-		assert(dataConstructor.getCount() == 0);
-		assert(dataConstructor.getStatus().equals(HttpStatus.OK));
-		assert(dataConstructor.isSuccess());
-		assert(dataConstructor.getFailedValidations().size() == 1);
-		assert(dataConstructor.getFailedValidations().get(0).getValidationError().equals(ValidationError.REGEX));
+		assertEquals("Test", dataConstructor.data);
+		assertEquals(0, dataConstructor.getCount());
+		assertEquals(HttpStatus.OK, dataConstructor.getStatus());
+		assertTrue(dataConstructor.isSuccess());
+		assertEquals(1, dataConstructor.getFailedValidations().size());
+		assertEquals(ValidationError.REGEX, dataConstructor.getFailedValidations().get(0).getValidationError());
 		
 	}
 	
@@ -54,12 +57,12 @@ public class ApiResponseTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testApiReponseDataCountConstructor() throws Exception {
+	void testApiReponseDataCountConstructor() throws Exception {
 		ApiResponse dataConstructor = new ApiResponse("Test", 5);
-		assert(dataConstructor.data.equals("Test"));
-		assert(dataConstructor.getCount() == 5);
-		assert(dataConstructor.getStatus().equals(HttpStatus.OK));
-		assert(dataConstructor.isSuccess());
+		assertEquals("Test", dataConstructor.data);
+		assertEquals(5, dataConstructor.getCount());
+		assertEquals(HttpStatus.OK, dataConstructor.getStatus());
+		assertTrue(dataConstructor.isSuccess());
 	}
 
 }

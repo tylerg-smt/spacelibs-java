@@ -1,5 +1,8 @@
 package com.siliconmtn.io.api.validation.factory;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +29,7 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  * @updates:
  ****************************************************************************/
 
-public class ParserFactoryTest {
+class ParserFactoryTest {
 	
 	
 	/**
@@ -35,7 +38,7 @@ public class ParserFactoryTest {
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testParserFactory() throws Exception {
+	void testParserFactory() throws Exception {
 		ParserFactory fact = new ParserFactory();
 		
 		Map<String, String> builderMapper = mock(HashMap.class);
@@ -45,17 +48,17 @@ public class ParserFactoryTest {
 		
 		ReflectionTestUtils.setField(fact, "builderMapper", builderMapper);
 
-		assert(fact.parserDispatcher(null) == null);
-		assert(fact.parserDispatcher("test") == null);
+		assertNull(fact.parserDispatcher(null));
+		assertNull(fact.parserDispatcher("test"));
 		
 		ParserIntfc parser = fact.parserDispatcher("com.fake.class.otherFake");
 		
 		List<ValidationDTO> fields = parser.requestParser("Test");
 		
-		assert(fields.size() == 1);
-		assert(fields.get(0).getValue().equals("Test"));
-		assert(fields.get(0).getElementId().equals("id"));
-		assert(fields.get(0).isRequired());
+		assertEquals(1, fields.size());
+		assertEquals("Test", fields.get(0).getValue());
+		assertEquals("id", fields.get(0).getElementId());
+		assertTrue(fields.get(0).isRequired());
 		
 		try {
 			fact.parserDispatcher("com.fake.class.fakeMethod");
