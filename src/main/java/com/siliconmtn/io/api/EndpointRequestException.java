@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
  * @since Mar 4, 2021
  * @updates:
  ****************************************************************************/
-public class ApiRequestException extends RuntimeException {
+public class EndpointRequestException extends RuntimeException {
 
 	/**
 	 * Serial Version UID
@@ -32,7 +32,7 @@ public class ApiRequestException extends RuntimeException {
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
 	 * @param message
 	 */
-	public ApiRequestException(String message) {
+	public EndpointRequestException(String message) {
 		super(message);
 		this.status = HttpStatus.BAD_REQUEST;
 	}
@@ -42,7 +42,7 @@ public class ApiRequestException extends RuntimeException {
 	 * @param message Error message to display
 	 * @param status HttpStatus to send
 	 */
-	public ApiRequestException(String message, HttpStatus status) {
+	public EndpointRequestException(String message, HttpStatus status) {
 		super(message);
 		this.status = status;
 	}
@@ -52,7 +52,7 @@ public class ApiRequestException extends RuntimeException {
 	 * @param cause Exception that was thrown
 	 * @param status HttpStatus to be applied
 	 */
-	public ApiRequestException(Throwable cause, HttpStatus status) {
+	public EndpointRequestException(Throwable cause, HttpStatus status) {
 		super(cause);
 		this.status = status;
 	}
@@ -63,7 +63,7 @@ public class ApiRequestException extends RuntimeException {
 	 * @param cause Exception that was thrown
 	 * @param status HttpStatus to be applied
 	 */
-	public ApiRequestException(String message, Throwable cause, HttpStatus status) {
+	public EndpointRequestException(String message, Throwable cause, HttpStatus status) {
 		super(message, cause);
 		this.status = status;
 	}

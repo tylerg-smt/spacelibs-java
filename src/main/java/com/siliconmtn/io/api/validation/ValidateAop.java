@@ -11,7 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 // Spacelibs 1.0
-import com.siliconmtn.io.api.ApiRequestException;
+import com.siliconmtn.io.api.EndpointRequestException;
 
 // Lombok 1.18.x
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +38,7 @@ public class ValidateAop {
 	    * before a selected method execution.
 	    */
 	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate)")
-	   public void aroundAdvice(JoinPoint jp) throws ApiRequestException {
+	   public void aroundAdvice(JoinPoint jp) throws EndpointRequestException {
 		   Method m = MethodSignature.class.cast(jp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
