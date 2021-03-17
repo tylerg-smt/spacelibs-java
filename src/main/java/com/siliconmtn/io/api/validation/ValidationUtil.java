@@ -24,6 +24,8 @@ import com.siliconmtn.io.api.validation.validator.ValidatorIntfc;
 
 public class ValidationUtil {
 	
+	private ValidationUtil() {/*Hides public constructor*/}
+	
 	/**
 	 * Loop through the supplied list ValidationDTOs and run them through the proper validation procedures.
 	 * @param fields List of ValidationDTOs to be run through the validation process.
@@ -35,7 +37,7 @@ public class ValidationUtil {
 		if (fields == null) return errors;
 		
 		for (ValidationDTO field : fields) {
-			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());;
+			ValidatorIntfc validator = ValidationFactory.getValidator(field.getType());
 			errors.addAll(validator.validate(field));
 		}
 		

@@ -51,13 +51,13 @@ public class ValidateAop {
 	 * @throws Throwable 
 	    */
 	   @Before("@annotation(com.siliconmtn.io.api.validation.Validate) && args(.., @RequestBody body)")
-	   public void beforeAdvice(JoinPoint pjp, Object body) throws Throwable {
+	   public void beforeAdvice(JoinPoint pjp, Object body) throws ApiRequestException {
 		   Method m = MethodSignature.class.cast(pjp.getSignature()).getMethod();
 		   Validate validate = m.getAnnotation(Validate.class);
 		   
 		   if (validate != null) {
 			   List<ValidationErrorDTO> errors = validateReponse(body,  m.getDeclaringClass().getName() + "." + m.getName());
-			   if (errors.size() > 0) {
+			   if (!errors.isEmpty()) {
 				   throw new ApiRequestException("Failed to validate request", errors);
 			   }
 		   }

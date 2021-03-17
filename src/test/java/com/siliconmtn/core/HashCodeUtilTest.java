@@ -8,9 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.siliconmtn.io.api.validation.factory.ParserFactory;
 
 /****************************************************************************
  * <b>Title</b>: HashCodeUtilTest.java

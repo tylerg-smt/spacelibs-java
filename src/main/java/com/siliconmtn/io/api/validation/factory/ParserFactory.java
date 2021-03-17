@@ -50,7 +50,7 @@ public class ParserFactory {
 		
 		try {
 			Class<?> c = Class.forName(parserClassName);
-			return (ParserIntfc) c.newInstance(); 
+			return (ParserIntfc) c.getDeclaredConstructor().newInstance(); 
 		} catch (Exception e) {
 			throw new ApiRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
