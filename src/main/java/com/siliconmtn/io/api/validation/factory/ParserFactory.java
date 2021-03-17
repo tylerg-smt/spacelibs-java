@@ -4,7 +4,9 @@ package com.siliconmtn.io.api.validation.factory;
 import java.util.Map;
 
 // Spring 5.3.x
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,9 @@ public class ParserFactory {
 	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
 	
+	@Autowired
+	private  AutowireCapableBeanFactory autowireCapableBeanFactory;
+	
 	/**
 	 * Checks the parserMapper property in the application's config file for the parser associated with
 	 * the passed classname.methodname key.
@@ -51,7 +56,9 @@ public class ParserFactory {
 		
 		try {
 			Class<?> c = Class.forName(parserClassName);
-			return (ParserIntfc) c.getConstructor().newInstance(); 
+	        ParserIntfc parser = (ParserIntfc) c.getConstructor().newInstance();
+	        autowireCapableBeanFactory.autowireBean(parser);
+	        return parser; 
 		} catch (Exception e) {
 			throw new ApiRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

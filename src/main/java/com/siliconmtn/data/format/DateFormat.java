@@ -162,9 +162,7 @@ public class DateFormat {
 		Date theDate = null;
 		try {
 			theDate = formatter.parse(dateText);
-		} catch (Exception e) {
-			log.error("Unable to convert date", e);
-		}
+		} catch (Exception e) { /* nothing to do */ }
 		
 		return theDate;
 	}

@@ -8,14 +8,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 // Spring 5.5.x
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.aspectj.lang.JoinPoint;
-
+import org.springframework.transaction.annotation.Transactional;
 
 // Spacelibs 1.0
 import com.siliconmtn.io.api.ApiRequestException;
@@ -36,7 +35,7 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  * @updates:
  ****************************************************************************/
 @Aspect
-@Component
+@Transactional
 public class ValidateAop {
 	
 	@Autowired
@@ -57,7 +56,7 @@ public class ValidateAop {
 		   
 		   if (validate != null) {
 			   List<ValidationErrorDTO> errors = validateReponse(body,  m.getDeclaringClass().getName() + "." + m.getName());
-			   if (errors.size() > 0) {
+			   if (!errors.isEmpty()) {
 				   throw new ApiRequestException("Failed to validate request", errors);
 			   }
 		   }
@@ -82,6 +81,7 @@ public class ValidateAop {
 				
 				fields = parser.requestParser(body);
 			} catch (Exception e) {
+				e.printStackTrace();
 				throw new ApiRequestException("Data validation preperation failed.", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 			} 
 			
