@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UUIDValidator extends StringValidator {
 	
-	public static final String UUID_REGEX = "[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*";
+	public static final String UUID_REGEX = "^[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*-[A-za-z0-9]*$";
 	public static final String UUID_LENGTH = "36";
 	
 
