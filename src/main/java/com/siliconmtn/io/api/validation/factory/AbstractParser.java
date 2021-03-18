@@ -1,13 +1,13 @@
 package com.siliconmtn.io.api.validation.factory;
 
 // JDK 11.x
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 // Spacelibs java
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
 /****************************************************************************
@@ -85,7 +85,7 @@ public abstract class AbstractParser implements ParserIntfc {
 	 * @see com.siliconmtn.io.api.validation.factory.ParserIntfc#requestParser(java.lang.Object)
 	 */
 	@Override
-	public List<ValidationDTO> requestParser(Object dataElement) throws JsonProcessingException {
+	public List<ValidationDTO> requestParser(Object dataElement) throws IOException {
 		return new ArrayList<>();
 	}
 
