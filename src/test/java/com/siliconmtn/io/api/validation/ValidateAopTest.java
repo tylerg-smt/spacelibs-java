@@ -36,7 +36,8 @@ import org.aspectj.lang.reflect.MethodSignature;
  * @author Eric Damschroder
  * @version 3.0
  * @since Mar 16, 2021
- * @updates:
+ * updates:
+ * March 18 - James Camire - Rewrote the test to accomodate for API changes
  ****************************************************************************/
 
 class ValidateAopTest {
