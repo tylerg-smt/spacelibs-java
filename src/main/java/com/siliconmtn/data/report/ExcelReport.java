@@ -357,7 +357,7 @@ public class ExcelReport extends AbstractReport {
 		if (value == null) value = "";
 
 		// Determines the type of data nd csts it into the cell
-		if (Pattern.matches("^[+-]?(?:\\d*\\.)?\\d+$", value.toString())) {
+		if (Pattern.matches("^[+-]?\\d*\\.?\\d+$", value.toString())) {
 			Number num = NumberUtil.getNumber(value.toString());
 			if (num instanceof Long) {
 				c.setCellValue(num.longValue());
