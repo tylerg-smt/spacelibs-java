@@ -7,7 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.siliconmtn.io.api.EndpointRequestException;
 import com.siliconmtn.io.api.validation.factory.ParserFactory;
 import com.siliconmtn.io.api.validation.factory.ParserIntfc;
+import com.siliconmtn.io.api.validation.factory.AbstractParser.AttributeKey;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 import com.siliconmtn.io.api.validation.validator.ValidatorIntfc.ValidatorType;
 
@@ -103,7 +106,8 @@ class ValidateAopTest {
 	void getResults(String methodName, boolean pass, boolean throwError, boolean nullParser) throws Throwable {
 
 		ValidateAop validate = new ValidateAop();
-
+		Map<AttributeKey, Object> attributes = new EnumMap<>(AttributeKey.class);
+		attributes.put(AttributeKey.PATH_VAR, "test");
         JoinPoint joinPoint = mock(JoinPoint.class);
         MethodSignature signature = mock(MethodSignature.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -115,9 +119,9 @@ class ValidateAopTest {
         when(joinPoint.getSignature()).thenReturn(signature);
         when(signature.getMethod()).thenReturn(m);
         if (nullParser) {
-            when(pFact.parserDispatcher("com.siliconmtn.io.api.validation.ValidateAopTest." + methodName)).thenReturn(null);
+            when(pFact.parserDispatcher("com.siliconmtn.io.api.validation.ValidateAopTest." + methodName,attributes)).thenReturn(null);
         } else {
-            when(pFact.parserDispatcher("com.siliconmtn.io.api.validation.ValidateAopTest." + methodName)).thenReturn(parser);
+            when(pFact.parserDispatcher("com.siliconmtn.io.api.validation.ValidateAopTest." + methodName,attributes)).thenReturn(parser);
         }
         
         if (throwError) {
@@ -130,9 +134,9 @@ class ValidateAopTest {
         validate.pFact = pFact;
         
         if (throwError || (!pass && !nullParser && !"dontValidateTestMethod".equals(methodName))) {
-            assertThrows(EndpointRequestException.class, () -> validate.beforeAdvice(joinPoint, "Test"));
+            assertThrows(EndpointRequestException.class, () -> validate.beforeAdvice(joinPoint, "Test", "Test1"));
         } else {
-        	assertDoesNotThrow(() -> validate.beforeAdvice(joinPoint, "Test"));
+        	assertDoesNotThrow(() -> validate.beforeAdvice(joinPoint, "Test", "Test"));
         }
 	}
 	
