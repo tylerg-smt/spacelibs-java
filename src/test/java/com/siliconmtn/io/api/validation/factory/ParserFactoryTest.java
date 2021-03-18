@@ -7,16 +7,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.EnumMap;
 // JDK 11.x
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Spacelibs 1.x
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+
+//Spacelibs 1.0
 import com.siliconmtn.io.api.EndpointRequestException;
+import com.siliconmtn.io.api.validation.factory.AbstractParser.AttributeKey;
 import com.siliconmtn.io.api.validation.validator.ValidationDTO;
 
 
@@ -32,10 +39,12 @@ import com.siliconmtn.io.api.validation.validator.ValidationDTO;
  * @since Mar 16, 2021
  * @updates:
  ****************************************************************************/
-
+@ExtendWith(SpringExtension.class)
 class ParserFactoryTest {
 	
-	
+	@InjectMocks
+	private ParserFactory parserFactory;
+		
 	/**
 	 * Test the parser factory to ensure it functions as desired
 	 * @throws Exception
@@ -44,26 +53,28 @@ class ParserFactoryTest {
 	@Test
 	void testParserFactory() throws Exception {
 		ParserFactory fact = new ParserFactory();
+		fact.autowireCapableBeanFactory = mock(AutowireCapableBeanFactory.class);
+		Map<AttributeKey, Object> attributes = new EnumMap<>(AttributeKey.class);
+		attributes.put(AttributeKey.PATH_VAR, "test");
 		
 		Map<String, String> builderMapper = mock(HashMap.class);
 		when(builderMapper.get("test")).thenReturn("");
 		when(builderMapper.get("com.fake.class.fakeMethod")).thenReturn("nothing");
 		when(builderMapper.get("com.fake.class.otherFake")).thenReturn("com.siliconmtn.io.api.validation.TestParser");
-		
 		ReflectionTestUtils.setField(fact, "builderMapper", builderMapper);
 
-		assertNull(fact.parserDispatcher(null));
-		assertNull(fact.parserDispatcher("test"));
-		
-		ParserIntfc parser = fact.parserDispatcher("com.fake.class.otherFake");
-		
+		assertNull(fact.parserDispatcher(null, attributes));
+		assertNull(fact.parserDispatcher("test", attributes));
+
+		ParserIntfc parser = fact.parserDispatcher("com.fake.class.otherFake", attributes);
+
 		List<ValidationDTO> fields = parser.requestParser("Test");
-		
+
 		assertEquals(1, fields.size());
 		assertEquals("Test", fields.get(0).getValue());
 		assertEquals("id", fields.get(0).getElementId());
 		assertTrue(fields.get(0).isRequired());
-		assertThrows(EndpointRequestException.class,	() -> fact.parserDispatcher("com.fake.class.fakeMethod"));
+		assertThrows(EndpointRequestException.class, () -> fact.parserDispatcher("com.fake.class.fakeMethod",attributes));
 		
 	}
 

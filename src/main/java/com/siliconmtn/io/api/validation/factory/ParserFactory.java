@@ -4,7 +4,9 @@ package com.siliconmtn.io.api.validation.factory;
 import java.util.Map;
 
 // Spring 5.3.x
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 // Spacelibs
 import com.siliconmtn.data.text.StringUtil;
 import com.siliconmtn.io.api.EndpointRequestException;
+import com.siliconmtn.io.api.validation.factory.AbstractParser.AttributeKey;
 
 /****************************************************************************
  * <b>Title</b>: ParserFactory.java
@@ -37,22 +40,32 @@ public class ParserFactory {
 	@Value("#{${parserMapper}}") 
 	private Map<String,String> builderMapper;
 	
+	@Autowired
+	protected AutowireCapableBeanFactory autowireCapableBeanFactory;
+	
 	/**
 	 * Checks the parserMapper property in the application's config file for the parser associated with
 	 * the passed classname.methodname key.
 	 * @param controllerName the classname.methodname combo key for the parser we are looking for
+	 * @param attributes map of attributes from endpoint other than the body
 	 * @return ParserIntfc that will be used to parse the request body into ValidationDTOs
 	 * @throws EndpointRequestException When unable to create an instance of the controller name
 	 */
-	public ParserIntfc parserDispatcher(String controllerName) throws EndpointRequestException {
-		String parserClassName=builderMapper.get(controllerName);
-		if (StringUtil.isEmpty(parserClassName)) return null;
-		
+	public ParserIntfc parserDispatcher(String controllerName, Map<AttributeKey, Object> attributes)
+			throws EndpointRequestException {
+		String parserClassName = builderMapper.get(controllerName);
+		if (StringUtil.isEmpty(parserClassName))
+			return null;
+
 		try {
 			Class<?> c = Class.forName(parserClassName);
-			return (ParserIntfc) c.getDeclaredConstructor().newInstance(); 
+			ParserIntfc parser = (ParserIntfc) c.getDeclaredConstructor().newInstance();
+			parser.setAttributes(attributes);
+			autowireCapableBeanFactory.autowireBean(parser);
+			return parser;
 		} catch (Exception e) {
-			throw new EndpointRequestException("Failed to create data parser", e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new EndpointRequestException("Failed to create data parser", e.getCause(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

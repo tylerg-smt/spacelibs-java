@@ -38,7 +38,7 @@ public class EndpointRequestException extends RuntimeException {
 	/**
 	 * Collection of failed validations
 	 */
-    protected final List<ValidationErrorDTO> failedValidations;
+    private final List<ValidationErrorDTO> failedValidations;
 
 	/**
 	 * Error message to display.  Status set to HttpStatus.BAD_REQUEST
