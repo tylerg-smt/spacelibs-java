@@ -1,5 +1,6 @@
 package com.siliconmtn.io.api.validation.factory;
 
+import java.io.IOException;
 // JDK 11.x
 import java.util.List;
 import java.util.Map;
@@ -62,5 +63,5 @@ public interface ParserIntfc {
 	 * @return Collection of fields to be validated.  Empty List if none
 	 * @throws JsonProcessingException Throws parsing error if data can't be processed
 	 */
-	List<ValidationDTO> requestParser(Object dataElement) throws JsonProcessingException;
+	List<ValidationDTO> requestParser(Object dataElement) throws IOException;
 }
