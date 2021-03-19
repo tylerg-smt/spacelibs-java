@@ -22,6 +22,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import lombok.extern.log4j.Log4j2;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -38,7 +41,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * @since Mar 4, 2021
  * @updates:
  ****************************************************************************/
-
+@Log4j2
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -109,7 +112,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
-        EndpointResponse apiErrorResponse = new EndpointResponse(BAD_REQUEST);
+    	log.error(ex);
+    	EndpointResponse apiErrorResponse = new EndpointResponse(BAD_REQUEST);
         apiErrorResponse.setMessage("Validation error");
         return buildResponseEntity(apiErrorResponse);
     }
@@ -123,7 +127,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(EndpointRequestException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EndpointRequestException ex) {
-        EndpointResponse apiErrorResponse = new EndpointResponse(NOT_FOUND);
+    	log.error(ex);
+    	EndpointResponse apiErrorResponse = new EndpointResponse(NOT_FOUND);
         apiErrorResponse.setMessage(ex.getMessage());
         apiErrorResponse.setStatus(ex.getStatus());
         apiErrorResponse.addFailedValidations(ex.getFailedValidations());
@@ -186,6 +191,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+    	log.error(ex);
         return buildResponseEntity(new EndpointResponse(HttpStatus.NOT_FOUND, ex));
     }
 
@@ -198,7 +204,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex,WebRequest request) {
-        if (ex.getCause() instanceof ConstraintViolationException) {
+    	log.error(ex);
+    	if (ex.getCause() instanceof ConstraintViolationException) {
             return buildResponseEntity(new EndpointResponse(HttpStatus.CONFLICT, "Database error", ex.getCause()));
         }
         return buildResponseEntity(new EndpointResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex));
@@ -214,6 +221,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
                                                                       WebRequest request) {
+    	log.error(ex);
         EndpointResponse apiErrorResponse = new EndpointResponse(BAD_REQUEST);
         Class<?> type = ex.getRequiredType();
         String name = type == null ? "" : type.getSimpleName();
