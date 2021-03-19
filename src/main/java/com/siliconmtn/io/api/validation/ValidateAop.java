@@ -10,10 +10,9 @@ import java.util.Map;
 // JEE 7.x
 import javax.servlet.http.HttpServletRequest;
 
-
+import org.aspectj.lang.JoinPoint;
 // Spring 5.5.x
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +99,7 @@ public class ValidateAop {
 
 			fields = parser.requestParser(body);
 		} catch (Exception e) {
-			throw new EndpointRequestException("Data validation preperation failed.", e.getCause(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new EndpointRequestException("Data validation preperation failed.", e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		return ValidationUtil.validateData(fields);
