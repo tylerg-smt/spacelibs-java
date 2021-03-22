@@ -71,7 +71,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper{
     public static String stripXSS(String value) {
         if (StringUtil.isEmpty(value)) return value;
         
-        value = Encode.forJava(value).replace("\0", "");
+        value = Encode.forCDATA(value).replace("\0", "");
         return Jsoup.clean(value, Whitelist.none());
     }
     
