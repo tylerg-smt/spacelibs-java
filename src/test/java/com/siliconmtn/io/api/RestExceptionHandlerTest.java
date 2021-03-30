@@ -33,6 +33,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.siliconmtn.io.api.security.SecurityAuthorizationException;
+
 import java.lang.reflect.Method;
 // JDK 11.x
 import java.util.ArrayList;
@@ -329,6 +331,17 @@ class RestExceptionHandlerTest {
 		ResponseEntity<Object> resp = rest.handleAsyncRequestTimeoutException(new AsyncRequestTimeoutException(), null, HttpStatus.BAD_REQUEST, null);
 		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
 		assertEquals("Request Timed Out", ((EndpointResponse)resp.getBody()).getMessage());
+	}
+
+	/**
+	 * Test method for {@link com.siliconmtn.io.api.RestExceptionHandler#handleSecurityAuthorizationException(com.siliconmtn.io.api.security.SecurityAuthorizationException)}.
+	 */
+	@Test
+	public void testHandleSecurityAuthorizationException() throws Exception {
+		RestExceptionHandler  rest = new RestExceptionHandler();
+		ResponseEntity<Object> resp = rest.handleSecurityAuthorizationException(new SecurityAuthorizationException("test"));
+		assertEquals(HttpStatus.FORBIDDEN, resp.getStatusCode());
+		assertEquals("test", ((EndpointResponse)resp.getBody()).getMessage());
 	}
 
 }
