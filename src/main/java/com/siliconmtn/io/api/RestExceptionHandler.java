@@ -26,6 +26,9 @@ import org.springframework.web.context.request.async.AsyncRequestTimeoutExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.siliconmtn.io.api.security.SecurityAuthorizationException;
+
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -287,6 +290,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         apiErrorResponse.setMessage(ex.getMessage());
         apiErrorResponse.setStatus(ex.getStatus());
         apiErrorResponse.addFailedValidations(ex.getFailedValidations());
+        return buildResponseEntity(apiErrorResponse);
+    }
+    
+    /**
+     * Handles SecurityAuthorizationException. This exception is thrown when 
+     * a malformed or malicious request is made and trapped
+     *
+     * @param ex the SecurityAuthorizationException
+     * @return the ApiErrorResponse object
+     */
+    @ExceptionHandler(SecurityAuthorizationException.class)
+    protected ResponseEntity<Object> handleSecurityAuthorizationException(SecurityAuthorizationException ex) {
+    	log.error(ex);
+    	EndpointResponse apiErrorResponse = new EndpointResponse(NOT_FOUND);
+        apiErrorResponse.setMessage(ex.getMessage());
+        apiErrorResponse.setStatus(HttpStatus.FORBIDDEN);
         return buildResponseEntity(apiErrorResponse);
     }
 
