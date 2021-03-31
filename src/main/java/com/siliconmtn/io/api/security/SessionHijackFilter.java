@@ -10,15 +10,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 // Spring 5.x
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 // Spacelibs 1.x
 import com.siliconmtn.data.text.StringUtil;
+import com.siliconmtn.io.api.EndpointResponse;
 import com.siliconmtn.io.http.HttpHeaders;
 
 /****************************************************************************
@@ -56,19 +59,33 @@ public class SessionHijackFilter implements Filter {
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
     @Override
-    public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
         throws IOException, ServletException {
     	
     	// Cast the request and get the session
     	HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();
+        HttpServletResponse response = (HttpServletResponse)res;
         
         // Determine if the session is new and either add to session or compare
-        if (session.isNew()) assignLocationToSession(request, session);
-        else validateUserInfo(request, session);
-        
-        // Pass along to next process in chain
-        chain.doFilter(request, response);
+        if (session.isNew()) {
+        	assignLocationToSession(request, session);
+        	
+        	// Pass along to next process in chain
+            chain.doFilter(request, response);
+        } else {
+        	try {
+        		validateUserInfo(request, session);
+        		
+            	// Pass along to next process in chain
+                chain.doFilter(request, response);
+        	} catch (Exception e) {
+        		EndpointResponse epres = new EndpointResponse(HttpStatus.FORBIDDEN);
+        		epres.setMessage(e.getMessage());
+        		response.setContentType("application/json");
+        		response.getOutputStream().write(epres.toString().getBytes());
+        	}
+        }
     }
     
 	/**
@@ -91,8 +108,9 @@ public class SessionHijackFilter implements Filter {
 	 * Checks to make sure the user's ip and user agent haven't changed
 	 * @param request Http Request Object
 	 * @param session User Session
+	 * @throws SecurityAuthorizationException 
 	 */
-	protected void validateUserInfo(HttpServletRequest request, HttpSession session) {
+	protected void validateUserInfo(HttpServletRequest request, HttpSession session) throws SecurityAuthorizationException {
 		String addr = request.getHeader(HttpHeaders.X_FORWARDED_FOR);
 		if (StringUtil.isEmpty(addr)) addr = request.getRemoteAddr();
 		
