@@ -14,7 +14,7 @@ package com.siliconmtn.io.api.security;
  * <b>updates:</b>
  * 
  ****************************************************************************/
-public class SecurityAuthorizationException extends RuntimeException {
+public class SecurityAuthorizationException extends Exception {
 	/**
 	 * 
 	 */

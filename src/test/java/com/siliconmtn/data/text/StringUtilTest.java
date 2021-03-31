@@ -2,6 +2,7 @@ package com.siliconmtn.data.text;
 
 // Junit 5
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +12,13 @@ import java.util.UUID;
 // Mockito 3.7.0
 import org.mockito.Mockito;
 
+// Jackson 2.x
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.siliconmtn.data.bean.GenericVO;
+
 // Space Libs 1.x
 import com.siliconmtn.data.tree.Node;
-
 
 /****************************************************************************
  * <b>Title</b>: StringUtilTest.java
@@ -233,5 +238,32 @@ class StringUtilTest {
 		assertEquals("", StringUtil.defaultString(""));
 		assertEquals("", StringUtil.defaultString("   "));
 		assertEquals("hello", StringUtil.defaultString("hello"));
+	}
+
+	/**
+	 * Test method for {@link com.siliconmtn.data.text.StringUtil#getJsonString(java.lang.Object)}.
+	 */
+	@Test
+	void testGetJsonString() throws Exception {
+		GenericVO gvo = new GenericVO();
+		gvo.setKey("SOME_NEW_KEY");
+		gvo.setValue("SOME_NEW_VALUE");
+		
+		String json = StringUtil.getJsonString(gvo);
+		assertTrue(json.indexOf("SOME_NEW_KEY") > -1);
+		assertTrue(json.indexOf("SOME_NEW_VALUE") > -1);
+	}
+	
+	/**
+	 * Test method for {@link com.siliconmtn.data.text.StringUtil#getJsonString(java.lang.Object)}.
+	 */
+	@Test
+	void testGetJsonStringError() throws Exception {
+		ObjectMapper om = mock(ObjectMapper.class);
+		when(om.writeValueAsString(Object.class)).thenThrow(new JsonProcessingException("") {
+			private static final long serialVersionUID = -9027563449231916877L;
+		});
+		
+		assertEquals("", StringUtil.getJsonString(new Object()));
 	}
 }

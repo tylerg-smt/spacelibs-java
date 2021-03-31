@@ -2,19 +2,21 @@ package com.siliconmtn.io.api.security;
 
 // Jee 7.x
 import javax.servlet.FilterChain;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 // Junit 5
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // Spacelibs 1.x
+import com.siliconmtn.io.ServletOutputStreamMock;
 import com.siliconmtn.io.http.HttpHeaders;
 
 /****************************************************************************
@@ -34,7 +36,7 @@ class SessionHijackFilterTest {
 	// Members
 	private SessionHijackFilter shj;
 	private HttpServletRequest req;
-	private ServletResponse response;
+	private HttpServletResponse response;
 	private FilterChain chain;
 	private HttpSession session; 
 	
@@ -43,7 +45,7 @@ class SessionHijackFilterTest {
 		shj = new SessionHijackFilter();
         //ServletRequest req = mock(ServletRequest.class);
         req = mock(HttpServletRequest.class);
-        response = mock(ServletResponse.class);
+        response = mock(HttpServletResponse.class);
         chain = mock(FilterChain.class);
         session = mock(HttpSession.class);
 	}
@@ -117,15 +119,17 @@ class SessionHijackFilterTest {
 	 */
 	@Test
 	void testDoFilterExistingMismatchIP() throws Exception {
-        
+        ServletOutputStream sos = new ServletOutputStreamMock();
         when(req.getSession()).thenReturn(session);
         when(req.getRemoteAddr()).thenReturn("127.0.0.1");
 		when(session.getAttribute(SessionHijackFilter.USER_IP_ADDRESS)).thenReturn("128.0.0.1");
 		when(session.getAttribute(SessionHijackFilter.USER_AGENT)).thenReturn("MyBrowser");
 		when(req.getHeader(HttpHeaders.USER_AGENT)).thenReturn("MyBrowser");
         when(session.isNew()).thenReturn(false);
-        
-		assertThrows(SecurityAuthorizationException.class, ()-> shj.doFilter(req, response, chain));
+        when(response.getOutputStream()).thenReturn(sos);
+        shj.doFilter(req, response, chain);
+        System.out.println("SOS: " + sos.toString());
+        assertTrue(sos.toString().indexOf("IP Address Changed") > -1);
 	}
 
 	
@@ -134,14 +138,16 @@ class SessionHijackFilterTest {
 	 */
 	@Test
 	void testDoFilterExistingMismatchUA() throws Exception {
-        
+		ServletOutputStream sos = new ServletOutputStreamMock();
         when(req.getSession()).thenReturn(session);
         when(req.getRemoteAddr()).thenReturn("127.0.0.1");
 		when(session.getAttribute(SessionHijackFilter.USER_IP_ADDRESS)).thenReturn("127.0.0.1");
 		when(session.getAttribute(SessionHijackFilter.USER_AGENT)).thenReturn("MyBrowser");
 		when(req.getHeader(HttpHeaders.USER_AGENT)).thenReturn("YourBrowser");
         when(session.isNew()).thenReturn(false);
+        when(response.getOutputStream()).thenReturn(sos);
+        shj.doFilter(req, response, chain);
         
-		assertThrows(SecurityAuthorizationException.class, ()-> shj.doFilter(req, response, chain));
+        assertTrue(sos.toString().indexOf("User Agent Changed") > -1);
 	}
 }
