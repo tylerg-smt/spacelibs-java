@@ -337,7 +337,7 @@ class RestExceptionHandlerTest {
 	 * Test method for {@link com.siliconmtn.io.api.RestExceptionHandler#handleSecurityAuthorizationException(com.siliconmtn.io.api.security.SecurityAuthorizationException)}.
 	 */
 	@Test
-	public void testHandleSecurityAuthorizationException() throws Exception {
+	void testHandleSecurityAuthorizationException() throws Exception {
 		RestExceptionHandler  rest = new RestExceptionHandler();
 		ResponseEntity<Object> resp = rest.handleSecurityAuthorizationException(new SecurityAuthorizationException("test"));
 		assertEquals(HttpStatus.FORBIDDEN, resp.getStatusCode());
