@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 // Mockito 3.7.0
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 // Space Libs 1.x
@@ -31,10 +30,8 @@ import com.siliconmtn.data.tree.Node;
  ****************************************************************************/
 class StringUtilTest {
 
-	@Mock
-	Node mockNode = Mockito.mock(Node.class);
-
 	// Members
+	Node mockNode = Mockito.mock(Node.class);
 	String uuid = "40e6215d-b5c6-4896-987c-f30f3678f608";
 	String baduuid = "40e6215d-b5c6-4896-987c-f30f3678fzzz";
 	
