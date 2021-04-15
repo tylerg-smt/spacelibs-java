@@ -35,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class EntityUtil {
 	
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	/**
 	 * Creating bean for JPA Entity Manager by autowiring
